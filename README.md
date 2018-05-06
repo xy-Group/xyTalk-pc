@@ -8,29 +8,32 @@ XyTalk.pc is Windows/linux/Mac XMPP instant messaging client software.
 <br>
 XyTalk.pc是XMPP协议的即时通讯IM客户端软件，可用于Windows/linux/Mac.
 <p>
-todo list:
+
+## TODO LIST ##
+
 <br>
-## 登陆  ##
+<b>登陆  <b>
 <br>
 1、登陆记住密码；
 <br>
 2、登陆自动登陆Jframe；
 <br>
 <p>
-## 消息 ##
+
+<b>消息  <b>
 <br>
 1、来消息声音提示
 <br>
 2、消息的回执状态处理和ui展示，“未读”、“已读”
 <br>
 <p>
-## 聊天窗 ##
+<b>聊天窗<b>
 <br>
 1、截图时隐藏当前窗口
 <br>
 <p>
 
-## UI ##
+<b>UI<b>
 <br>
 1、编辑头像时更专业的截取器，支持缩放、位移。兼容vacrd的小文件（小于30K），对大图做压缩处理
 <br>
