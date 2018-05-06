@@ -10,19 +10,25 @@ XyTalk.pc是XMPP协议的即时通讯IM客户端软件，可用于Windows/linux/
 <p>
 
 ## 技术选型 ##
-<br>通讯协议： XMPP（用于消息）、HTTP
-<br>XMPP Server： Tigase，我们做了部分插件
-<br>PC端UI： Swing（很low？知道intellij idea、Google Android Studio用什么开发的吗？）
-<br>异步框架： java8内置CompletableFuture、或SwingWorker，原则是适合就好，不用搬用过重框架
-<br>DB： MySQL（Server side）、SQLite（客户端）
-<br>ORM：Mybatis
-<br>皮肤：Darcula
-<br>日志库：logback、slf4j-log4j12
+<br>
+<p>
+<UL>
+  <LI>通讯协议： XMPP（用于消息）、HTTP
+  <LI>XMPP Server： Tigase，我们做了部分插件
+  <LI>PC端UI： Swing（很low？知道intellij idea、Google Android Studio用什么开发的吗？）
+  <LI>异步框架： java8内置CompletableFuture、或SwingWorker，原则是适合就好，不用搬用过重框架
+  <LI>DB： MySQL（Server side）、SQLite（客户端）
+  <LI>ORM：Mybatis
+  <LI>皮肤：Darcula
+  <LI>日志库：logback、slf4j-log4j12
+/UL>
+
 
 <p>
-## TODO LIST ##
 
+## TODO LIST ##
 <br>
+<p>
 <b>登陆  </b>
 <br>
 1、登陆记住密码；
@@ -55,7 +61,7 @@ XyTalk.pc是XMPP协议的即时通讯IM客户端软件，可用于Windows/linux/
 <p>
 <br>2018-05-06以前没有记录了，从6号开始更新
 2018-05-06： <br>
-1、保存自身的Avater头像至XMPP服务端，并刷新用户MyInfoPanel区的头像
-2、刷新头像缓存；
-3、bugfix：修正SessionManager认证后UserCache.CurrentUserName的空值；
+<br>1、保存自身的Avater头像至XMPP服务端，并刷新用户MyInfoPanel区的头像
+<br>2、刷新头像缓存；
+<br>3、bugfix：修正SessionManager认证后UserCache.CurrentUserName的空值；
 
