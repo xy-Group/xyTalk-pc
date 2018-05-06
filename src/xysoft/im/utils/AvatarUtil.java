@@ -44,8 +44,8 @@ public class AvatarUtil
 
     private static final String AVATAR_CACHE_ROOT;
     private static final String CUSTOM_AVATAR_CACHE_ROOT;
-    private static final int DEFAULT_AVATAR = 0;
-    private static final int CUSTOM_AVATAR = 1;
+    private static final int DEFAULT_AVATAR = 0; //用户自己的头像
+    private static final int CUSTOM_AVATAR = 1; //其他人的头像
 
     private static Map<String, Image> avatarCache = new HashMap<>();
 
@@ -203,6 +203,11 @@ public class AvatarUtil
     public static void saveAvatar(BufferedImage image, String username)
     {
         saveAvatar(image, username, CUSTOM_AVATAR);
+    }
+
+    public static void saveMyAvatar(BufferedImage image, String username)
+    {
+        saveAvatar(image, username, DEFAULT_AVATAR);
     }
 
     private static void saveAvatar(BufferedImage image, String username, int type)

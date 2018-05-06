@@ -1,6 +1,7 @@
 package xysoft.im.panels;
 
 import xysoft.im.app.Launcher;
+import xysoft.im.cache.UserCache;
 import xysoft.im.components.Colors;
 import xysoft.im.components.GBC;
 import xysoft.im.components.message.MainOperationPopupMenu;
@@ -116,7 +117,7 @@ public class MyInfoPanel extends ParentAvailablePanel
 
     public void reloadAvatar()
     {
-        currentUsername = currentUserService.findAll().get(0).getUsername();
+        currentUsername = UserCache.CurrentUserName;// currentUserService.findAll().get(0).getUsername();
         //Image image = AvatarUtil.createOrLoadUserAvatar(currentUsername);
         //avatar.setImage(image);
         avatar.setIcon(new ImageIcon(AvatarUtil.createOrLoadUserAvatar(currentUsername).getScaledInstance(50,50,Image.SCALE_SMOOTH)));

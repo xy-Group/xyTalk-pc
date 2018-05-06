@@ -113,6 +113,7 @@ public class Launcher
         userHome = System.getProperty("user.home");
 
         appFilesBasePath = userHome + System.getProperty("file.separator") + "xytalk";
+        DebugUtil.debug("appFilesBasePath is " + appFilesBasePath);
     }
 
     /**

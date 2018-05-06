@@ -21,6 +21,7 @@ import org.jivesoftware.smack.packet.Stanza;
 import org.jivesoftware.smack.tcp.XMPPTCPConnection;
 import org.jivesoftware.smack.tcp.XMPPTCPConnectionConfiguration;
 import xysoft.im.app.Launcher;
+import xysoft.im.cache.UserCache;
 import xysoft.im.constant.Res;
 import xysoft.im.extension.Receipt;
 import xysoft.im.listener.SessionManager;
@@ -171,7 +172,17 @@ public class XmppLogin implements Login {
             sessionManager.setUserBareAddress(getUsername()+"@"+Launcher.DOMAIN);
             sessionManager.setJID(sessionManager.getUserBareAddress()+"/"+Launcher.RESOURCE);
             sessionManager.setUsername(username);
-            sessionManager.setPassword(password);            
+            sessionManager.setPassword(password);  
+            
+        	UserCache.CurrentUserName = sessionManager.getUsername();
+        	UserCache.CurrentUserPassword = sessionManager.getPassword();
+        	UserCache.CurrentUserToken = "";
+        	UserCache.CurrentBareJid = sessionManager.getUserBareAddress();
+        	UserCache.CurrentFullJid = sessionManager.getJID();
+        	
+        	DebugUtil.debug("UserCache.CurrentUserName:" +UserCache.CurrentUserName);
+        	DebugUtil.debug("UserCache.CurrentBareJid:" +UserCache.CurrentBareJid);
+        	DebugUtil.debug("UserCache.CurrentFullJid:" +UserCache.CurrentFullJid);
             
             DebugUtil.debug("Launcher.connection.getUser():"+Launcher.connection.getUser());
             DebugUtil.debug("Launcher.connection.getServiceName():"+Launcher.connection.getServiceName());

@@ -29,4 +29,18 @@ todo list:
 1、截图时隐藏当前窗口
 <br>
 <p>
-bugfix list:
+
+## UI ##
+<br>
+1、编辑头像时更专业的截取器，支持缩放、位移。兼容vacrd的小文件（小于30K），对大图做压缩处理
+<br>
+<p>
+更新日志:
+<br>
+<p>
+<br>2018-05-06以前没有记录了，从遮天开始
+2018-05-06： <br>
+1、保存自身的Avater头像至XMPP服务端，并刷新用户MyInfoPanel区的头像
+2、刷新头像缓存；
+3、bugfix：修正SessionManager认证后UserCache.CurrentUserName的空值；
+

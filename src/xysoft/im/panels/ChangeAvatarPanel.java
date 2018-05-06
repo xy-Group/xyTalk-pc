@@ -1,19 +1,32 @@
 package xysoft.im.panels;
 
+import xysoft.im.app.Launcher;
+import xysoft.im.cache.UserCache;
 import xysoft.im.components.Colors;
 import xysoft.im.components.RCButton;
 import xysoft.im.components.VerticalFlowLayout;
 import xysoft.im.db.model.CurrentUser;
 import xysoft.im.frames.MainFrame;
 import xysoft.im.utils.AvatarUtil;
+import xysoft.im.utils.DebugUtil;
+import xysoft.im.utils.GraphicUtils;
 import xysoft.im.utils.IconUtil;
 import org.apache.commons.codec.binary.Base64;
+import org.jivesoftware.smack.SmackException.NoResponseException;
+import org.jivesoftware.smack.SmackException.NotConnectedException;
+import org.jivesoftware.smack.XMPPException;
+import org.jivesoftware.smack.XMPPException.XMPPErrorException;
+import org.jivesoftware.smack.packet.Presence;
+import org.jivesoftware.smackx.vcardtemp.VCardManager;
+import org.jivesoftware.smackx.vcardtemp.packet.VCard;
+
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.image.BufferedImage;
+import java.awt.image.RenderedImage;
 import java.awt.image.RescaleOp;
 import java.io.*;
 import static xysoft.im.app.Launcher.currentUserService;
@@ -53,8 +66,8 @@ public class ChangeAvatarPanel extends JPanel
             int imageHeight = image.getHeight(null);
             if (imageWidth < 200 || imageHeight < 200)
             {
-                JOptionPane.showMessageDialog(MainFrame.getContext(), "建议使用 200 * 200 或更高分辨率的图像", "图像太low - , -!", JOptionPane.WARNING_MESSAGE);
-                return;
+//                JOptionPane.showMessageDialog(MainFrame.getContext(), "建议使用 200 * 200 或更高分辨率的图像", "图像太low - , -!", JOptionPane.WARNING_MESSAGE);
+//                return;
             }
 
             imageLabel.setImage(image);
@@ -74,7 +87,7 @@ public class ChangeAvatarPanel extends JPanel
         Image avatar = new ImageIcon(AvatarUtil.createOrLoadUserAvatar(currentUser.getUsername()).getScaledInstance(200, 200, Image.SCALE_SMOOTH)).getImage();
         imageLabel = new ImageAdjustLabel(imageMaxWidth, imageMaxHeight, avatar);
         imageLabel.setHorizontalAlignment(SwingConstants.CENTER);
-        imageLabel.setPreferredSize(new Dimension(360, 200));
+        imageLabel.setPreferredSize(new Dimension(350, 300));
         //imageLabel.setBorder(new LineBorder(Colors.ITEM_SELECTED_LIGHT));
 
         //imageLabel.setIcon(new ImageIcon(AvatarUtil.createOrLoadUserAvatar(currentUser.getUsername()).getScaledInstance(200, 200, Image.SCALE_SMOOTH)));
@@ -149,8 +162,16 @@ public class ChangeAvatarPanel extends JPanel
                     }
                     else
                     {
-                        // TODO: 上传头像，图片数据为selectedImage
+                    	//刷新缓存以便再次保存新的头像进缓存
+                    	AvatarUtil.refreshUserAvatarCache(UserCache.CurrentUserName);
+                        // 上传头像到服务器，图片数据为selectedImage
+                    	saveVCard(selectedImage);
                         JOptionPane.showMessageDialog(MainFrame.getContext(), "更改头像", "更改头像", JOptionPane.INFORMATION_MESSAGE);
+                        okButton.setText("头像已保存");
+                        okButton.setIcon(null);
+                        //保存到本地
+                        AvatarUtil.saveMyAvatar(selectedImage, UserCache.CurrentUserName);
+                        MyInfoPanel.getContext().reloadAvatar();
                     }
 
                 }
@@ -165,7 +186,7 @@ public class ChangeAvatarPanel extends JPanel
         JFileChooser fileChooser = new JFileChooser();
         fileChooser.setDialogTitle("请选择图片");
         fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
-        fileChooser.setFileFilter(new FileNameExtensionFilter("图像", "jpg", "jpeg", "png"));
+        fileChooser.setFileFilter(new FileNameExtensionFilter("图像", "jpg", "jpeg", "png", "JPG", "JPEG", "PNG"));
 
         fileChooser.showDialog(MainFrame.getContext(), "上传");
         if (fileChooser.getSelectedFile() != null)
@@ -173,7 +194,8 @@ public class ChangeAvatarPanel extends JPanel
             selectedFile = fileChooser.getSelectedFile();
 
             String extension = selectedFile.getName();
-            if (!extension.endsWith(".jpg") && !extension.endsWith(".jpeg") && !extension.endsWith(".png"))
+            if (!extension.endsWith(".jpg") && !extension.endsWith(".jpeg") && !extension.endsWith(".png")
+            		 && !extension.endsWith(".JPG") && !extension.endsWith(".JPEG") && !extension.endsWith(".PNG"))
             {
                 JOptionPane.showMessageDialog(MainFrame.getContext(), "请选择图像文件", "文件类型不正确", JOptionPane.WARNING_MESSAGE);
                 return;
@@ -225,6 +247,73 @@ public class ChangeAvatarPanel extends JPanel
     {
         return context;
     }
+    
+    public void saveVCard(BufferedImage selectedImage) {
+		DebugUtil.debug("保存Vcard信息");
+		
+		VCard vcard = null;
+		try {
+			vcard = VCardManager.getInstanceFor(Launcher.connection).loadVCard(UserCache.CurrentBareJid);
+		} catch (NoResponseException | XMPPErrorException | NotConnectedException e2) {
+			// TODO Auto-generated catch block
+			e2.printStackTrace();
+		}
+		// Save personal info
+//		vcard.setFirstName(personalPanel.getFirstName());
+//		vcard.setLastName(personalPanel.getLastName());
+//		vcard.setEmailHome(personalPanel.getEmailAddress());
+//		vcard.setOrganization(personalPanel.getCompany());
+//		vcard.setAddressFieldWork("STREET", personalPanel.getStreetAddress());
+//		vcard.setAddressFieldWork("REGION", personalPanel.getState());
+//		vcard.setAddressFieldWork("CTRY", personalPanel.getCountry());
+//		vcard.setField("TITLE", personalPanel.getJobTitle());
+//		vcard.setPhoneWork("VOICE", personalPanel.getPhone());
+//		vcard.setPhoneWork("CELL", personalPanel.getMobile());
+
+
+		// Save Avatar
+
+		Image image = selectedImage;
+		byte[] imageInByte;
+		ByteArrayOutputStream baos = new ByteArrayOutputStream();
+		try {
+			ImageIO.write( (RenderedImage) image, "jpg", baos );
+			baos.flush();
+			imageInByte = baos.toByteArray();
+			baos.close();
+			
+			if (image.getWidth(null) > 128 || image.getHeight(null) > 128) {
+				image = image.getScaledInstance(-1, 128, Image.SCALE_SMOOTH);
+			} 
+
+			if (imageInByte != null) {
+				vcard.setAvatar(imageInByte);
+			}
+			
+		} catch (IOException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+
+		try {
+
+			try {
+				VCardManager.getInstanceFor(Launcher.connection).saveVCard(vcard);
+			} catch (NoResponseException | NotConnectedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+			// Change my own presence
+			//SessionManager().changePresence(newPresence);
+
+		} catch (XMPPException e) {
+			JOptionPane.showMessageDialog(null,
+					"服务器不支持VCards。 无法保存你的VCard。",
+					"Error", JOptionPane.ERROR_MESSAGE);
+		}
+	}
+
 }
 
 class ImageAdjustLabel extends JLabel

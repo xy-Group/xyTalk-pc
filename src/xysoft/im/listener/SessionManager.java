@@ -110,13 +110,6 @@ public final class SessionManager implements ConnectionListener {
     {
     	DebugUtil.debug("authenticated");
     	
-    	UserCache.CurrentUserName = username;
-    	UserCache.CurrentUserPassword = password;
-    	UserCache.CurrentUserToken = "";
-    	UserCache.CurrentBareJid = userBareAddress;
-    	UserCache.CurrentFullJid = JID;
-    	
-    	
 //    	CurrentUser cu = Launcher.currentUserService.findById("c1");
 //    	if (cu==null){
 //    		CurrentUser cuNew = new CurrentUser();

@@ -29,9 +29,6 @@ import xysoft.im.constant.Res;
 
 /*
  *  文件io处理
- *  
- *  author: Tim on 04/23/2018.
- *  by Xysoft Group
  */
 public class FilesIO {
 	static Logger log = LoggerFactory.getLogger(FilesIO.class);
