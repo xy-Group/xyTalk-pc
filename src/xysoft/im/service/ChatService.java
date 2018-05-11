@@ -3,11 +3,16 @@ package xysoft.im.service;
 import java.util.List;
 
 import org.jivesoftware.smack.SmackException.NotConnectedException;
-import org.jivesoftware.smack.chat.Chat;
-import org.jivesoftware.smack.chat.ChatManager;
 import org.jivesoftware.smack.chat.ChatManagerListener;
 import org.jivesoftware.smack.chat.ChatMessageListener;
 import org.jivesoftware.smack.packet.ExtensionElement;
+import org.jivesoftware.smack.packet.Message.Type;
+import org.jxmpp.jid.EntityBareJid;
+import org.jxmpp.jid.Jid;
+import org.jxmpp.jid.impl.JidCreate;
+import org.jxmpp.stringprep.XmppStringprepException;
+import org.jivesoftware.smack.chat2.*;
+//import org.jivesoftware.smack.packet.Message;
 import xysoft.im.db.model.Message;
 import xysoft.im.db.model.Room;
 import xysoft.im.entity.MessageItem;
@@ -21,6 +26,7 @@ import xysoft.im.app.Launcher;
 public class ChatService {
 
 	static String from;
+	static Jid fromJID;
 	static String datetime;
 	static String subject;
 	static String body;
@@ -40,17 +46,18 @@ public class ChatService {
 		//	3、当前聊天者不为新消息发送者，联系人列表中不存在新消息发送者
 		//	4、用户离线，但上线后同样在1-3之间处理
 		
-		from = message.getFrom();
+		fromJID = message.getFrom();
 		body = message.getBody();
 		subject = message.getSubject();
 		id = message.getStanzaId();
 		threadId = message.getThread();
 
 		// 通过barejid判断是否需要新建联系人列表项
-		barejid = JID.bare(message.getFrom());
-		fromUsername = JID.username(message.getFrom());
+		from = fromJID.asBareJid().toString();
+		barejid = JID.bare(fromJID.asBareJid().toString());
+		fromUsername = JID.username(from);
 
-		if (barejid != null) {
+		if (barejid != null && body!=null) {
 			if (Launcher.currRoomId.equals(barejid)) {
 				// 当前聊天者即为新消息发送者
 				updateChatPanel(message);
@@ -116,7 +123,6 @@ public class ChatService {
 
 	private static void dbMessagePersistence() {
 		// 消息持久化数据操作
-
 		Message dbMessage = null;
 
         if (id == null)
@@ -150,8 +156,14 @@ public class ChatService {
 	}
 
 	public static void sendMessage(String roomId, String content) {
-		Chat chat = ChatManager.getInstanceFor(Launcher.connection)
-        		.createChat(roomId);
+		EntityBareJid jid = null;
+		try {
+			jid = JidCreate.entityBareFrom(roomId);
+		} catch (XmppStringprepException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		Chat chat = ChatManager.getInstanceFor(Launcher.connection).chatWith(jid);
 
 //        ChatManager chatManager = ChatManager.getInstanceFor(Launcher.connection);       
 //        chatManager.addChatListener(new ChatManagerListener() {               
@@ -172,10 +184,16 @@ public class ChatService {
 //        });
     
         org.jivesoftware.smack.packet.Message message = new org.jivesoftware.smack.packet.Message();
+        message.setType(Type.chat);
         message.addExtension(new Receipt());
         message.setBody(content);
         try {
-			chat.sendMessage(message);
+			try {
+				chat.send(message);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 			DebugUtil.debug( "chat.sendMessage:："+ message.toString());		
 		} catch (NotConnectedException e) {
 			// TODO Auto-generated catch block

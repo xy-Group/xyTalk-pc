@@ -19,9 +19,7 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-/**
- * Created by song on 17-6-4.
- */
+
 public class SizeAutoAdjustTextArea extends JIMSendTextPane
 {
     private final FontMetrics fontMetrics;

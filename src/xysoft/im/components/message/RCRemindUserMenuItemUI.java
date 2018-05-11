@@ -8,9 +8,7 @@ import javax.swing.*;
 import javax.swing.plaf.basic.BasicMenuItemUI;
 import java.awt.*;
 
-/**
- * Created by song on 21/06/2017.
- */
+
 public class RCRemindUserMenuItemUI extends BasicMenuItemUI
 {
     private int width;

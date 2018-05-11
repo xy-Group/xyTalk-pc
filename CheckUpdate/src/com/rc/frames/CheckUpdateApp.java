@@ -1,11 +1,9 @@
-package xysoft.im.frames;
+package com.rc.frames;
 
 import java.io.File;
 import java.io.IOException;
 
-/**
- * Created by song on 28/06/2017.
- */
+
 public class CheckUpdateApp
 {
     private static String userHome;

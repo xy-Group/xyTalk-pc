@@ -1,10 +1,8 @@
-package xysoft.im.frames.components;
+package com.rc.frames.components;
 
 import java.awt.*;
 
-/**
- * Created by song on 17-5-28.
- */
+
 public class GBC extends GridBagConstraints{
     /*
      * constructs a GBC with a given gridx and gridy position and all other grid

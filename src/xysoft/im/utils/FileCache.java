@@ -12,9 +12,7 @@ import java.awt.image.BufferedImage;
 import java.io.*;
 import java.text.DecimalFormat;
 
-/**
- * Created by song on 2017/6/11.
- */
+
 public class FileCache
 {
 

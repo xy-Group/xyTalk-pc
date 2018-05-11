@@ -29,7 +29,7 @@ public class Launcher
 
     //############  最重要且必须设置的项  Begin ############ 
 	
-	public static final boolean IS_DEBUGMODE = true; // debug模式输出全部log信息
+	public static final boolean IS_DEBUGMODE = true; // debug模式则console输出全部log信息
     public static final String HOSTNAME = "localhost";
     public static final String DOMAIN = "win7-1803071731";
     public static final String IP = "127.0.0.1";

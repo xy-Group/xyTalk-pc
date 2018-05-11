@@ -2,9 +2,7 @@ package xysoft.im.components.message;
 
 import javax.swing.*;
 
-/**
- * Created by song on 27/06/2017.
- */
+
 public class MessageImageLabel extends JLabel
 {
     private Object tag;

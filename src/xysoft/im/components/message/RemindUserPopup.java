@@ -17,9 +17,7 @@ import java.awt.*;
 import java.awt.event.*;
 import java.util.List;
 
-/**
- * Created by song on 21/06/2017.
- */
+
 public class RemindUserPopup extends JPopupMenu
 {
     private List<String> users;

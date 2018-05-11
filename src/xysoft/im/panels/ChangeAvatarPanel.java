@@ -19,6 +19,8 @@ import org.jivesoftware.smack.XMPPException.XMPPErrorException;
 import org.jivesoftware.smack.packet.Presence;
 import org.jivesoftware.smackx.vcardtemp.VCardManager;
 import org.jivesoftware.smackx.vcardtemp.packet.VCard;
+import org.jxmpp.jid.impl.JidCreate;
+import org.jxmpp.stringprep.XmppStringprepException;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -253,7 +255,12 @@ public class ChangeAvatarPanel extends JPanel
 		
 		VCard vcard = null;
 		try {
-			vcard = VCardManager.getInstanceFor(Launcher.connection).loadVCard(UserCache.CurrentBareJid);
+			try {
+				vcard = VCardManager.getInstanceFor(Launcher.connection).loadVCard(JidCreate.entityBareFrom(UserCache.CurrentBareJid));
+			} catch (XmppStringprepException | InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		} catch (NoResponseException | XMPPErrorException | NotConnectedException e2) {
 			// TODO Auto-generated catch block
 			e2.printStackTrace();
@@ -296,18 +303,11 @@ public class ChangeAvatarPanel extends JPanel
 		}
 
 		try {
-
-			try {
-				VCardManager.getInstanceFor(Launcher.connection).saveVCard(vcard);
-			} catch (NoResponseException | NotConnectedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			
+			VCardManager.getInstanceFor(Launcher.connection).saveVCard(vcard);
 			// Change my own presence
 			//SessionManager().changePresence(newPresence);
 
-		} catch (XMPPException e) {
+		} catch (NoResponseException | NotConnectedException | InterruptedException | XMPPException e) {
 			JOptionPane.showMessageDialog(null,
 					"服务器不支持VCards。 无法保存你的VCard。",
 					"Error", JOptionPane.ERROR_MESSAGE);

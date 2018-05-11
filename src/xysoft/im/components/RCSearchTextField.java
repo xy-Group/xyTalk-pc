@@ -8,9 +8,7 @@ import javax.swing.event.DocumentListener;
 import java.awt.*;
 import java.awt.geom.RoundRectangle2D;
 
-/**
- * Created by song on 17-5-29.
- */
+
 public class RCSearchTextField extends JTextField
 {
 

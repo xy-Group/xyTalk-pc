@@ -5,9 +5,7 @@ import xysoft.im.utils.FontUtil;
 import javax.swing.*;
 import java.awt.*;
 
-/**
- * Created by song on 12/06/2017.
- */
+
 public class SystemMessagePanel extends JPanel
 {
     private String text;

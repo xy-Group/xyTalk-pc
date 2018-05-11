@@ -7,9 +7,7 @@ import java.awt.event.MouseWheelEvent;
 import java.awt.font.LineMetrics;
 import java.util.*;
 
-/**
- * Created by song on 26/06/2017.
- */
+
 public class ImageLabel extends JLabel
 {
     private Image image;

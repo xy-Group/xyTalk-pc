@@ -1,9 +1,9 @@
 package xysoft.im.file;
 
-public class SOCKS5File {
+public class BytestreamsFile {
 
 	//XEP-0065: SOCKS5 Bytestreams支持
-	public SOCKS5File() {
+	public BytestreamsFile() {
 		// TODO Auto-generated constructor stub
 	}
 

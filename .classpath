@@ -27,20 +27,37 @@
 	<classpathentry kind="lib" path="D:/0NewIMRespo/smacklibs/dom4j.jar"/>
 	<classpathentry kind="lib" path="D:/0NewIMRespo/smacklibs/jdom.jar"/>
 	<classpathentry kind="lib" path="D:/0NewIMRespo/smacklibs/sdes4j.jar"/>
-	<classpathentry kind="lib" path="D:/0NewIMRespo/smacklibs/smack-core.jar" sourcepath="D:/0NewIMRespo/smack_4_2_4/libs/smack-core-4.2.4-sources.jar"/>
-	<classpathentry kind="lib" path="D:/0NewIMRespo/smacklibs/smack-debug.jar"/>
-	<classpathentry kind="lib" path="D:/0NewIMRespo/smacklibs/smack-extensions.jar" sourcepath="D:/0NewIMRespo/smack_4_2_4/libs/smack-extensions-4.2.4-sources.jar"/>
-	<classpathentry kind="lib" path="D:/0NewIMRespo/smacklibs/smack-im.jar" sourcepath="D:/0NewIMRespo/smack_4_2_4/libs/smack-im-4.2.4-sources.jar"/>
-	<classpathentry kind="lib" path="D:/0NewIMRespo/smacklibs/smack-java7.jar"/>
-	<classpathentry kind="lib" path="D:/0NewIMRespo/smacklibs/smack-legacy.jar"/>
-	<classpathentry kind="lib" path="D:/0NewIMRespo/smacklibs/smack-resolver-javax.jar"/>
-	<classpathentry kind="lib" path="D:/0NewIMRespo/smacklibs/smack-sasl-javax.jar"/>
-	<classpathentry kind="lib" path="D:/0NewIMRespo/smacklibs/smack-tcp.jar"/>
-	<classpathentry kind="lib" path="D:/0NewIMRespo/smacklibs/systeminfo.jar"/>
-	<classpathentry kind="lib" path="D:/0NewIMRespo/smacklibs/xpp3.jar"/>
 	<classpathentry kind="lib" path="D:/0NewIMRespo/smacklibs/xstream.jar"/>
-	<classpathentry kind="lib" path="D:/0NewIMRespo/smacklibs/jxmpp-core-0.6.2.jar"/>
 	<classpathentry kind="lib" path="D:/0NewIMRespo/smacklibs/jxmpp-jid-0.6.2.jar"/>
 	<classpathentry kind="lib" path="D:/0NewIMRespo/smacklibs/jxmpp-util-cache-0.6.2.jar"/>
+	<classpathentry kind="lib" path="D:/0NewIMRespo/smack_4_2_4/libs/smack-bosh-4.2.4.jar"/>
+	<classpathentry kind="lib" path="D:/0NewIMRespo/smack_4_2_4/libs/smack-compression-jzlib-4.2.4.jar"/>
+	<classpathentry kind="lib" path="D:/0NewIMRespo/smack_4_2_4/libs/smack-core-4.2.4.jar" sourcepath="D:/0NewIMRespo/smack_4_2_4/libs/smack-core-4.2.4-sources.jar"/>
+	<classpathentry kind="lib" path="D:/0NewIMRespo/smack_4_2_4/libs/smack-debug-4.2.4.jar"/>
+	<classpathentry kind="lib" path="D:/0NewIMRespo/smack_4_2_4/libs/smack-debug-slf4j-4.2.4.jar"/>
+	<classpathentry kind="lib" path="D:/0NewIMRespo/smack_4_2_4/libs/smack-experimental-4.2.4.jar"/>
+	<classpathentry kind="lib" path="D:/0NewIMRespo/smack_4_2_4/libs/smack-extensions-4.2.4.jar" sourcepath="D:/0NewIMRespo/smack_4_2_4/libs/smack-extensions-4.2.4-sources.jar"/>
+	<classpathentry kind="lib" path="D:/0NewIMRespo/smack_4_2_4/libs/smack-im-4.2.4.jar"/>
+	<classpathentry kind="lib" path="D:/0NewIMRespo/smack_4_2_4/libs/smack-java7-4.2.4.jar"/>
+	<classpathentry kind="lib" path="D:/0NewIMRespo/smack_4_2_4/libs/smack-jingle-old-4.2.4.jar"/>
+	<classpathentry kind="lib" path="D:/0NewIMRespo/smack_4_2_4/libs/smack-legacy-4.2.4.jar"/>
+	<classpathentry kind="lib" path="D:/0NewIMRespo/smack_4_2_4/libs/smack-omemo-4.2.4.jar"/>
+	<classpathentry kind="lib" path="D:/0NewIMRespo/smack_4_2_4/libs/smack-omemo-signal-4.2.4.jar"/>
+	<classpathentry kind="lib" path="D:/0NewIMRespo/smack_4_2_4/libs/smack-repl-4.2.4.jar"/>
+	<classpathentry kind="lib" path="D:/0NewIMRespo/smack_4_2_4/libs/smack-resolver-dnsjava-4.2.4.jar"/>
+	<classpathentry kind="lib" path="D:/0NewIMRespo/smack_4_2_4/libs/smack-resolver-javax-4.2.4.jar"/>
+	<classpathentry kind="lib" path="D:/0NewIMRespo/smack_4_2_4/libs/smack-resolver-minidns-4.2.4.jar"/>
+	<classpathentry kind="lib" path="D:/0NewIMRespo/smack_4_2_4/libs/smack-sasl-javax-4.2.4.jar"/>
+	<classpathentry kind="lib" path="D:/0NewIMRespo/smack_4_2_4/libs/smack-sasl-provided-4.2.4.jar"/>
+	<classpathentry kind="lib" path="D:/0NewIMRespo/smack_4_2_4/libs/smack-tcp-4.2.4.jar"/>
+	<classpathentry kind="lib" path="D:/0NewIMRespo/smack_4_2_4/libs/xpp3-1.1.4c.jar"/>
+	<classpathentry kind="lib" path="D:/0NewIMRespo/smack_4_2_4/libs/minidns-core-0.2.4.jar"/>
+	<classpathentry kind="lib" path="D:/0NewIMRespo/smack_4_2_4/libs/minidns-dnssec-0.2.4.jar"/>
+	<classpathentry kind="lib" path="D:/0NewIMRespo/smack_4_2_4/libs/minidns-hla-0.2.4.jar"/>
+	<classpathentry kind="lib" path="D:/0NewIMRespo/smack_4_2_4/libs/minidns-iterative-resolver-0.2.4.jar"/>
+	<classpathentry kind="lib" path="D:/0NewIMRespo/smack_4_2_4/libs/jxmpp-core-0.6.2.jar"/>
+	<classpathentry kind="lib" path="D:/0NewIMRespo/smack_4_2_4/libs/jxmpp-jid-0.6.2.jar"/>
+	<classpathentry kind="lib" path="D:/0NewIMRespo/smack_4_2_4/libs/jxmpp-util-cache-0.6.2.jar"/>
+	<classpathentry kind="lib" path="D:/0NewIMRespo/smack_4_2_4/libs/dnsjava-2003.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

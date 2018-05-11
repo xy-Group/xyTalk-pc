@@ -15,9 +15,7 @@ import java.awt.event.MouseEvent;
 import static xysoft.im.app.Launcher.contactsUserService;
 import static xysoft.im.app.Launcher.roomService;
 
-/**
- * Created by song on 07/06/2017.
- */
+
 public class UserInfoPopup extends JPopupMenu
 {
     private JPanel contentPanel;

@@ -5,9 +5,7 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 
-/**
- * Created by song on 08/06/2017.
- */
+
 public class HttpPostTask extends HttpTask
 {
 

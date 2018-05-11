@@ -4,9 +4,7 @@ import xysoft.im.utils.HttpUtil;
 
 import java.io.IOException;
 
-/**
- * Created by song on 2017/6/13.
- */
+
 public class HttpBytesGetTask extends HttpTask
 {
     @Override

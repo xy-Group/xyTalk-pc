@@ -150,6 +150,31 @@ public class RoomsPanel extends ParentAvailablePanel
             }
         }
     }
+    
+    public void updateRoomItemAddUnread(String roomId,String msg)
+    {
+        if (roomId == null || roomId.isEmpty())
+        {
+            notifyDataSetChanged(true);
+            return;
+        }
+
+        for (int i = 0; i < roomItemList.size(); i++)
+        {
+            RoomItem item = roomItemList.get(i);
+            if (item.getRoomId().equals(roomId))
+            {
+                Room room = roomService.findById(item.getRoomId());
+                if (room != null)
+                {
+                    item.setLastMessage(msg);
+                    item.setUnreadCount(room.getUnreadCount()+1);
+                    roomsView.notifyItemChanged(i);
+                }
+                break;
+            }
+        }
+    }
 
     /**
      * 激活指定的房间项目

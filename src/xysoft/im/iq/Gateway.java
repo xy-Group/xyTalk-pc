@@ -2,7 +2,6 @@ package xysoft.im.iq;
 
 import java.io.IOException;
 
-import org.jivesoftware.smack.PacketCollector;
 import org.jivesoftware.smack.SmackConfiguration;
 import org.jivesoftware.smack.SmackException;
 import org.jivesoftware.smack.XMPPConnection;
@@ -101,7 +100,7 @@ public class Gateway extends IQ {
         registration.setUsername(username);
 
         XMPPConnection con = Launcher.connection;
-        PacketCollector collector = con.createPacketCollector(new StanzaIdFilter(registration.getStanzaId()));
+        PacketCollector  collector = con.createPacketCollector(new StanzaIdFilter(registration.getStanzaId()));
         try
         {
             con.sendStanza( registration );

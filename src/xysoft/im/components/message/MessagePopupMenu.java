@@ -21,9 +21,7 @@ import java.awt.event.ActionEvent;
 import java.io.File;
 import java.util.Map;
 
-/**
- * Created by song on 2017/6/5.
- */
+
 public class MessagePopupMenu extends JPopupMenu
 {
     private int messageType;

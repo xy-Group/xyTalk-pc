@@ -6,9 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.awt.font.LineMetrics;
 
-/**
- * Created by song on 22/06/2017.
- */
+
 public class HighLightLabel extends JLabel
 {
     private String keyWord;

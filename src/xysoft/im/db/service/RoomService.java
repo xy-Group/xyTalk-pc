@@ -45,11 +45,5 @@ public class RoomService extends BasicService<RoomDao, Room>
         return dao.searchByName(name);
     }
 
-	public int getMsgNum(String id) {
-		return dao.getMsgNum(id);
-	}
-	
-	public int getUnReadNum(String id) {
-		return dao.getUnReadNum(id);
-	}
+
 }

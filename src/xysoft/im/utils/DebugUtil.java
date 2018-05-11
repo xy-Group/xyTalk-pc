@@ -1,5 +1,7 @@
 package xysoft.im.utils;
 
+import xysoft.im.app.Launcher;
+
 public class DebugUtil {
 
 	public DebugUtil() {
@@ -7,6 +9,7 @@ public class DebugUtil {
 	}
 
 	public static void debug(String str){
+		if (Launcher.IS_DEBUGMODE)
 		System.out.println(str);
 	}
 }

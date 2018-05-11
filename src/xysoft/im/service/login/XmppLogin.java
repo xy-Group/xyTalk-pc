@@ -6,9 +6,13 @@ import org.jivesoftware.smack.ConnectionConfiguration.SecurityMode;
 import org.jivesoftware.smack.ReconnectionManager;
 import org.jivesoftware.smack.SmackConfiguration;
 import org.jivesoftware.smack.SmackException;
+import org.jivesoftware.smack.SmackException.NoResponseException;
 import org.jivesoftware.smack.SmackException.NotConnectedException;
+import org.jivesoftware.smack.SmackException.NotLoggedInException;
 import org.jivesoftware.smack.StanzaListener;
+import org.jivesoftware.smack.XMPPConnection;
 import org.jivesoftware.smack.XMPPException;
+import org.jivesoftware.smack.XMPPException.XMPPErrorException;
 import org.jivesoftware.smack.chat.Chat;
 import org.jivesoftware.smack.chat.ChatManager;
 import org.jivesoftware.smack.chat.ChatManagerListener;
@@ -20,13 +24,25 @@ import org.jivesoftware.smack.packet.Message;
 import org.jivesoftware.smack.packet.Stanza;
 import org.jivesoftware.smack.tcp.XMPPTCPConnection;
 import org.jivesoftware.smack.tcp.XMPPTCPConnectionConfiguration;
+import org.jivesoftware.smackx.muc.InvitationListener;
+import org.jivesoftware.smackx.muc.MultiUserChat;
+import org.jivesoftware.smackx.muc.MultiUserChatException.NotAMucServiceException;
+import org.jivesoftware.smackx.muc.MultiUserChatManager;
+import org.jivesoftware.smackx.muc.packet.MUCUser.Invite;
+import org.jivesoftware.smackx.muclight.MultiUserChatLightManager;
+import org.jivesoftware.smackx.push_notifications.PushNotificationsManager;
+import org.jxmpp.jid.EntityFullJid;
+import org.jxmpp.jid.EntityJid;
+import org.jxmpp.jid.parts.Resourcepart;
+import org.jxmpp.stringprep.XmppStringprepException;
+
 import xysoft.im.app.Launcher;
 import xysoft.im.cache.UserCache;
 import xysoft.im.constant.Res;
-import xysoft.im.extension.Receipt;
 import xysoft.im.listener.SessionManager;
 import xysoft.im.service.ChatService;
 import xysoft.im.service.ErrorMsgService;
+import xysoft.im.service.FormService;
 import xysoft.im.service.HeadlineChatService;
 import xysoft.im.service.MucChatService;
 import xysoft.im.service.ProviderRegister;
@@ -96,23 +112,21 @@ public class XmppLogin implements Login {
             StanzaFilter filterIQ = new StanzaTypeFilter(IQ.class);
             //PacketCollector myCollector = Launcher.connection.createPacketCollector(filterMsg);        	
             StanzaListener listenerMsg = new StanzaListener() {
+
 				@Override
-				public void processPacket(Stanza stanza) throws NotConnectedException {
+				public void processStanza(Stanza stanza)
+						throws NotConnectedException, InterruptedException, NotLoggedInException {
 					DebugUtil.debug("processPacket-MSG:"+stanza.toString());
 					if (stanza instanceof Message) {//消息包
 	                    Message message = (Message) stanza;
 	                    if (message.getType() == Message.Type.chat) {//单聊
+	                    	if (message.getBody()==null){
+		                    	DebugUtil.debug("(抛弃的)processPacket-Message.Type.chat:"+message.toString());	 	                    			                    		
+	                    	}else{
+		                    	ChatService.recivePacket(message);
+		                    	DebugUtil.debug("processPacket-Message.Type.chat:"+message.toString());	 	                    		
+	                    	}
 	                    	
-	                    	ChatService.recivePacket(message);
-	                    	DebugUtil.debug("processPacket-Message.Type.chat:"+message.toString());	 
-	                    	
-//	                    	if (message.hasExtension("http://jabber.org/protocol/chatstates")){
-//	                    		ChatService.chatstatesArrived(message);	                    		
-//	                    	}
-//	                    	else{
-//		                    	ChatService.recivePacket(message);
-//		                    	DebugUtil.debug("processPacket-Message.Type.chat:"+message.toString());	                    		
-//	                    	}
 	                    }
 	                    if (message.getType() == Message.Type.headline) {//重要消息
 	                    	HeadlineChatService.recivePacket(message);
@@ -129,10 +143,22 @@ public class XmppLogin implements Login {
 	                    		//震动提醒消息
 	                    		DebugUtil.debug("urn:xmpp:attention:0:"+message.toString());
 	                    	}	                    	
+	                    	else if (message.hasExtension("http://jabber.org/protocol/muc#user")){
+	                    		//被邀请加入群聊
+	                    		DebugUtil.debug("被邀请加入群聊:"+message.getFrom().toString());
+	                    	}	   
+	                    	else if (message.hasExtension("jabber:x:conference")){
+	                    		//被邀请加入群聊
+	                    		DebugUtil.debug("被邀请加入群聊:"+message.getFrom().toString());
+	                    	}	   
 	                    	else{
-	                    		//普通消息
-	                    		ChatService.recivePacket(message);
-		                    	DebugUtil.debug("processPacket-Message.Type.normal:"+message.toString());
+	                    		if (message.getBody()==null){
+			                    	DebugUtil.debug("(抛弃的)processPacket-Message.Type.normal:"+message.toString());	 	                    			                    		
+		                    	}else{
+			                    	ChatService.recivePacket(message);
+			                    	DebugUtil.debug("processPacket-Message.Type.normal:"+message.toString());	 	                    		
+		                    	}
+
 	                    	}
 	                    		
 	                    }
@@ -144,15 +170,17 @@ public class XmppLogin implements Login {
 	                    	DebugUtil.debug("processPacket-Message.Type.error:"+message.toString());
 	                    	ErrorMsgService.recivePacket(message);
 	                    }
-	                }					
+	                }			
 				}
         	};
         	
         	StanzaListener listenerIQ = new StanzaListener() {
+
 				@Override
-				public void processPacket(Stanza stanza) throws NotConnectedException {
+				public void processStanza(Stanza stanza)
+						throws NotConnectedException, InterruptedException, NotLoggedInException {
 					DebugUtil.debug("processPacket-IQ:"+stanza.toString());
-										
+					
 					if (stanza instanceof IQ) {
 						//TODO IQ包
 						
@@ -163,9 +191,15 @@ public class XmppLogin implements Login {
         	Launcher.connection.addSyncStanzaListener(listenerMsg, filterMsg);
         	Launcher.connection.addSyncStanzaListener(listenerIQ, filterIQ);
 
-        	Launcher.connection.connect();
-        	Launcher.connection.login();  
-        	
+        	try {
+				Launcher.connection.connect();
+	        	Launcher.connection.login();  
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+
+        	//注册扩展
         	ProviderRegister.register();
         	
             sessionManager.initializeSession(Launcher.connection);
@@ -173,6 +207,9 @@ public class XmppLogin implements Login {
             sessionManager.setJID(sessionManager.getUserBareAddress()+"/"+Launcher.RESOURCE);
             sessionManager.setUsername(username);
             sessionManager.setPassword(password);  
+            
+            MucChatService.mucInvitation();
+            MucChatService.mucGetInfo("mc2@muc.win7-1803071731");
             
         	UserCache.CurrentUserName = sessionManager.getUsername();
         	UserCache.CurrentUserPassword = sessionManager.getPassword();
@@ -211,6 +248,21 @@ public class XmppLogin implements Login {
 //            message.setBody("你好！");
 //            chat.sendMessage(message);
             
+
+            PushNotificationsManager pushNotificationsManager = PushNotificationsManager.getInstanceFor(Launcher.connection);
+
+
+            try {
+				boolean isSupported = pushNotificationsManager.isSupported();//.isSupportedByServer();
+				boolean isSupportedByServer = pushNotificationsManager.isSupportedByServer();//.isSupportedByServer();
+
+				DebugUtil.debug("PushNotificationsManager isSupported:" +isSupported);
+				DebugUtil.debug("PushNotificationsManager isSupportedByServer:" +isSupportedByServer);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+            
 			return "ok";
 		} catch (XMPPException e) {
 			return "XMPPException";
@@ -219,8 +271,12 @@ public class XmppLogin implements Login {
 		} catch (IOException e) {
 			return "IOException";
 		}  
+        
+        
 
 	}
+
+
 	
 	protected XMPPTCPConnectionConfiguration retrieveConnectionConfiguration() {
 
@@ -234,7 +290,8 @@ public class XmppLogin implements Login {
 				        .setResource(Launcher.RESOURCE)
 				        .setPort(Launcher.HOSTPORT)
 				        .setConnectTimeout(5000)
-				        .setServiceName(Launcher.DOMAIN)
+				        .setXmppDomain(Launcher.DOMAIN)
+				        //.setServiceName(Launcher.DOMAIN)
 				        .setHost("127.0.0.1")
 						.setHost(Launcher.HOSTNAME)
 				        .setSecurityMode(SecurityMode.disabled )

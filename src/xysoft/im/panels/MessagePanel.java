@@ -6,9 +6,6 @@ import xysoft.im.components.RCListView;
 import javax.swing.*;
 import java.awt.*;
 
-/**
- * Created by song on 17-5-30.
- */
 public class MessagePanel extends ParentAvailablePanel
 {
     RCListView listView;

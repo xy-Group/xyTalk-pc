@@ -5,9 +5,7 @@ import javax.swing.plaf.basic.BasicProgressBarUI;
 import java.awt.*;
 import java.awt.geom.Point2D;
 
-/**
- * Created by song on 17-6-4.
- */
+
 public class GradientProgressBarUI extends BasicProgressBarUI
 {
     @Override

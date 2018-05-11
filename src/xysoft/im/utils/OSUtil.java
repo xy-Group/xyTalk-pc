@@ -1,8 +1,6 @@
 package xysoft.im.utils;
 
-/**
- * Created by song on 05/06/2017.
- */
+
 public class OSUtil
 {
     public static final int  Windows = 0;

@@ -1,8 +1,11 @@
-package xysoft.im.frames;
+package com.rc.frames;
 
-import xysoft.im.frames.components.*;
 
 import javax.swing.*;
+
+import xysoft.im.components.RCProgressBar;
+import xysoft.im.tasks.DownloadTask;
+
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -10,9 +13,7 @@ import java.awt.event.MouseMotionAdapter;
 import java.io.File;
 import java.io.FileOutputStream;
 
-/**
- * Created by song on 2017/6/27.
- */
+
 public class UpdateFrame extends JFrame
 {
     private static final int FRAME_WIDTH = 650;

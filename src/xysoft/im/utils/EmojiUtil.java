@@ -3,9 +3,7 @@ package xysoft.im.utils;
 import javax.swing.*;
 import java.net.URL;
 
-/**
- * Created by song on 2017/7/1.
- */
+
 public class EmojiUtil
 {
 

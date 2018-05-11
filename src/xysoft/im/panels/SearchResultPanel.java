@@ -14,7 +14,6 @@ import java.util.List;
 
 /**
  * 左侧搜索结果列表
- * Created by song on 17-6-21.
  */
 public class SearchResultPanel extends ParentAvailablePanel
 {

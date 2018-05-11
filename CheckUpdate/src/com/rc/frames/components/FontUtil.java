@@ -1,10 +1,8 @@
-package xysoft.im.frames.components;
+package com.rc.frames.components;
 
 import java.awt.*;
 
-/**
- * Created by song on 17-5-29.
- */
+
 public class FontUtil
 {
     private static Font font;

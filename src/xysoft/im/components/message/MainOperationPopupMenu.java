@@ -11,9 +11,7 @@ import javax.swing.border.LineBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 
-/**
- * Created by song on 2017/6/5.
- */
+
 public class MainOperationPopupMenu extends JPopupMenu
 {
     public MainOperationPopupMenu()

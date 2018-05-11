@@ -11,8 +11,6 @@ import java.awt.event.MouseListener;
 
 /**
  * 文本气泡
- *
- * Created by song on 17-6-3.
  */
 public class RCTextMessageBubble extends JTextArea implements RCMessageBubble
 {

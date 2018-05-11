@@ -6,9 +6,7 @@ import javax.swing.*;
 import javax.swing.plaf.basic.BasicMenuItemUI;
 import java.awt.*;
 
-/**
- * Created by song on 2017/6/5.
- */
+
 public class RCMenuItemUI extends BasicMenuItemUI
 {
 

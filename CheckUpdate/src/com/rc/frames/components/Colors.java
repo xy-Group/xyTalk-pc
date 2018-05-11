@@ -1,10 +1,8 @@
-package xysoft.im.frames.components;
+package com.rc.frames.components;
 
 import java.awt.*;
 
-/**
- * Created by song on 17-5-29.
- */
+
 public class Colors
 {
     public static final Color RED = new Color(228, 74, 47);

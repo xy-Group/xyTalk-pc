@@ -48,7 +48,12 @@ public final class SessionManager implements ConnectionListener {
     private void discoverItems() {
         ServiceDiscoveryManager disco = ServiceDiscoveryManager.getInstanceFor(Launcher.connection);
         try {
-            discoverItems = disco.discoverItems(Launcher.connection.getServiceName());
+            try {
+				discoverItems = disco.discoverItems(Launcher.connection.getServiceName());
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
         }
         catch (XMPPException | SmackException e) {
             discoverItems = new DiscoverItems();

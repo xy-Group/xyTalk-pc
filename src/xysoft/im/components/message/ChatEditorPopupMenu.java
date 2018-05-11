@@ -14,9 +14,7 @@ import java.awt.event.ActionEvent;
 import java.util.*;
 import java.util.List;
 
-/**
- * Created by song on 2017/6/5.
- */
+
 public class ChatEditorPopupMenu extends JPopupMenu
 {
     JMenuItem selectAllItem = new JMenuItem("全选");

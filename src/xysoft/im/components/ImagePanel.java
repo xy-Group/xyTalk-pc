@@ -13,9 +13,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
 
-/**
- * Created by song on 17-5-29.
- */
+
 public class ImagePanel extends JPanel
 {
     private GeneralPath path = new GeneralPath();

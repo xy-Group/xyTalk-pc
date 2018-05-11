@@ -1,12 +1,10 @@
-package xysoft.im.frames.components;
+package com.rc.frames.components;
 
 import javax.swing.*;
 import javax.swing.border.LineBorder;
 import java.awt.*;
 
-/**
- * Created by song on 17-6-4.
- */
+
 public class RCProgressBar extends JProgressBar
 {
     public RCProgressBar()

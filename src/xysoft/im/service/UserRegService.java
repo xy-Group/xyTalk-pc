@@ -30,7 +30,12 @@ public class UserRegService {
         registration.setTo(gatewayDomain);
         registration.addExtension(new GatewayRegisterExtension());
 
-        con.sendStanzaWithResponseCallback( registration, new IQReplyFilter( registration, con ), callback);
+        try {
+			con.sendStanzaWithResponseCallback( registration, new IQReplyFilter( registration, con ), callback);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
     }
 
     public static void unregister(XMPPConnection con, String gatewayDomain) throws SmackException.NotConnectedException
@@ -41,12 +46,17 @@ public class UserRegService {
         registration.setType(IQ.Type.set);
         registration.setTo(gatewayDomain);
 
-        con.sendStanzaWithResponseCallback( registration, new IQReplyFilter( registration, con ), stanza -> {
-            IQ response = (IQ) stanza;
-            if (response.getType() == IQ.Type.error ) {
-                //Log.warning( "Unable to unregister from gateway: " + stanza );
-            }
-        } );
+        try {
+			con.sendStanzaWithResponseCallback( registration, new IQReplyFilter( registration, con ), stanza -> {
+			    IQ response = (IQ) stanza;
+			    if (response.getType() == IQ.Type.error ) {
+			        //Log.warning( "Unable to unregister from gateway: " + stanza );
+			    }
+			} );
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
     }
 
 

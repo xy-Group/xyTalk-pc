@@ -7,9 +7,7 @@ import xysoft.im.utils.IconUtil;
 import javax.swing.*;
 import java.awt.*;
 
-/**
- * Created by song on 2017/6/15.
- */
+
 public class TipPanel extends ParentAvailablePanel
 {
     private JLabel imageLabel;

@@ -1,8 +1,5 @@
 package xysoft.im.components.message;
 
-/**
- * Created by song on 17-6-2.
- */
 
 import javax.swing.*;
 import javax.swing.text.AbstractDocument;

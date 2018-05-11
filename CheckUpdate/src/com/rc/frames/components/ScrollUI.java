@@ -1,4 +1,4 @@
-package xysoft.im.frames.components;
+package com.rc.frames.components;
 
 import javax.swing.*;
 import javax.swing.plaf.basic.BasicScrollBarUI;

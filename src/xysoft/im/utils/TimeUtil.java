@@ -4,9 +4,6 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
-/**
- * Created by song on 28/04/2017.
- */
 
 public class TimeUtil
 {

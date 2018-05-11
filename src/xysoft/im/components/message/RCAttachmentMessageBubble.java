@@ -8,8 +8,6 @@ import java.awt.event.MouseListener;
 
 /**
  * 附件气泡
- *
- * Created by song on 17-6-3.
  */
 public class RCAttachmentMessageBubble extends JPanel implements RCMessageBubble
 {

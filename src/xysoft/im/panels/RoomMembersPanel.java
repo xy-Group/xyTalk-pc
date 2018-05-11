@@ -20,9 +20,7 @@ import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by song on 07/06/2017.
- */
+
 public class RoomMembersPanel extends ParentAvailablePanel
 {
     public static final int ROOM_MEMBER_PANEL_WIDTH = 200;

@@ -3,9 +3,7 @@ package xysoft.im.db.service;
 import xysoft.im.db.dao.TableDao;
 import org.apache.ibatis.session.SqlSession;
 
-/**
- * Created by song on 08/06/2017.
- */
+
 public class TableService
 {
     private TableDao dao;

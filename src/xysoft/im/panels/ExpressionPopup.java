@@ -9,9 +9,7 @@ import xysoft.im.utils.IconUtil;
 import javax.swing.*;
 import java.awt.*;
 
-/**
- * Created by song on 04/07/2017.
- */
+
 public class ExpressionPopup extends JPopupMenu
 {
     private static final int WIDTH = 400;

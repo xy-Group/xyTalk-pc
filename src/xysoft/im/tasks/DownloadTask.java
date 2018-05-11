@@ -2,9 +2,7 @@ package xysoft.im.tasks;
 
 import xysoft.im.utils.HttpUtil;
 
-/**
- * Created by song on 16/06/2017.
- */
+
 public class DownloadTask extends HttpTask
 {
     HttpUtil.ProgressListener progressListener;

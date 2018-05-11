@@ -226,7 +226,6 @@ public class MainFrame extends JFrame
         UIManager.put("Panel.background", Colors.WINDOW_BACKGROUND);
         UIManager.put("CheckBox.background", Colors.WINDOW_BACKGROUND);
 
-
         leftPanel = new LeftPanel();
         leftPanel.setPreferredSize(new Dimension(260, currentWindowHeight));
 

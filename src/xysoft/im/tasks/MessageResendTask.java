@@ -1,8 +1,6 @@
 package xysoft.im.tasks;
 
-/**
- * Created by song on 14/06/2017.
- */
+
 public class MessageResendTask
 {
     ResendTaskCallback listener;
