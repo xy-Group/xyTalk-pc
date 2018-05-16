@@ -52,6 +52,8 @@ import org.jxmpp.stringprep.XmppStringprepException;
 import xysoft.im.adapter.message.BaseMessageViewHolder;
 import xysoft.im.adapter.message.MessageAdapter;
 import xysoft.im.adapter.message.MessageAttachmentViewHolder;
+import xysoft.im.adapter.message.MessageLeftAttachmentViewHolder;
+import xysoft.im.adapter.message.MessageLeftImageViewHolder;
 import xysoft.im.adapter.message.MessageRightAttachmentViewHolder;
 import xysoft.im.adapter.message.MessageRightImageViewHolder;
 import xysoft.im.app.Launcher;
@@ -80,6 +82,7 @@ import xysoft.im.listener.ExpressionListener;
 import xysoft.im.service.ChatService;
 import xysoft.im.service.MucChatService;
 import xysoft.im.service.StateService;
+import xysoft.im.service.XmppFileService;
 import xysoft.im.tasks.DownloadTask;
 import xysoft.im.tasks.HttpResponseListener;
 import xysoft.im.tasks.UploadTaskCallback;
@@ -851,24 +854,12 @@ public class ChatPanel extends ParentAvailablePanel {
 			sendOfflineFile();
 		}
 		else{			
-			// TODO: 通知服务器要开始在线上传文件
-			FileTransferManager manager = FileTransferManager.getInstanceFor(Launcher.connection);
-			OutgoingFileTransfer transfer;
-			try {
-				transfer = manager.createOutgoingFileTransfer(JidCreate.entityFullFrom(fulljid));
-				transfer.sendFile(new File(fileFullPath), "file transfer");
-				
-				// TODO: 更新UI显示上传文件
-				notifyUIStartUploadFile(fileFullPath, randomMessageId());//这里使用随机消息id，是因为这并不是xmpp message
-
-			} catch (XmppStringprepException | SmackException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+			XmppFileService.sendFile(fileFullPath, fulljid);			
+			//TODO: 更新UI显示上传文件
+			notifyUIStartUploadFile(fileFullPath, randomMessageId());//这里使用随机消息id，是因为这并不是xmpp message
 		}
-		
 	}
-
+	
 	private void sendOfflineFile() {
 		// TODO 发送离线文件
 		JOptionPane.showMessageDialog(null,"开始转为离线文件发送");
@@ -924,6 +915,87 @@ public class ChatPanel extends ParentAvailablePanel {
 		uploadingOrDownloadingFiles.add(fileId);
 	}
 
+	public void notifyUIStartReciveFile(String reciveFilename, String fileId, String senderBareJid) {
+		reciveFile(reciveFilename, fileId,senderBareJid);
+		uploadingOrDownloadingFiles.add(fileId);
+	}
+
+	private void reciveFile(String reciveFilename, String fileId, String senderBareJid) {
+		// TODO 接收文件时的UI变化
+		final MessageItem item = new MessageItem();
+		boolean isImage;
+		if (reciveFilename.lastIndexOf(".")<0){
+			isImage = false;
+		}else{
+			String type = MimeTypeUtil.getMime(reciveFilename.substring(reciveFilename.lastIndexOf(".")));
+			isImage = type.startsWith("image/");
+		}
+		
+		// 发送的是图片
+		String name = reciveFilename.substring(reciveFilename.lastIndexOf(File.separator) + 1); // 文件名
+
+		FileAttachment fileAttachment = null;
+		ImageAttachment imageAttachment = null;
+
+		if (isImage) {
+			
+			imageAttachment = new ImageAttachment();
+			imageAttachment.setId(fileId);
+			imageAttachment.setWidth(100);
+			imageAttachment.setHeight(100);
+			imageAttachment.setImageUrl(reciveFilename);
+			imageAttachment.setTitle(name);
+	
+			item.setImageAttachment(new ImageAttachmentItem(imageAttachment));
+			item.setMessageType(MessageItem.LEFT_IMAGE);
+		} else {
+
+			fileAttachment = new FileAttachment();
+			fileAttachment.setId(fileId);
+			fileAttachment.setLink(reciveFilename);
+			fileAttachment.setTitle(name);
+
+			item.setFileAttachment(new FileAttachmentItem(fileAttachment));
+			item.setMessageType(MessageItem.LEFT_ATTACHMENT);
+		}
+
+		final String messageId = randomMessageId();
+		item.setMessageContent(name);
+		item.setTimestamp(System.currentTimeMillis());
+		item.setSenderId(senderBareJid);
+		item.setSenderUsername(JID.usernameByJid(senderBareJid));
+		item.setId(messageId);
+		item.setProgress(0);
+
+		addMessageItemToEnd(item);
+		
+		uploadingOrDownloadingFiles.remove(fileId);
+		
+		// 循环全部消息的原因是有可能在发送文件的同时会到来新消息，所以不能粗暴的设置最后一条消息为文件消息
+		for (int i = messageItems.size() - 1; i >= 0; i--) {
+			if (messageItems.get(i).getId().equals(item.getId())) {
+				messageItems.get(i).setProgress(100);
+				messageService.updateProgress(messageItems.get(i).getId(), 100);
+
+				BaseMessageViewHolder viewHolder = getViewHolderByPosition(i);
+				if (viewHolder != null) {
+					if (isImage) {
+						MessageLeftImageViewHolder holder = (MessageLeftImageViewHolder) viewHolder;
+					} else {
+						MessageLeftAttachmentViewHolder holder = (MessageLeftAttachmentViewHolder) viewHolder;
+
+						holder.sizeLabel.setVisible(false);
+						holder.progressBar.setVisible(false);
+						holder.sizeLabel.setVisible(true);
+						holder.sizeLabel.setText(fileCache.fileSizeString(reciveFilename));
+					}
+
+				}
+				break;
+			}
+		}
+	}
+
 	/**
 	 * 上传文件
 	 *
@@ -931,8 +1003,13 @@ public class ChatPanel extends ParentAvailablePanel {
 	 */
 	private void uploadFile(String uploadFilename, String fileId) {
 		final MessageItem item = new MessageItem();
-		String type = MimeTypeUtil.getMime(uploadFilename.substring(uploadFilename.lastIndexOf(".")));
-		final boolean isImage = type.startsWith("image/");
+		boolean isImage;
+		if (uploadFilename.lastIndexOf(".")<0){
+			isImage = false;
+		}else{
+			String type = MimeTypeUtil.getMime(uploadFilename.substring(uploadFilename.lastIndexOf(".")));
+			isImage = type.startsWith("image/");
+		}
 		
 		File file = new File(uploadFilename);
 		if (!file.exists()) {
