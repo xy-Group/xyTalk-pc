@@ -1,11 +1,13 @@
 package xysoft.im.components;
 
+import xysoft.im.app.Launcher;
 import xysoft.im.db.model.ContactsUser;
 import xysoft.im.db.model.Room;
 import xysoft.im.forms.ImageViewerFrame;
 import xysoft.im.frames.MainFrame;
 import xysoft.im.panels.ChatPanel;
 import xysoft.im.panels.ContactsPanel;
+import xysoft.im.panels.RoomsPanel;
 import xysoft.im.utils.AvatarUtil;
 import xysoft.im.utils.FontUtil;
 import javax.swing.*;
@@ -18,7 +20,11 @@ import static xysoft.im.app.Launcher.roomService;
 
 public class UserInfoPopup extends JPopupMenu
 {
-    private JPanel contentPanel;
+    /**
+	 * 用户信息弹出窗
+	 */
+	private static final long serialVersionUID = -5251311301957204281L;
+	private JPanel contentPanel;
     private JLabel avatarLabel;
     private JLabel usernameLabel;
     private JButton sendButton;
@@ -131,21 +137,29 @@ public class UserInfoPopup extends JPopupMenu
             ChatPanel.getContext().enterRoom(room.getRoomId());
         }else
         {
-            createDirectChat(user.getName());
+        	createNewRoom();       	
         }
 
         this.setVisible(false);
 
     }
-
-    /**
-     * 创建直接聊天
-     *
-     * @param username
-     */
-    private void createDirectChat(String username)
-    {
-        JOptionPane.showMessageDialog(MainFrame.getContext(), "发起聊天", "发起聊天", JOptionPane.INFORMATION_MESSAGE);
-    }
+    
+    //新建一个联系人
+	private void createNewRoom() {
+		Room room = new Room();
+		room.setLastMessage("新建联系人");
+		room.setLastChatAt(System.currentTimeMillis());
+		room.setMsgSum(1);
+		room.setName(Launcher.contactsUserService.findByUsername(username).getName());
+		room.setRoomId(username + "@"+Launcher.DOMAIN);
+		room.setTotalReadCount(0);
+		room.setUpdatedAt("2018-01-01T06:38:55.119Z");
+		room.setType("d"); //单聊
+		room.setUnreadCount(1);
+		Launcher.roomService.insertOrUpdate(room);
+		
+		RoomsPanel.getContext().notifyDataSetChanged(false);	
+		ChatPanel.getContext().enterRoom(room.getRoomId());
+	}
 
 }

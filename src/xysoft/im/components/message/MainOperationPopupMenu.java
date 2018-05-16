@@ -21,7 +21,7 @@ public class MainOperationPopupMenu extends JPopupMenu
 
     private void initMenuItem()
     {
-        JMenuItem item1 = new JMenuItem("创建群聊");
+        JMenuItem item1 = new JMenuItem("创建群组");
         JMenuItem item2 = new JMenuItem("设置");
 
         item1.setUI(new RCMainOperationMenuItemUI());

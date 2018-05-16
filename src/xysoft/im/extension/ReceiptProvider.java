@@ -10,7 +10,7 @@ import org.xmlpull.v1.XmlPullParserException;
 public class ReceiptProvider extends ExtensionElementProvider<Receipt> {
 
 	public ReceiptProvider() {
-		// TODO Auto-generated constructor stub
+
 	}
 
 	@Override

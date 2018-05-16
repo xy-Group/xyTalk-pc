@@ -17,6 +17,13 @@ public class MimeTypeUtil
         MimeMap.put(".avi", "video/x-msvideo");
         MimeMap.put(".bin", "application/octet-stream");
         MimeMap.put(".bmp", "image/bmp");
+        MimeMap.put(".gif", "image/gif");
+        MimeMap.put(".jpeg", "image/jpeg");
+        MimeMap.put(".jpg", "image/jpeg");
+        MimeMap.put(".png", "image/png");
+        MimeMap.put(".svg", "image/image/svg-xml");
+        MimeMap.put(".tif", "image/image/tiff");
+        MimeMap.put(".tiff", "image/image/tiff");
         MimeMap.put(".c", "text/plain");
         MimeMap.put(".class", "application/octet-stream");
         MimeMap.put(".conf", "text/plain");
@@ -26,7 +33,6 @@ public class MimeTypeUtil
         MimeMap.put(".xls", "application/vnd.ms-excel");
         MimeMap.put(".xlsx", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
         MimeMap.put(".exe", "application/octet-stream");
-        MimeMap.put(".gif", "image/gif");
         MimeMap.put(".gtar", "application/x-gtar");
         MimeMap.put(".gz", "application/x-gzip");
         MimeMap.put(".h", "text/plain");
@@ -34,8 +40,6 @@ public class MimeTypeUtil
         MimeMap.put(".html", "text/html");
         MimeMap.put(".jar", "application/java-archive");
         MimeMap.put(".java", "text/plain");
-        MimeMap.put(".jpeg", "image/jpeg");
-        MimeMap.put(".jpg", "image/jpeg");
         MimeMap.put(".js", "application/x-javascript");
         MimeMap.put(".log", "text/plain");
         MimeMap.put(".m3u", "audio/x-mpegurl");
@@ -57,7 +61,6 @@ public class MimeTypeUtil
         MimeMap.put(".msg", "application/vnd.ms-outlook");
         MimeMap.put(".ogg", "audio/ogg");
         MimeMap.put(".pdf", "application/pdf");
-        MimeMap.put(".png", "image/png");
         MimeMap.put(".pps", "application/vnd.ms-powerpoint");
         MimeMap.put(".ppt", "application/vnd.ms-powerpoint");
         MimeMap.put(".pptx", "application/vnd.openxmlformats-officedocument.presentationml.presentation");
@@ -78,6 +81,7 @@ public class MimeTypeUtil
         MimeMap.put(".rar", "application/x-compress");
         MimeMap.put(".7z", "application/x-compress");
         MimeMap.put(".zip", "application/x-zip-compressed");
+        MimeMap.put(".iso", "application/iso");
        // MimeMap.put("", "*/*");
     }
 
@@ -87,7 +91,14 @@ public class MimeTypeUtil
         {
             suffix = "." + suffix;
         }
-        return MimeMap.get(suffix);
+        String mime = MimeMap.get(suffix);
+        if (mime==null){
+        	return "application/unknow";
+        }else
+        {
+        	return MimeMap.get(suffix);
+        }
+        
     }
 
 }

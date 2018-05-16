@@ -16,12 +16,13 @@ XyTalk.pc是XMPP协议的即时通讯IM客户端PC软件，可用于Windows/linu
 
 <br>
 <UL>
+  <LI>开发语言：Java8
   <LI>通讯协议： XMPP（用于消息）、HTTP
   <LI>通讯Server： Tigase + Nginx + Kafka + Zookeeper，针对XMPP我们做了部分定制，对Openfire服务器不保证支持
   <LI>OSGi service platform： Apache Felix
   <LI>WebServer Portal & API： Spring、Shiro、Activiti、Websocket 
   <LI>PC端UI： Awt/Swing（very low？知道intellij idea、Google Android Studio用什么开发的吗？）
-  <LI>异步框架： Java8内置CompletableFuture、或SwingWorker，原则是适合就好，不必过重
+  <LI>异步框架： Java8内置CompletableFuture、SwingWorker，原则是适合就好，不必过重
   <LI>缓存： 堆内缓存
   <LI>DB： MySQL（Server side）、SQLite（客户端）
   <LI>ORM：Mybatis
@@ -30,7 +31,7 @@ XyTalk.pc是XMPP协议的即时通讯IM客户端PC软件，可用于Windows/linu
 </UL>
 <br>
 <p>
-<H2>## TODO LIST ##</H2>
+<H2>## TODO LIST 待开发项  ##</H2>
 
  
 <H4>登陆</H4>
@@ -57,6 +58,7 @@ XyTalk.pc是XMPP协议的即时通讯IM客户端PC软件，可用于Windows/linu
 
 <br>
 1、编辑头像时更专业的截取器，支持缩放、位移。兼容vacrd的小文件（小于30K），对大图做压缩处理
+2、在登陆后mainframe出来前增加一个过场frame，用于loading，改善用户体验
 <br>
 <p>
 <H2>## 更新日志 ##</H2>
@@ -79,6 +81,10 @@ XyTalk.pc是XMPP协议的即时通讯IM客户端PC软件，可用于Windows/linu
 <p><br>2018-05-10： 
 <br>1、縮減了發送消息的UI更新速度
 <p><br>2018-05-11： 
-<br>1、启动进行muc的订阅，对原xmpp muc的邀请模式进行自动化处理
+<br>1、启动进行muc的订阅，对原xmpp muc的邀请模式进行自动化处理，抛弃原来发消息即邀请群成员的模式；
 <br>2、创建muc群组
+<p><br>2018-05-16： 
+<br>1、roster禁用的情况下获取fulljid（用于si文件）
+<br>2、在线文件发送
+<br>3、在线文件接收
 

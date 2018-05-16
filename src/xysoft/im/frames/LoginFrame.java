@@ -278,22 +278,44 @@ public class LoginFrame extends JFrame {
 			showMessage("请输入密码");
 		} else {
 			statusLabel.setVisible(false);
+			
+			SwingWorker aWorker = new SwingWorker() 
+	    	{
+			@Override
+			protected Object doInBackground() throws Exception {
+				XmppLogin login = new XmppLogin();
+				login.setUsername(name);
+				login.setPassword(pwd);
+				String flag = login.login();
 
-			XmppLogin login = new XmppLogin();
-			login.setUsername(name);
-			login.setPassword(pwd);
-			String flag = login.login();
-
-			if (flag.equals("ok")) {
-				this.dispose();
-				MainFrame frame = new MainFrame();
-				frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-				frame.setVisible(true);
+				if (flag.equals("ok")) {					
+					MainFrame frame = new MainFrame();
+					frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+					frame.setVisible(true);
+				}
+				else{
+					statusLabel.setVisible(true);
+					statusLabel.setText(flag);
+				}
+				return true;
 			}
-			else{
-				statusLabel.setVisible(true);
-				statusLabel.setText(flag);
-			}
+			@Override
+	        protected void done() {
+	            boolean done = false;
+	            try {
+	            	done = (boolean) get();
+	                // Update UI
+	                if (done)
+	                	hideMe();
+	            } catch (Exception ex) {
+	                ex.printStackTrace();
+	            }
+	           
+	        }
+	    	};
+	    	aWorker.execute();
+	    	statusLabel.setVisible(true);
+	    	statusLabel.setText("加载数据......");
 			 
 
 			// HttpPostTask task = new HttpPostTask();
@@ -323,6 +345,10 @@ public class LoginFrame extends JFrame {
 
 	}
 
+	private void hideMe() {
+		this.dispose();
+	}
+
 	@SuppressWarnings("unused")
 	private void processLoginResult(JSONObject ret) {
 		if (ret.get("status").equals("success")) {
@@ -339,7 +365,7 @@ public class LoginFrame extends JFrame {
 			currentUser.setUsername(usernameField.getText());
 			currentUserService.insertOrUpdate(currentUser);
 
-			this.dispose();
+			hideMe();
 
 			MainFrame frame = new MainFrame();
 			frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

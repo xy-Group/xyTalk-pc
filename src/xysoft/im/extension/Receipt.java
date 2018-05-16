@@ -6,7 +6,6 @@ import org.jivesoftware.smack.packet.ExtensionElement;
 public class Receipt implements ExtensionElement{
 
 	public Receipt() {
-		// TODO Auto-generated constructor stub
 		
 	}
 

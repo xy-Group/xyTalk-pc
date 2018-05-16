@@ -41,7 +41,13 @@ import javax.swing.text.StyleConstants;
 
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.log4j.Logger;
+import org.jivesoftware.smack.SmackException;
 import org.jivesoftware.smack.packet.Message.Type;
+import org.jivesoftware.smackx.filetransfer.FileTransferManager;
+import org.jivesoftware.smackx.filetransfer.OutgoingFileTransfer;
+import org.jxmpp.jid.Jid;
+import org.jxmpp.jid.impl.JidCreate;
+import org.jxmpp.stringprep.XmppStringprepException;
 
 import xysoft.im.adapter.message.BaseMessageViewHolder;
 import xysoft.im.adapter.message.MessageAdapter;
@@ -73,6 +79,7 @@ import xysoft.im.helper.MessageViewHolderCacheHelper;
 import xysoft.im.listener.ExpressionListener;
 import xysoft.im.service.ChatService;
 import xysoft.im.service.MucChatService;
+import xysoft.im.service.StateService;
 import xysoft.im.tasks.DownloadTask;
 import xysoft.im.tasks.HttpResponseListener;
 import xysoft.im.tasks.UploadTaskCallback;
@@ -307,6 +314,9 @@ public class ChatPanel extends ParentAvailablePanel {
 		messageEditorPanel.getUploadFileLabel().addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
+				//发送文件前先Ping一下，作用是获取对方的fullJid
+				StateService.sendPing(roomId);
+				
 				JFileChooser fileChooser = new JFileChooser();
 				fileChooser.setDialogTitle("请选择上传文件或图片");
 				fileChooser.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
@@ -316,7 +326,7 @@ public class ChatPanel extends ParentAvailablePanel {
 				if (selectedFile != null) {
 					String path = selectedFile.getAbsolutePath();
 					sendFileMessage(path);
-					showSendingMessage();
+					//showSendingMessage();
 				}
 
 				super.mouseClicked(e);
@@ -831,12 +841,37 @@ public class ChatPanel extends ParentAvailablePanel {
 	 *
 	 * @param path
 	 */
-	private void sendFileMessage(String path) {
-		// TODO: 通知服务器要开始上传文件
+	private void sendFileMessage(String fileFullPath) {
+		DebugUtil.debug("准备文件发送:"+fileFullPath);
+		
+		String fulljid = StateService.getFullJid(roomId);
+		if (fulljid==null || fulljid.isEmpty()){
+			//对方不在线或无法获得fulljid
+			//离线文件
+			sendOfflineFile();
+		}
+		else{			
+			// TODO: 通知服务器要开始在线上传文件
+			FileTransferManager manager = FileTransferManager.getInstanceFor(Launcher.connection);
+			OutgoingFileTransfer transfer;
+			try {
+				transfer = manager.createOutgoingFileTransfer(JidCreate.entityFullFrom(fulljid));
+				transfer.sendFile(new File(fileFullPath), "file transfer");
+				
+				// TODO: 更新UI显示上传文件
+				notifyUIStartUploadFile(fileFullPath, randomMessageId());//这里使用随机消息id，是因为这并不是xmpp message
 
-		// TODO: 收到服务器响应，调用下面方法开始上传文件
-		notifyStartUploadFile(path, randomMessageId());
-		// WebSocketClient.getContext().sendFileMessage(roomId, path);
+			} catch (XmppStringprepException | SmackException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		
+	}
+
+	private void sendOfflineFile() {
+		// TODO 发送离线文件
+		JOptionPane.showMessageDialog(null,"开始转为离线文件发送");
 	}
 
 	/**
@@ -874,7 +909,7 @@ public class ChatPanel extends ParentAvailablePanel {
 			}
 
 			sendFileMessage(path);
-			showSendingMessage();
+			//showSendingMessage();
 		}
 	}
 
@@ -884,7 +919,7 @@ public class ChatPanel extends ParentAvailablePanel {
 	 * @param uploadFilename
 	 * @param fileId
 	 */
-	public void notifyStartUploadFile(String uploadFilename, String fileId) {
+	public void notifyUIStartUploadFile(String uploadFilename, String fileId) {
 		uploadFile(uploadFilename, fileId);
 		uploadingOrDownloadingFiles.add(fileId);
 	}
@@ -898,7 +933,13 @@ public class ChatPanel extends ParentAvailablePanel {
 		final MessageItem item = new MessageItem();
 		String type = MimeTypeUtil.getMime(uploadFilename.substring(uploadFilename.lastIndexOf(".")));
 		final boolean isImage = type.startsWith("image/");
-
+		
+		File file = new File(uploadFilename);
+		if (!file.exists()) {
+			JOptionPane.showMessageDialog(null, "文件不存在", "上传失败", JOptionPane.ERROR_MESSAGE);
+			return;
+		} 
+		
 		// 发送的是图片
 		int[] bounds;
 		String name = uploadFilename.substring(uploadFilename.lastIndexOf(File.separator) + 1); // 文件名
@@ -916,10 +957,10 @@ public class ChatPanel extends ParentAvailablePanel {
 			imageAttachment.setHeight(bounds[1]);
 			imageAttachment.setImageUrl(uploadFilename);
 			imageAttachment.setTitle(name);
-			item.setImageAttachment(new ImageAttachmentItem(imageAttachment));
 			dbMessage.setImageAttachmentId(imageAttachment.getId());
 			imageAttachmentService.insertOrUpdate(imageAttachment);
-
+			
+			item.setImageAttachment(new ImageAttachmentItem(imageAttachment));
 			item.setMessageType(MessageItem.RIGHT_IMAGE);
 		} else {
 
@@ -928,10 +969,10 @@ public class ChatPanel extends ParentAvailablePanel {
 			System.out.println(File.separator);
 			fileAttachment.setLink(uploadFilename);
 			fileAttachment.setTitle(name);
-			item.setFileAttachment(new FileAttachmentItem(fileAttachment));
 			dbMessage.setFileAttachmentId(fileAttachment.getId());
 			fileAttachmentService.insertOrUpdate(fileAttachment);
-
+			
+			item.setFileAttachment(new FileAttachmentItem(fileAttachment));
 			item.setMessageType(MessageItem.RIGHT_ATTACHMENT);
 		}
 
@@ -954,86 +995,136 @@ public class ChatPanel extends ParentAvailablePanel {
 		addMessageItemToEnd(item);
 
 		messageService.insertOrUpdate(dbMessage);
+		
+		if (Launcher.FILECUTTINGTRANSFER){ //分块传输		
+			cuttingTransfer(uploadFilename, fileId, item, isImage, file, dbMessage);
+		}
+		else{ //不分块,整体传输
+			wholeTransfer(uploadFilename, fileId, item, isImage, file, dbMessage);
+		}
+	}
+	
+	private void cuttingTransfer(String uploadFilename, String fileId, final MessageItem item, final boolean isImage,
+			File file, Message dbMessage) {
+		// 分块上传
+		final List<byte[]> dataParts = cuttingFile(file);
+		final int[] index = { 1 };
 
-		File file = new File(uploadFilename);
-		if (!file.exists()) {
-			JOptionPane.showMessageDialog(null, "文件不存在", "上传失败", JOptionPane.ERROR_MESSAGE);
-		} else {
-			// 分块上传
-			final List<byte[]> dataParts = cuttingFile(file);
-			final int[] index = { 1 };
+		// TODO：向服务器上传文件
+		// TODO http post file
+		final int[] uploadedBlockCount = { 1 };
 
-			// TODO：向服务器上传文件
-			final int[] uploadedBlockCount = { 1 };
+		UploadTaskCallback callback = new UploadTaskCallback() {
+			@Override
+			public void onTaskSuccess() {
+				// 当收到上一个分块的响应后，才能开始上传下一个分块，否则容易造成分块接收顺序错乱
+				uploadedBlockCount[0]++;
+				if (uploadedBlockCount[0] <= dataParts.size()) {
+					sendDataPart(uploadedBlockCount[0], dataParts, this);
+				}
 
-			UploadTaskCallback callback = new UploadTaskCallback() {
-				@Override
-				public void onTaskSuccess() {
-					// 当收到上一个分块的响应后，才能开始上传下一个分块，否则容易造成分块接收顺序错乱
-					uploadedBlockCount[0]++;
-					if (uploadedBlockCount[0] <= dataParts.size()) {
-						sendDataPart(uploadedBlockCount[0], dataParts, this);
+				int progress = (int) ((index[0] * 1.0f / dataParts.size()) * 100);
+				index[0]++;
+
+				// 上传完成
+				if (progress == 100) {
+					uploadingOrDownloadingFiles.remove(fileId);
+
+					Room room = roomService.findById(roomId);
+					room.setLastMessage(dbMessage.getMessageContent());
+					roomService.update(room);
+					RoomsPanel.getContext().updateRoomItem(roomId);
+
+					if (uploadFilename.startsWith(ClipboardUtil.CLIPBOARD_TEMP_DIR)) {
+						File file = new File(uploadFilename);
+						file.delete();
 					}
+				}
 
-					int progress = (int) ((index[0] * 1.0f / dataParts.size()) * 100);
-					index[0]++;
+				//这里有个不合理的地方，每次分块都循环全部消息，效率太低
+				for (int i = messageItems.size() - 1; i >= 0; i--) {
+					if (messageItems.get(i).getId().equals(item.getId())) {
+						messageItems.get(i).setProgress(progress);
+						messageService.updateProgress(messageItems.get(i).getId(), progress);
 
-					// 上传完成
-					if (progress == 100) {
-						uploadingOrDownloadingFiles.remove(fileId);
-
-						Room room = roomService.findById(roomId);
-						room.setLastMessage(dbMessage.getMessageContent());
-						roomService.update(room);
-						RoomsPanel.getContext().updateRoomItem(roomId);
-
-						if (uploadFilename.startsWith(ClipboardUtil.CLIPBOARD_TEMP_DIR)) {
-							File file = new File(uploadFilename);
-							file.delete();
-						}
-					}
-
-					for (int i = messageItems.size() - 1; i >= 0; i--) {
-						if (messageItems.get(i).getId().equals(item.getId())) {
-							messageItems.get(i).setProgress(progress);
-							messageService.updateProgress(messageItems.get(i).getId(), progress);
-
-							BaseMessageViewHolder viewHolder = getViewHolderByPosition(i);
-							if (viewHolder != null) {
-								if (isImage) {
-									MessageRightImageViewHolder holder = (MessageRightImageViewHolder) viewHolder;
-									if (progress >= 100) {
-										holder.sendingProgress.setVisible(false);
-									}
-								} else {
-									MessageRightAttachmentViewHolder holder = (MessageRightAttachmentViewHolder) viewHolder;
-
-									// 隐藏"等待上传"，并显示进度条
-									holder.sizeLabel.setVisible(false);
-									holder.progressBar.setVisible(true);
-									holder.progressBar.setValue(progress);
-
-									if (progress >= 100) {
-										holder.progressBar.setVisible(false);
-										holder.sizeLabel.setVisible(true);
-										holder.sizeLabel.setText(fileCache.fileSizeString(uploadFilename));
-									}
+						BaseMessageViewHolder viewHolder = getViewHolderByPosition(i);
+						if (viewHolder != null) {
+							if (isImage) {
+								MessageRightImageViewHolder holder = (MessageRightImageViewHolder) viewHolder;
+								if (progress >= 100) {
+									holder.sendingProgress.setVisible(false);
 								}
+							} else {
+								MessageRightAttachmentViewHolder holder = (MessageRightAttachmentViewHolder) viewHolder;
 
+								// 隐藏"等待上传"，并显示进度条
+								holder.sizeLabel.setVisible(false);
+								holder.progressBar.setVisible(true);
+								holder.progressBar.setValue(progress);
+
+								if (progress >= 100) {
+									holder.progressBar.setVisible(false);
+									holder.sizeLabel.setVisible(true);
+									holder.sizeLabel.setText(fileCache.fileSizeString(uploadFilename));
+								}
 							}
-							break;
+
 						}
+						break;
+					}
+				}
+
+				logger.debug("file uploading, progress = " + progress + "%");
+			}
+
+			@Override
+			public void onTaskError() {
+			}
+		};
+
+		sendDataPart(0, dataParts, callback);
+	}
+
+	private void wholeTransfer(String uploadFilename, String fileId,final MessageItem item, final boolean isImage, File file, Message dbMessage) {
+		
+		uploadingOrDownloadingFiles.remove(fileId);
+
+		Room room = roomService.findById(roomId);
+		room.setLastMessage("发送文件");
+		roomService.update(room);
+		RoomsPanel.getContext().updateRoomItem(roomId);
+
+		if (uploadFilename.startsWith(ClipboardUtil.CLIPBOARD_TEMP_DIR)) {
+			file.delete();
+		}
+		
+		// 循环全部消息的原因是有可能在发送文件的同时会到来新消息，所以不能粗暴的设置最后一条消息为文件消息
+		for (int i = messageItems.size() - 1; i >= 0; i--) {
+			if (messageItems.get(i).getId().equals(item.getId())) {
+				messageItems.get(i).setProgress(100);
+				messageService.updateProgress(messageItems.get(i).getId(), 100);
+
+				BaseMessageViewHolder viewHolder = getViewHolderByPosition(i);
+				if (viewHolder != null) {
+					if (isImage) {
+						MessageRightImageViewHolder holder = (MessageRightImageViewHolder) viewHolder;
+						holder.sendingProgress.setVisible(false);
+					} else {
+						MessageRightAttachmentViewHolder holder = (MessageRightAttachmentViewHolder) viewHolder;
+
+						// 隐藏"等待上传"，并显示进度条
+						holder.sizeLabel.setVisible(false);
+						holder.progressBar.setVisible(true);
+						holder.progressBar.setValue(100);
+
+						holder.progressBar.setVisible(false);
+						holder.sizeLabel.setVisible(true);
+						holder.sizeLabel.setText(fileCache.fileSizeString(uploadFilename));
 					}
 
-					logger.debug("file uploading, progress = " + progress + "%");
 				}
-
-				@Override
-				public void onTaskError() {
-				}
-			};
-
-			sendDataPart(0, dataParts, callback);
+				break;
+			}
 		}
 	}
 
@@ -1293,8 +1384,8 @@ public class ChatPanel extends ParentAvailablePanel {
 			Message dbMessage = null;
 			String messageId = message.getStanzaId();
 			String content = message.getBody();
-			String fromBarejid = JID.bare(message.getFrom().asBareJid().toString());
-			String fromUsername = JID.username(message.getFrom().asBareJid().toString());
+			String fromBarejid = message.getFrom().asBareJid().toString();
+			String fromUsername = JID.usernameByJid(message.getFrom().asBareJid().toString());
 			if (messageId == null) {
 				DebugUtil.debug("新消息无编号：" + message.toString());
 			} else {

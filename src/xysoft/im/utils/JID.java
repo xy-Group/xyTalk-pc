@@ -1,5 +1,7 @@
 package xysoft.im.utils;
 
+import xysoft.im.app.Launcher;
+
 public class JID {
 
 	public JID() {
@@ -11,9 +13,9 @@ public class JID {
 		return "test1@win7-1803071731";
 	}
 
-	public static String username(String from) {
-		// TODO Auto-generated method stub
-		return "test1";
+	public static String usernameByJid(String from) {
+
+		return from.substring(0, from.indexOf("@"));
 	}
 
 	public static String nameByMuc(String fromfull) {
@@ -28,6 +30,11 @@ public class JID {
 			return nickname.substring(0,nickname.indexOf("-"));
 		else
 			return nickname;
+	}
+
+	public static String full(String jid) {
+		// bareJid补全fullJid
+		return jid+"/"+Launcher.RESOURCE;
 	}
 
 }

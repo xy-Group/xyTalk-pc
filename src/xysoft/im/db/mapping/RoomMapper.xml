@@ -38,15 +38,6 @@
 		SELECT count(1) FROM room
 	</select>
 
-    <select id="getMsgNum" resultType="java.lang.Integer">
-		SELECT msgSum FROM room where roomId = #{id}
-	</select>
-	
-	<select id="getUnReadNum" resultType="java.lang.Integer">
-		SELECT msgSum FROM room where roomId = #{id}
-	</select>
-
-
     <select id="exist" resultType="java.lang.Integer">
 		SELECT count(1) FROM room where roomId = #{id}
 	</select>

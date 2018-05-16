@@ -12,6 +12,8 @@ import xysoft.im.db.service.RoomService;
 import xysoft.im.entity.SelectUserData;
 import xysoft.im.frames.AddOrRemoveMemberDialog;
 import xysoft.im.frames.MainFrame;
+import xysoft.im.utils.JID;
+
 import javax.swing.*;
 import javax.swing.border.LineBorder;
 import java.awt.*;
@@ -23,7 +25,11 @@ import java.util.List;
 
 public class RoomMembersPanel extends ParentAvailablePanel
 {
-    public static final int ROOM_MEMBER_PANEL_WIDTH = 200;
+    /**
+	 * 右侧单聊群聊成员浮动窗
+	 */
+	private static final long serialVersionUID = -7968437757611971512L;
+	public static final int ROOM_MEMBER_PANEL_WIDTH = 200;
     private static RoomMembersPanel roomMembersPanel;
 
     private RCListView listView = new RCListView();
@@ -32,11 +38,8 @@ public class RoomMembersPanel extends ParentAvailablePanel
 
     private List<String> members = new ArrayList<>();
     private String roomId;
-    private RoomService roomService = Launcher.roomService;
-    private CurrentUserService currentUserService = Launcher.currentUserService;
     private CurrentUser currentUser;
     private Room room;
-    private ContactsUserService contactsUserService = Launcher.contactsUserService;
     private RoomMembersAdapter adapter;
     private AddOrRemoveMemberDialog addOrRemoveMemberDialog;
 
@@ -49,7 +52,7 @@ public class RoomMembersPanel extends ParentAvailablePanel
         initView();
         setListeners();
 
-        currentUser = currentUserService.findAll().get(0);
+        currentUser = Launcher.currentUserService.findAll().get(0);
     }
 
     private void initComponents()
@@ -88,7 +91,7 @@ public class RoomMembersPanel extends ParentAvailablePanel
     public void setRoomId(String roomId)
     {
         this.roomId = roomId;
-        room = roomService.findById(roomId);
+        room = Launcher.roomService.findById(roomId);
     }
 
     public void setVisibleAndUpdateUI(boolean aFlag)
@@ -108,12 +111,12 @@ public class RoomMembersPanel extends ParentAvailablePanel
         {
             try
             {
-                room = roomService.findById(roomId);
+                room = Launcher.roomService.findById(roomId);
             }
             catch (Exception e)
             {
                 e.printStackTrace();
-                room = roomService.findById(roomId);
+                room = Launcher.roomService.findById(roomId);
             }
 
             getRoomMembers();
@@ -134,11 +137,11 @@ public class RoomMembersPanel extends ParentAvailablePanel
 
             if (isRoomCreator())
             {
-                leaveButton.setText("解散群聊");
+                leaveButton.setText("解散群组");
             }
             else
             {
-                leaveButton.setText("退出群聊");
+                leaveButton.setText("退出群组");
             }
 
         }
@@ -152,9 +155,9 @@ public class RoomMembersPanel extends ParentAvailablePanel
         if (room.getType().equals("d"))
         {
             members.add(currentUser.getUsername());
-            members.add(room.getName());
+            members.add(JID.usernameByJid(room.getRoomId()));
         }
-        else
+        else //群聊
         {
             String roomMembers = room.getMember();
             String[] userArr = new String[]{};
@@ -244,7 +247,7 @@ public class RoomMembersPanel extends ParentAvailablePanel
                     int ret = JOptionPane.showConfirmDialog(MainFrame.getContext(), "确认解散群聊？", "确认解散群聊", JOptionPane.YES_NO_OPTION);
                     if (ret == JOptionPane.YES_OPTION)
                     {
-                        deleteChannelOrGroup(room.getRoomId());
+                        deleteGroup(room.getRoomId());
                     }
                 }
                 else
@@ -252,7 +255,7 @@ public class RoomMembersPanel extends ParentAvailablePanel
                     int ret = JOptionPane.showConfirmDialog(MainFrame.getContext(), "退出群聊，并从聊天列表中删除该群聊", "确认退出群聊", JOptionPane.YES_NO_OPTION);
                     if (ret == JOptionPane.YES_OPTION)
                     {
-                        leaveChannelOrGroup(room.getRoomId());
+                        leaveGroup(room.getRoomId());
                     }
                 }
                 super.mouseClicked(e);
@@ -266,7 +269,7 @@ public class RoomMembersPanel extends ParentAvailablePanel
      */
     private void selectAndAddRoomMember()
     {
-        List<ContactsUser> contactsUsers = contactsUserService.findAll();
+        List<ContactsUser> contactsUsers = Launcher.contactsUserService.findAll();
         List<SelectUserData> selectUsers = new ArrayList<>();
 
         for (ContactsUser contactsUser : contactsUsers)
@@ -350,21 +353,21 @@ public class RoomMembersPanel extends ParentAvailablePanel
     }
 
     /**
-     * 删除Channel或Group
+     * 删除MucRoom
      *
      * @param roomId
      */
-    private void deleteChannelOrGroup(String roomId)
+    private void deleteGroup(String roomId)
     {
         JOptionPane.showMessageDialog(null, "删除群聊：" + roomId, "删除群聊", JOptionPane.INFORMATION_MESSAGE);
     }
 
     /**
-     * 退出Channel或Group
+     * 退出MUC订阅
      *
      * @param roomId
      */
-    private void leaveChannelOrGroup(final String roomId)
+    private void leaveGroup(final String roomId)
     {
         JOptionPane.showMessageDialog(null, "退出群聊：" + roomId, "退出群聊", JOptionPane.INFORMATION_MESSAGE);
     }

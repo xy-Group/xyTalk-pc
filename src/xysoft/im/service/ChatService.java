@@ -1,11 +1,8 @@
 package xysoft.im.service;
 
-import java.util.List;
 
 import org.jivesoftware.smack.SmackException.NotConnectedException;
-import org.jivesoftware.smack.chat.ChatManagerListener;
-import org.jivesoftware.smack.chat.ChatMessageListener;
-import org.jivesoftware.smack.packet.ExtensionElement;
+import org.jivesoftware.smack.packet.Stanza;
 import org.jivesoftware.smack.packet.Message.Type;
 import org.jxmpp.jid.EntityBareJid;
 import org.jxmpp.jid.Jid;
@@ -15,7 +12,6 @@ import org.jivesoftware.smack.chat2.*;
 //import org.jivesoftware.smack.packet.Message;
 import xysoft.im.db.model.Message;
 import xysoft.im.db.model.Room;
-import xysoft.im.entity.MessageItem;
 import xysoft.im.extension.Receipt;
 import xysoft.im.panels.ChatPanel;
 import xysoft.im.panels.RoomsPanel;
@@ -24,20 +20,64 @@ import xysoft.im.utils.JID;
 import xysoft.im.app.Launcher;
 
 public class ChatService {
+	
+	public static void messageProcess(Stanza stanza) {
+		// 消息包
+			org.jivesoftware.smack.packet.Message message = (org.jivesoftware.smack.packet.Message) stanza;
+			if (message.getType() == org.jivesoftware.smack.packet.Message.Type.chat) {// 单聊
+				if (message.getBody() == null) {
+					DebugUtil.debug("(抛弃的)processPacket-Message.Type.chat:" + message.toString());
+				} else {
+					boolean mucInvition = message.getExtension("x","xytalk:muc:invitation") != null;
+				        if (mucInvition) {//群组邀请消息-离线,加入群
+				        	MucChatService.join(message);
+				        	DebugUtil.debug("(离线群邀请)processPacket-Message.Type.chat:" + message.toString());
+				        }
+				        else{
+							ChatService.recivePacket(message);
+							DebugUtil.debug("(单聊)chat:" + message.toString());
+				        }
+				}
 
-	static String from;
-	static Jid fromJID;
-	static String datetime;
-	static String subject;
-	static String body;
-	static String id;
-	static String threadId;
-	static String barejid;
-	static String fromUsername;
-	static List<ExtensionElement> extensions;
-	static ExtensionElement currExtension;
-	static String currElementName;
-	static String currNamespace;
+			}
+			if (message.getType() == org.jivesoftware.smack.packet.Message.Type.headline) {// 重要消息
+				HeadlineChatService.recivePacket(message);
+				DebugUtil.debug("processPacket-Message.Type.headline:" + message.toString());
+			}
+			if (message.getType() == org.jivesoftware.smack.packet.Message.Type.normal) {
+				// 可能是普通消息，也可能是回执消息，也可能是扩展消息
+				if (message.hasExtension("urn:xmpp:receipts")) {
+					// 回执消息
+					ChatService.receiptArrived(message);
+					DebugUtil.debug("urn:xmpp:receipts:" + message.toString());
+				} else if (message.hasExtension("urn:xmpp:attention:0")) {
+					// 震动提醒消息
+					DebugUtil.debug("urn:xmpp:attention:0:" + message.toString());
+				} else if (message.hasExtension("http://jabber.org/protocol/muc#user")) {
+					// 被邀请加入群聊
+					DebugUtil.debug("被邀请加入群聊:" + message.getFrom().toString());
+				} else if (message.hasExtension("jabber:x:conference")) {
+					// 被邀请加入群聊
+					DebugUtil.debug("被邀请加入群聊:" + message.getFrom().toString());
+				} else {
+					if (message.getBody() == null) {
+						DebugUtil.debug("(抛弃的)processPacket-Message.Type.normal:" + message.toString());
+					} else {
+						ChatService.recivePacket(message);
+						DebugUtil.debug("processPacket-Message.Type.normal:" + message.toString());
+					}
+				}
+			}
+			if (message.getType() == org.jivesoftware.smack.packet.Message.Type.groupchat) {// 表示群聊
+				DebugUtil.debug("processPacket-Message.Type.groupchat:" + message.toString());
+				MucChatService.recivePacket(message);
+			}
+			if (message.getType() == org.jivesoftware.smack.packet.Message.Type.error) {// 表示错误信息
+				DebugUtil.debug("processPacket-Message.Type.error:" + message.toString());
+				ErrorMsgService.recivePacket(message);
+			}
+		
+	}
 
 	public static void recivePacket(org.jivesoftware.smack.packet.Message message) {
 		// 消息抵达后，客户端处在4种状况
@@ -46,31 +86,24 @@ public class ChatService {
 		//	3、当前聊天者不为新消息发送者，联系人列表中不存在新消息发送者
 		//	4、用户离线，但上线后同样在1-3之间处理
 		
-		fromJID = message.getFrom();
-		body = message.getBody();
-		subject = message.getSubject();
-		id = message.getStanzaId();
-		threadId = message.getThread();
-
-		// 通过barejid判断是否需要新建联系人列表项
-		from = fromJID.asBareJid().toString();
-		barejid = JID.bare(fromJID.asBareJid().toString());
-		fromUsername = JID.username(from);
+		Jid fromJID = message.getFrom();
+		String body = message.getBody();
+		String barejid = fromJID.asBareJid().toString();
 
 		if (barejid != null && body!=null) {
 			if (Launcher.currRoomId.equals(barejid)) {
-				// 当前聊天者即为新消息发送者
+				// 1、当前聊天者即为新消息发送者
 				updateChatPanel(message);
 			} else {
 				if (Launcher.roomService.exist(barejid)) {
-					// 联系人列表中存在消息发送者,更新未读信息，则修改
+					// 2、联系人列表中存在消息发送者,更新未读信息
 					updateRoom(message);
 					
 				} else {
-					// 联系人中不存在新消息发送者,则新建一个联系人
+					// 3、联系人中不存在新消息发送者,则新建一个联系人
 					createNewRoom(message);
 				}
-				dbMessagePersistence();
+				dbMessagePersistence(message);
 			}
 		}
 	}
@@ -82,24 +115,28 @@ public class ChatService {
 	}
 
 	private static void updateRoom(org.jivesoftware.smack.packet.Message message) {
-		Room room = Launcher.roomService.findById(barejid);
+		Room room = Launcher.roomService.findById(message.getFrom().asBareJid().toString());
 		room.setLastMessage(message.getBody());
 		room.setLastChatAt(System.currentTimeMillis());
 		room.setMsgSum(room.getMsgSum() + 1);
 		room.setUnreadCount(room.getUnreadCount() + 1);
 		Launcher.roomService.insertOrUpdate(room);
 		
-		updateLeftItemUI();
+		updateLeftItemUI(message.getFrom().asBareJid().toString());
 	}
 
 	// 联系人中不存在新消息发送者,则新建一个联系人
 	private static void createNewRoom(org.jivesoftware.smack.packet.Message message) {
+		
+		String barejid = message.getFrom().asBareJid().toString();
+		String fromUsername = JID.usernameByJid(barejid);
+		
 		Room room = new Room();
 		room.setLastMessage(message.getBody());
 		room.setLastChatAt(System.currentTimeMillis());
 		room.setMsgSum(1);
-		room.setName(Launcher.userService.getName(fromUsername));
-		room.setRoomId(barejid);
+		room.setName(Launcher.contactsUserService.findByUsername(fromUsername).getName());
+		room.setRoomId(message.getFrom().asBareJid().toString());
 		room.setTotalReadCount(0);
 		room.setUpdatedAt("2018-01-01T06:38:55.119Z");
 		room.setType("d");
@@ -115,14 +152,20 @@ public class ChatService {
 		RoomsPanel.getContext().notifyDataSetChanged(false);		
 	}
 
-	private static void updateLeftItemUI() {
+	private static void updateLeftItemUI(String bareJid) {
 
 		DebugUtil.debug("新消息导致联系人UI-Item改变");
-		RoomsPanel.getContext().updateRoomItem(barejid);		
+		RoomsPanel.getContext().updateRoomItem(bareJid);		
 	}
 
-	private static void dbMessagePersistence() {
-		// 消息持久化数据操作
+	private static void dbMessagePersistence(org.jivesoftware.smack.packet.Message message) {
+		
+		Jid fromJID = message.getFrom();
+		String body = message.getBody();
+		String id = message.getStanzaId(); //使用xmpp message消息ID
+		String barejid = fromJID.asBareJid().toString();
+		String fromUsername = JID.usernameByJid(barejid);
+
 		Message dbMessage = null;
 
         if (id == null)
@@ -164,41 +207,19 @@ public class ChatService {
 			e1.printStackTrace();
 		}
 		Chat chat = ChatManager.getInstanceFor(Launcher.connection).chatWith(jid);
-
-//        ChatManager chatManager = ChatManager.getInstanceFor(Launcher.connection);       
-//        chatManager.addChatListener(new ChatManagerListener() {               
-//        	
-//            @Override
-//            public void chatCreated(Chat cc, boolean bb) {
-//                // 当收到来自对方的消息时触发监听函数
-//                cc.addMessageListener(new ChatMessageListener() {
-//                	//消息状态监听，如开始输入\正在输入\暂停
-//                	//inactive\composing\paused
-//					@Override
-//					public void processMessage(Chat chat, org.jivesoftware.smack.packet.Message message) {
-//						// TODO Auto-generated method stub						
-//						DebugUtil.debug( roomId + "processMessage:："+ message.getThread());					
-//					}
-//                });
-//            }
-//        });
     
         org.jivesoftware.smack.packet.Message message = new org.jivesoftware.smack.packet.Message();
         message.setType(Type.chat);
         message.addExtension(new Receipt());
         message.setBody(content);
-        try {
-			try {
-				chat.send(message);
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			DebugUtil.debug( "chat.sendMessage:："+ message.toString());		
-		} catch (NotConnectedException e) {
+		try {
+			chat.send(message);
+			DebugUtil.debug( "chat.sendMessage:："+ message.toString());	
+		} catch (NotConnectedException | InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+
 	}
 
 	public static void chatstatesArrived(org.jivesoftware.smack.packet.Message message) {

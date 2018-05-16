@@ -1,14 +1,19 @@
 package xysoft.im.frames;
 
 import xysoft.im.app.Launcher;
+import xysoft.im.cache.UserCache;
 import xysoft.im.components.*;
 import xysoft.im.db.model.ContactsUser;
 import xysoft.im.db.service.ContactsUserService;
 import xysoft.im.entity.SelectUserData;
 import xysoft.im.panels.SelectUserPanel;
+import xysoft.im.service.MucChatService;
 import xysoft.im.utils.FontUtil;
 import javax.swing.*;
 import javax.swing.border.LineBorder;
+
+import org.jxmpp.jid.parts.Resourcepart;
+
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -161,6 +166,17 @@ public class CreateGroupDialog extends JDialog
                     }
 
                     checkRoomExists(roomName);
+                    try {
+                    	List<String> selectedUsers = new ArrayList<String>();
+                    	selectedUsers.add("test1@win7-1803071731");
+                    	selectedUsers.add("test2@win7-1803071731");
+                    	
+						MucChatService.createChatRoom(groupNameTextField.getText(),selectedUsers, UserCache.CurrentUserName+"-"+UserCache.CurrentUserRealName)
+							.join(Resourcepart.from(UserCache.CurrentUserName + "-" + UserCache.CurrentUserRealName));
+					} catch (Exception e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
                 }
 
 
@@ -211,7 +227,7 @@ public class CreateGroupDialog extends JDialog
         }
         sb.append("]");
 
-        JOptionPane.showMessageDialog(MainFrame.getContext(), "创建群聊", "创建群聊", JOptionPane.INFORMATION_MESSAGE);
+        JOptionPane.showMessageDialog(MainFrame.getContext(), "创建群组", "创建群组", JOptionPane.INFORMATION_MESSAGE);
     }
 
     public static CreateGroupDialog getContext()

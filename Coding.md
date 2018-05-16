@@ -57,13 +57,23 @@ processPacket-IQ:<iq to='wangxin@win7-1803071731/pc' id='kbecP-46' type='result'
 <message to="wangxin@win7-1803071731" from="mc1@muc.win7-1803071731" id="w1h78-205">
   <x xmlns="http://jabber.org/protocol/muc#user">
     <invite from="test1@win7-1803071731/Spark">
-      <reason>请把我加入会议中。</reason>
+      <reason>请加入会议。</reason>
     </invite>
   </x>
 </message>
 
+针对离线用户的邀请：
+<message to="test2@win7-1803071731" type="chat">
+  <body>请加入会议</body>
+  <x xmlns="xytalk:muc:invitation">
+    <roomid>1526287366130@muc.win7-1803071731</roomid>
+    <roomName>群组名称</roomName>
+  </x>
+</message>
 
-被邀请（其他邀请方式）
+
+
+被邀请（其他邀请方式）不支持此方式
 <message to="wangxin@win7-1803071731" from="test1@win7-1803071731/1120190887-tigase-7">
   <x xmlns="jabber:x:conference" jid="mc1@muc.win7-1803071731"/>
 </message>

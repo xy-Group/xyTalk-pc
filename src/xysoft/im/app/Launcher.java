@@ -15,7 +15,6 @@ import xysoft.im.db.service.FileAttachmentService;
 import xysoft.im.db.service.ImageAttachmentService;
 import xysoft.im.db.service.MessageService;
 import xysoft.im.db.service.RoomService;
-import xysoft.im.db.service.UserService;
 import xysoft.im.frames.AutoLoginFrame;
 import xysoft.im.frames.LoginFrame;
 import xysoft.im.frames.MainFrame;
@@ -37,13 +36,14 @@ public class Launcher
     public static final int HOSTPORT = 5222;
     public static final int HOSTSSLPORT = 5223;
     public static final String APP_VERSION = "0.1";
-    
+	public static final String MUCSERVICE = "@muc.";
+	public static final boolean FILECUTTINGTRANSFER = false; //分块传输文件
+	public static final boolean ISFILETRANSFERIBBONLY = false; //建议设置为false，ibb不适合发送大文件
     //############  最重要且必须设置的项  End ############ 
     
     private JFrame currentFrame;
     public static SqlSession sqlSession;
     public static RoomService roomService;
-    public static UserService userService;
     public static CurrentUserService currentUserService;
     public static MessageService messageService;
     public static ContactsUserService contactsUserService;
@@ -52,19 +52,22 @@ public class Launcher
     public static  AbstractXMPPConnection connection = null;
 	//来消息声音提示
 	public static final boolean IS_PLAYMESSAGESOUND = true;
+
+
     public static String userHome;
     public static String appFilesBasePath;
 	public static String currRoomId = "";
 
     public static int currentWindowWidth ;
     public static int currentWindowHeight ;
+
+
     
 
     static
     {
         sqlSession = DbUtils.getSqlSession();
         roomService = new RoomService(sqlSession);
-        userService = new UserService(sqlSession);
         currentUserService = new CurrentUserService(sqlSession);
         messageService = new MessageService(sqlSession);
         contactsUserService = new ContactsUserService(sqlSession);
