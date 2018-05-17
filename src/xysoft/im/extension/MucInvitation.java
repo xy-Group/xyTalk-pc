@@ -19,7 +19,12 @@ import org.xmlpull.v1.XmlPullParser;
  *
  */
 public class MucInvitation implements ExtensionElement
-{
+{	
+	public static final String ELEMENT_NAME = "x";
+	public static final String NAMESPACE = "xytalk:muc:invitation";
+	private String roomid;
+	private String roomName;
+	
     public MucInvitation() {
 		super();
 	}
@@ -30,12 +35,7 @@ public class MucInvitation implements ExtensionElement
 		this.roomName = roomName;
 	}
 
-	public static final String ELEMENT_NAME = "x";
 
-    public static final String NAMESPACE = "xytalk:muc:invitation";
-    
-    private String roomid;
-    private String roomName;
 
     public String getRoomName() {
 		return roomName;
@@ -54,23 +54,25 @@ public class MucInvitation implements ExtensionElement
     }
 
     public String getElementName() {
-	return ELEMENT_NAME;
+    	return ELEMENT_NAME;
     }
 
     public String getNamespace() {
-	return NAMESPACE;
+    	return NAMESPACE;
     }
 
     public String toXML() {
-        String buf = "<" + getElementName() + " xmlns=\"" + getNamespace() + "\">" +
-                "<roomid>" +
-                roomid +
-                "</roomid>" +
-                "<roomName>" +
-                roomName +
-                "</roomName>" +
-                "</" + getElementName() + ">";
-        return buf;
+    	StringBuffer sb =new StringBuffer();
+    	sb.append("<" + getElementName() + " xmlns=\"" + getNamespace() + "\">");
+    	sb.append("<roomid>" );
+    	sb.append(roomid );
+    	sb.append("</roomid>" );
+    	sb.append("<roomName>" );
+    	sb.append(roomName );
+    	sb.append( "</roomName>");
+    	sb.append( "</" + getElementName() + ">");
+        
+        return sb.toString();
     }
 
     public static class Provider extends ExtensionElementProvider<MucInvitation> {

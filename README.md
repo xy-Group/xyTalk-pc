@@ -18,16 +18,17 @@ XyTalk.pc是XMPP协议的即时通讯IM客户端PC软件，可用于Windows/linu
 <UL>
   <LI>开发语言：Java8
   <LI>通讯协议： XMPP（用于消息）、HTTP
-  <LI>通讯Server： Tigase + Nginx + Kafka + Zookeeper，针对XMPP我们做了部分定制，对Openfire服务器不保证支持
+  <LI>通讯Server： Tigase + Nginx + Kafka + Zookeeper，针对XMPP和企业业务我们做了部分定制，如离线文件、组织架构同步服务、企业集成登陆验证服务、消息同步、消息撤回、消息翻译、流程机器人等服务。注意：不支持Openfire服务器
   <LI>OSGi service platform： Apache Felix
   <LI>WebServer Portal & API： Spring、Shiro、Activiti、Websocket 
-  <LI>PC端UI： Awt/Swing（very low？知道intellij idea、Google Android Studio用什么开发的吗？）
+  <LI>PC端UI： Java Awt/Swing（very low？知道intellij idea、Google Android Studio用什么开发的吗？）
+  <LI>Swing皮肤：Darcula
   <LI>异步框架： Java8内置CompletableFuture、SwingWorker，原则是适合就好，不必过重
-  <LI>缓存： 堆内缓存
+  <LI>缓存：客户端堆内缓存，服务器端Ehcache
   <LI>DB： MySQL（Server side）、SQLite（客户端）
   <LI>ORM：Mybatis
-  <LI>皮肤：Darcula
   <LI>日志库：logback、slf4j-log4j12
+  <LI>其他客户端：Android、iOS、Web
 </UL>
 <br>
 <p>
@@ -47,6 +48,8 @@ XyTalk.pc是XMPP协议的即时通讯IM客户端PC软件，可用于Windows/linu
 2、tofix：MUC可能会重复推送已读消息，因为tigase离线消息持久化后不销毁，需要从服务器端解决
 <br>
 3、消息的回执状态处理和ui展示，“未读”、“已读”
+<br>
+4、消息撤回
 <br>
 <H4>聊天窗</H4>
 
@@ -88,4 +91,7 @@ XyTalk.pc是XMPP协议的即时通讯IM客户端PC软件，可用于Windows/linu
 <br>1、roster禁用的情况下获取fulljid（用于si文件）
 <br>2、在线文件发送
 <br>3、在线文件接收
+<p><br>2018-05-17： 
+<br>1、XMPP 离线文件扩展
+<br>2、和离线文件机器人交互，离线文件发送和接收
 

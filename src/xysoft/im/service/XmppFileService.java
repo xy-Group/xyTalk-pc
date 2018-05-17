@@ -7,6 +7,10 @@ import java.util.TimerTask;
 import java.util.UUID;
 
 import org.jivesoftware.smack.SmackException;
+import org.jivesoftware.smack.SmackException.NotConnectedException;
+import org.jivesoftware.smack.chat2.Chat;
+import org.jivesoftware.smack.chat2.ChatManager;
+import org.jivesoftware.smack.packet.Message.Type;
 import org.jivesoftware.smackx.filetransfer.FileTransfer.Status;
 import org.jivesoftware.smackx.filetransfer.FileTransferListener;
 import org.jivesoftware.smackx.filetransfer.FileTransferManager;
@@ -14,14 +18,18 @@ import org.jivesoftware.smackx.filetransfer.FileTransferNegotiator;
 import org.jivesoftware.smackx.filetransfer.FileTransferRequest;
 import org.jivesoftware.smackx.filetransfer.IncomingFileTransfer;
 import org.jivesoftware.smackx.filetransfer.OutgoingFileTransfer;
+import org.jxmpp.jid.EntityBareJid;
 import org.jxmpp.jid.impl.JidCreate;
 import org.jxmpp.stringprep.XmppStringprepException;
 
 import xysoft.im.app.Launcher;
+import xysoft.im.cache.UserCache;
 import xysoft.im.db.model.FileAttachment;
 import xysoft.im.db.model.ImageAttachment;
 import xysoft.im.db.model.Message;
 import xysoft.im.db.model.Room;
+import xysoft.im.extension.OfflineFile;
+import xysoft.im.extension.Receipt;
 import xysoft.im.panels.ChatPanel;
 import xysoft.im.panels.RoomsPanel;
 import xysoft.im.utils.DebugUtil;
@@ -178,6 +186,68 @@ public class XmppFileService {
 			room.setUnreadCount(room.getUnreadCount()+1);
 			Launcher.roomService.update(room);
 			RoomsPanel.getContext().updateRoomItem(senderBareJid);
+		}
+	}
+
+	public static void sendOfflineFile(String fileFullPath, String reciveBareJid) {
+		// TODO 和离线文件机器人交互
+		
+		sendOfflineFileMsg(fileFullPath, reciveBareJid);
+		//发送文件给机器人
+		sendFile(fileFullPath,Launcher.OFFLINEFILEROBOTJID);
+	}
+
+	public static void sendOfflineFileMsg(String fileFullPath, String reciveBareJid) {
+		String fileType;
+		String raw = UUID.randomUUID().toString().replace("-", "");
+		String fileName = fileFullPath.substring(fileFullPath.lastIndexOf(System.getProperty("file.separator"))+1);
+
+		boolean isImage;
+		if (fileFullPath.lastIndexOf(".")<0){
+			isImage = false;
+		}else{
+			String type = MimeTypeUtil.getMime(fileFullPath.substring(fileFullPath.lastIndexOf(".")));
+			isImage = type.startsWith("image/");
+		}
+		
+		if (isImage){
+			fileType = "image";
+		}
+		else{
+			fileType = "file";
+		}
+		
+		OfflineFile of = new OfflineFile(UserCache.CurrentBareJid,reciveBareJid,fileType,raw,fileName);
+		
+		Chat chat;
+		try {
+			chat = ChatManager.getInstanceFor(Launcher.connection).chatWith(JidCreate.entityBareFrom(reciveBareJid));
+	        org.jivesoftware.smack.packet.Message message = new org.jivesoftware.smack.packet.Message();
+	        message.setType(Type.chat);
+	        message.addExtension(of);
+	        message.setBody(UserCache.CurrentUserRealName + " 发给您离线文件，即将接收："+fileName);
+			chat.send(message);
+			DebugUtil.debug( "send offlinefile msg:"+ message.toXML());	
+			
+		} catch (XmppStringprepException |NotConnectedException | InterruptedException e) {
+			
+		}
+	}
+
+	public static void requestOfflineFile(org.jivesoftware.smack.packet.Message message) {
+		// TODO 向离线文件机器人发送请求
+		// 将接收到的离线文件消息，原封不动的发给离线文件机器人 ，
+		//	离线机器人接收后，会立即将已存储的文件发过来，同时会发送一条消息回执，发送成功后，删除文件
+		//	用户收到回执后，需要对聊天UI进行处理，注意：此时的fromJid是机器人，应处理为实际发送者，即senderFullJid
+		Chat chat;
+		try {
+			chat = ChatManager.getInstanceFor(Launcher.connection).chatWith(JidCreate.entityBareFrom(Launcher.OFFLINEFILEROBOTJID));
+	        
+			chat.send(message); //发送请求到机器人
+			DebugUtil.debug( "send offlinefile request:"+ message.toXML());	
+			
+		} catch (XmppStringprepException |NotConnectedException | InterruptedException e) {
+			
 		}
 	}
 	

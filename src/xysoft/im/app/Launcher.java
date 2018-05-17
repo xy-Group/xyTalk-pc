@@ -39,6 +39,8 @@ public class Launcher
 	public static final String MUCSERVICE = "@muc.";
 	public static final boolean FILECUTTINGTRANSFER = false; //分块传输文件
 	public static final boolean ISFILETRANSFERIBBONLY = false; //建议设置为false，ibb不适合发送大文件
+	//public static final String OFFLINEFILEROBOTJID = "offlineFile@win7-1803071731/robot"; //离线文件机器人jid
+	public static final String OFFLINEFILEROBOTJID = "test1@win7-1803071731/Spark"; //离线文件机器人jid
     //############  最重要且必须设置的项  End ############ 
     
     private JFrame currentFrame;

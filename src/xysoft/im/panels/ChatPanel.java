@@ -850,19 +850,22 @@ public class ChatPanel extends ParentAvailablePanel {
 		String fulljid = StateService.getFullJid(roomId);
 		if (fulljid==null || fulljid.isEmpty()){
 			//对方不在线或无法获得fulljid
-			//离线文件
-			sendOfflineFile();
+			sendOfflineFile(fileFullPath, roomId);
 		}
 		else{			
 			XmppFileService.sendFile(fileFullPath, fulljid);			
-			//TODO: 更新UI显示上传文件
-			notifyUIStartUploadFile(fileFullPath, randomMessageId());//这里使用随机消息id，是因为这并不是xmpp message
+			
 		}
+		
+		//TODO: 更新UI显示上传文件
+		notifyUIStartUploadFile(fileFullPath, randomMessageId());//这里使用随机消息id，是因为这并不是xmpp message
 	}
 	
-	private void sendOfflineFile() {
+	private void sendOfflineFile(String fileFullPath, String bareJid) {
 		// TODO 发送离线文件
-		JOptionPane.showMessageDialog(null,"开始转为离线文件发送");
+		JOptionPane.showMessageDialog(null,"对方不在线，开始转为离线文件发送");
+		//离线文件，和离线文件机器人交互
+		XmppFileService.sendOfflineFile(fileFullPath,bareJid);
 	}
 
 	/**
