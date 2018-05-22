@@ -269,8 +269,8 @@ public class LoginFrame extends JFrame {
 	private void doLogin() {
 		// 登录逻辑
 		
-		String name = usernameField.getText().trim();
-		String pwd = new String(passwordField.getPassword());
+		final String name = usernameField.getText().trim();
+		final String pwd = new String(passwordField.getPassword());
 
 		if (name == null || name.isEmpty()) {
 			showMessage("请输入用户名");

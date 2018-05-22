@@ -47,7 +47,7 @@ public class RoomItemCommand {
                         }
 
                         //setBackground(viewHolder, Colors.ITEM_SELECTED);
-                        selectedViewHolder = viewHolder;
+                        //selectedViewHolder = viewHolder;
                     }
                 }
             }

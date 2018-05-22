@@ -496,7 +496,7 @@ public class MucChatService {
 				// 只获取2018-5-1以来的历史记录
 				// builder.requestHistorySince(new Date(2018,5,1));
 				MucEnterConfiguration mucEnterConfiguration = builder.build();
-				room.join(mucEnterConfiguration);
+				//room.join(mucEnterConfiguration);
 
 			}
 		}

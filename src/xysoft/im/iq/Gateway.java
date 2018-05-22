@@ -85,34 +85,6 @@ public class Gateway extends IQ {
 		}
     }
 
-    /**
-     * Returns the fully qualified JID of a user.
-     *
-     * @param serviceName the service the user belongs to.
-     * @param username    the name of the user.
-     * @return the JID.
-     */
-    public static String getJID(String serviceName, String username) throws SmackException.NotConnectedException
-    {
-        Gateway registration = new Gateway();
-        registration.setType(IQ.Type.set);
-        registration.setTo(serviceName);
-        registration.setUsername(username);
-
-        XMPPConnection con = Launcher.connection;
-        PacketCollector  collector = con.createPacketCollector(new StanzaIdFilter(registration.getStanzaId()));
-        try
-        {
-            con.sendStanza( registration );
-
-            Gateway response = collector.nextResult( SmackConfiguration.getDefaultPacketReplyTimeout() );
-            return response.getJid();
-        }
-        finally
-        {
-            collector.cancel();
-        }
-    }
-
+    
 
 }

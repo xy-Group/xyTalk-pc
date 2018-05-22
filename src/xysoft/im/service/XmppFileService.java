@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.jivesoftware.smack.SmackException;
 import org.jivesoftware.smack.SmackException.NotConnectedException;
@@ -29,6 +30,7 @@ import xysoft.im.db.model.ImageAttachment;
 import xysoft.im.db.model.Message;
 import xysoft.im.db.model.Room;
 import xysoft.im.extension.OfflineFile;
+import xysoft.im.extension.OfflineFileRobot;
 import xysoft.im.extension.Receipt;
 import xysoft.im.panels.ChatPanel;
 import xysoft.im.panels.RoomsPanel;
@@ -37,19 +39,22 @@ import xysoft.im.utils.JID;
 import xysoft.im.utils.MimeTypeUtil;
 
 public class XmppFileService {
+	
+	//用于存储离线文件发送者和文件名的关系
+	static ConcurrentHashMap<String,String> offlineFileJidMap = new ConcurrentHashMap<String,String>();
 
 	public XmppFileService() {
 		// TODO Auto-generated constructor stub
 	}
 
 	//发送文件
-	public static void sendFile(String fileFullPath, String fulljid) {
+	public static void sendFile(String fileFullPath,String fulljid,String description) {
 		// TODO: 通知服务器要开始在线上传文件
 		FileTransferManager manager = FileTransferManager.getInstanceFor(Launcher.connection);
 		OutgoingFileTransfer transfer;
 		try {
 			transfer = manager.createOutgoingFileTransfer(JidCreate.entityFullFrom(fulljid));
-			transfer.sendFile(new File(fileFullPath), "File Transfer");
+			transfer.sendFile(new File(fileFullPath), description);
 		} catch (XmppStringprepException | SmackException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -60,11 +65,13 @@ public class XmppFileService {
 	public static FileTransferListener fileListener() {
 		return new FileTransferListener() {
 			public void fileTransferRequest(FileTransferRequest request) {
-
-				IncomingFileTransfer transfer = request.accept();
-				String fileName = transfer.getFileName();
-				String senderjid = transfer.getPeer().asEntityBareJidIfPossible().toString();
 				
+				IncomingFileTransfer transfer = request.accept();
+
+				String fileName = transfer.getFileName();
+				String senderjid = transfer.getPeer().asEntityBareJidIfPossible().toString();	
+				String offlineSenderjid = offlineFileJidMap.get(fileName);
+	
 		        FileTransferNegotiator.getInstanceFor(Launcher.connection);
 		        FileTransferNegotiator.IBB_ONLY = Launcher.ISFILETRANSFERIBBONLY;
 	            String path = Launcher.appFilesBasePath
@@ -104,27 +111,38 @@ public class XmppFileService {
 					    this.cancel();
 					    timer.cancel();
 					    String rawID = UUID.randomUUID().toString().replace("-", "");
-					    reciveFile(downloadedFile.getPath(),rawID,senderjid);
+					    uiChange(senderjid, offlineSenderjid, downloadedFile, rawID);
+
 					    //_endtime = System.currentTimeMillis();
 					    //updateonFinished(request, downloadedFile);
 					}else
 					{
-					    // 100 % = Filesize
-					    // x %   = Currentsize	    
-					    long p = (transfer.getAmountWritten() * 100 / transfer.getFileSize() );
-					    //progressBar.setValue(Math.round(p));        
-					    DebugUtil.debug("updateProgessBar: " +fileName+"- "+ p);
+//					    // 100 % = Filesize
+//					    // x %   = Currentsize	    
+//					    long p = (transfer.getAmountWritten() * 100 / transfer.getFileSize() );
+//					    //progressBar.setValue(Math.round(p));        
+//					    DebugUtil.debug("updateProgessBar: " +fileName+"- "+ p);
 					}
 					
 				    }
+
+					public void uiChange(String senderjid, final String offlineSenderjid, final File downloadedFile,
+							String rawID) {
+						if (senderjid.equals(Launcher.OFFLINEFILEROBOTBAREJID)){//机器人发来的文件
+					    	reciveFile(downloadedFile.getPath(),rawID,offlineSenderjid);
+					    }
+					    else{//在线接收的文件
+						    reciveFile(downloadedFile.getPath(),rawID,senderjid);
+					    }
+					}
 				};	
-				timer.scheduleAtFixedRate(updateProgessBar, 2000, 100);
+				timer.scheduleAtFixedRate(updateProgessBar, 2000, 200);
 		}
 		};
 	}
 	
 	
-	private static void reciveFile(String reciveFilename, String fileId, String senderBareJid) {
+	private static void reciveFile(String reciveFilename, String fileId,String senderBareJid) {
 		// TODO 接收文件时的UI变化
 		boolean isImage;
 		if (reciveFilename.lastIndexOf(".")<0){
@@ -191,15 +209,16 @@ public class XmppFileService {
 
 	public static void sendOfflineFile(String fileFullPath, String reciveBareJid) {
 		// TODO 和离线文件机器人交互
+		String uuid = UUID.randomUUID().toString().replace("-", "");
 		
-		sendOfflineFileMsg(fileFullPath, reciveBareJid);
+		sendOfflineFileMsg(fileFullPath, reciveBareJid,uuid,false);
+		sendOfflineFileMsg(fileFullPath, Launcher.OFFLINEFILEROBOTJID,uuid,true); //给机器人也发送一条，让其根据uuid创建文件目录
 		//发送文件给机器人
-		sendFile(fileFullPath,Launcher.OFFLINEFILEROBOTJID);
+		sendFile(fileFullPath,Launcher.OFFLINEFILEROBOTJID,"");
 	}
 
-	public static void sendOfflineFileMsg(String fileFullPath, String reciveBareJid) {
+	public static void sendOfflineFileMsg(String fileFullPath, String reciveBareJid,String uuid,boolean toRobot) {
 		String fileType;
-		String raw = UUID.randomUUID().toString().replace("-", "");
 		String fileName = fileFullPath.substring(fileFullPath.lastIndexOf(System.getProperty("file.separator"))+1);
 
 		boolean isImage;
@@ -217,14 +236,28 @@ public class XmppFileService {
 			fileType = "file";
 		}
 		
-		OfflineFile of = new OfflineFile(UserCache.CurrentBareJid,reciveBareJid,fileType,raw,fileName);
+		OfflineFile of = null;
+		OfflineFileRobot ofr = null; 
+		
+		if (toRobot){
+			ofr = new OfflineFileRobot(UserCache.CurrentBareJid,reciveBareJid,fileType,uuid,fileName);
+		}else{
+			of = new OfflineFile(UserCache.CurrentBareJid,reciveBareJid,fileType,uuid,fileName);
+		}
+			
 		
 		Chat chat;
 		try {
 			chat = ChatManager.getInstanceFor(Launcher.connection).chatWith(JidCreate.entityBareFrom(reciveBareJid));
 	        org.jivesoftware.smack.packet.Message message = new org.jivesoftware.smack.packet.Message();
 	        message.setType(Type.chat);
-	        message.addExtension(of);
+	        
+	        if (toRobot){
+		        message.addExtension(ofr);	        	
+	        }else{
+		        message.addExtension(of);	        	
+	        }
+
 	        message.setBody(UserCache.CurrentUserRealName + " 发给您离线文件，即将接收："+fileName);
 			chat.send(message);
 			DebugUtil.debug( "send offlinefile msg:"+ message.toXML());	
@@ -243,7 +276,9 @@ public class XmppFileService {
 		try {
 			chat = ChatManager.getInstanceFor(Launcher.connection).chatWith(JidCreate.entityBareFrom(Launcher.OFFLINEFILEROBOTJID));
 	        
-			chat.send(message); //发送请求到机器人
+			chat.send(message); //发送请求到机器人,然后机器人会把文件发给我
+			OfflineFile of = (OfflineFile)message.getExtension(OfflineFile.NAMESPACE);
+			offlineFileJidMap.put(of.getFileName(), of.getSenderFullJid());
 			DebugUtil.debug( "send offlinefile request:"+ message.toXML());	
 			
 		} catch (XmppStringprepException |NotConnectedException | InterruptedException e) {

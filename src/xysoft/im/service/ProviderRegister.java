@@ -5,6 +5,7 @@ import xysoft.im.extension.Features;
 import xysoft.im.extension.MucInvitation;
 import xysoft.im.extension.OfflineFile;
 import xysoft.im.extension.OfflineFileReceipt;
+import xysoft.im.extension.OfflineFileRobot;
 
 public class ProviderRegister {
 
@@ -17,6 +18,7 @@ public class ProviderRegister {
         ProviderManager.addExtensionProvider("x", MucInvitation.NAMESPACE, new MucInvitation.Provider());
         ProviderManager.addExtensionProvider("x", OfflineFile.NAMESPACE, new OfflineFile.Provider());
         ProviderManager.addExtensionProvider("x", OfflineFileReceipt.NAMESPACE, new OfflineFileReceipt.Provider());        
+        ProviderManager.addExtensionProvider("x", OfflineFileRobot.NAMESPACE, new OfflineFileRobot.Provider());        
 	}
 
 }

@@ -19,7 +19,7 @@ public class TableDao
 
     public boolean exist(String name)
     {
-        return ((int) session.selectOne("tableExist", name)) > 0;
+        return ((Integer) session.selectOne("tableExist", name)) > 0;
     }
 
     public void createRoomTable()

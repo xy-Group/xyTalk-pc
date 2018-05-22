@@ -30,18 +30,23 @@ public class ChatService {
 			} else {
 				boolean mucInvition = message.getExtension("x", "xytalk:muc:invitation") != null;
 				boolean offlineFile = message.getExtension("x", OfflineFile.NAMESPACE) != null;
+				boolean processed = false;
 				if (mucInvition) {// 群组邀请消息-离线,加入群
 					MucChatService.join(message);
 					DebugUtil.debug("(离线群邀请)processPacket-Message.Type.chat:" + message.toXML());
+					processed = true;
 				}
 
 				if (offlineFile) {// 离线文件消息抵达，需要向离线机器人发送请求
 					XmppFileService.requestOfflineFile(message);
 					DebugUtil.debug("(离线文件)processPacket-Message.Type.chat:" + message.toXML());
+					processed = true;
 				}
 
-				ChatService.recivePacket(message);
-				DebugUtil.debug("(单聊)chat:" + message.toString());
+				if (!processed){
+					ChatService.recivePacket(message);
+					DebugUtil.debug("(单聊)chat:" + message.toString());
+				}
 
 			}
 

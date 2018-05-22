@@ -13,7 +13,7 @@ public class SwingAnimation {
 	/*
 	 * 鼠标字体浮动动态效果
 	 */
-	public static AbstractMouseListener foreAnimationMouse(JComponent obj) {
+	public static AbstractMouseListener foreAnimationMouse(final JComponent obj) {
 		return new AbstractMouseListener()
         {
 
@@ -38,7 +38,7 @@ public class SwingAnimation {
 	/*
 	 * 鼠标字体（背景）浮动动态效果
 	 */
-	public static AbstractMouseListener backAnimationMouse(JComponent obj) {
+	public static AbstractMouseListener backAnimationMouse(final JComponent obj) {
 		return new AbstractMouseListener()
         {
     		Color colorOriginal = null;
@@ -59,7 +59,7 @@ public class SwingAnimation {
         };
 	}
 	
-	public static AbstractMouseListener backLightAnimationMouse(JComponent obj) {
+	public static AbstractMouseListener backLightAnimationMouse(final JComponent obj) {
 		return new AbstractMouseListener()
         {
     		Color colorOriginal = null;

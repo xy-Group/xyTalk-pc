@@ -1,63 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
-	<classpathentry kind="src" path="src"/>
-	<classpathentry kind="src" path="CheckUpdate/src"/>
-	<classpathentry kind="src" path="res"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry kind="lib" path="libs/json-20160810.jar"/>
-	<classpathentry kind="lib" path="libs/sqlite-jdbc-3.21.0.1.jar"/>
-	<classpathentry kind="lib" path="libs/logback-access-1.2.3.jar"/>
-	<classpathentry kind="lib" path="libs/logback-classic-1.2.3.jar"/>
-	<classpathentry kind="lib" path="libs/logback-core-1.2.3.jar"/>
-	<classpathentry kind="lib" path="libs/slf4j-api-1.7.25.jar"/>
-	<classpathentry kind="lib" path="libs/slf4j-log4j12-1.7.25.jar"/>
-	<classpathentry kind="lib" path="libs/slf4j-simple-1.7.25.jar"/>
-	<classpathentry kind="lib" path="libs/commons-codec-1.6.jar"/>
-	<classpathentry kind="lib" path="libs/commons-lang3-3.4.jar"/>
-	<classpathentry kind="lib" path="libs/filters-2.0.235-1.jar"/>
-	<classpathentry kind="lib" path="libs/jintellitype-1.3.9.jar"/>
-	<classpathentry kind="lib" path="libs/mybatis-3.4.5.jar"/>
-	<classpathentry kind="lib" path="libs/okhttp-3.6.0.jar"/>
-	<classpathentry kind="lib" path="libs/okio-1.13.0.jar"/>
-	<classpathentry kind="lib" path="libs/emoji-java-3.2.0.jar"/>
-	<classpathentry kind="lib" path="libs/log4j-1.2.15.jar"/>
-	<classpathentry kind="lib" path="libs/android.ninepatch.jar"/>
-	<classpathentry kind="lib" path="libs/darcula.jar"/>
-	<classpathentry kind="lib" path="D:/0NewIMRespo/smacklibs/base.jar"/>
-	<classpathentry kind="lib" path="D:/0NewIMRespo/smacklibs/dom4j.jar"/>
-	<classpathentry kind="lib" path="D:/0NewIMRespo/smacklibs/jdom.jar"/>
-	<classpathentry kind="lib" path="D:/0NewIMRespo/smacklibs/sdes4j.jar"/>
-	<classpathentry kind="lib" path="D:/0NewIMRespo/smacklibs/xstream.jar"/>
-	<classpathentry kind="lib" path="D:/0NewIMRespo/smacklibs/jxmpp-jid-0.6.2.jar"/>
-	<classpathentry kind="lib" path="D:/0NewIMRespo/smacklibs/jxmpp-util-cache-0.6.2.jar"/>
-	<classpathentry kind="lib" path="D:/0NewIMRespo/smack_4_2_4/libs/smack-bosh-4.2.4.jar"/>
-	<classpathentry kind="lib" path="D:/0NewIMRespo/smack_4_2_4/libs/smack-compression-jzlib-4.2.4.jar"/>
-	<classpathentry kind="lib" path="D:/0NewIMRespo/smack_4_2_4/libs/smack-core-4.2.4.jar" sourcepath="D:/0NewIMRespo/smack_4_2_4/libs/smack-core-4.2.4-sources.jar"/>
-	<classpathentry kind="lib" path="D:/0NewIMRespo/smack_4_2_4/libs/smack-debug-4.2.4.jar"/>
-	<classpathentry kind="lib" path="D:/0NewIMRespo/smack_4_2_4/libs/smack-debug-slf4j-4.2.4.jar"/>
-	<classpathentry kind="lib" path="D:/0NewIMRespo/smack_4_2_4/libs/smack-experimental-4.2.4.jar"/>
-	<classpathentry kind="lib" path="D:/0NewIMRespo/smack_4_2_4/libs/smack-extensions-4.2.4.jar" sourcepath="D:/0NewIMRespo/smack_4_2_4/libs/smack-extensions-4.2.4-sources.jar"/>
-	<classpathentry kind="lib" path="D:/0NewIMRespo/smack_4_2_4/libs/smack-im-4.2.4.jar"/>
-	<classpathentry kind="lib" path="D:/0NewIMRespo/smack_4_2_4/libs/smack-java7-4.2.4.jar"/>
-	<classpathentry kind="lib" path="D:/0NewIMRespo/smack_4_2_4/libs/smack-jingle-old-4.2.4.jar"/>
-	<classpathentry kind="lib" path="D:/0NewIMRespo/smack_4_2_4/libs/smack-legacy-4.2.4.jar"/>
-	<classpathentry kind="lib" path="D:/0NewIMRespo/smack_4_2_4/libs/smack-omemo-4.2.4.jar"/>
-	<classpathentry kind="lib" path="D:/0NewIMRespo/smack_4_2_4/libs/smack-omemo-signal-4.2.4.jar"/>
-	<classpathentry kind="lib" path="D:/0NewIMRespo/smack_4_2_4/libs/smack-repl-4.2.4.jar"/>
-	<classpathentry kind="lib" path="D:/0NewIMRespo/smack_4_2_4/libs/smack-resolver-dnsjava-4.2.4.jar"/>
-	<classpathentry kind="lib" path="D:/0NewIMRespo/smack_4_2_4/libs/smack-resolver-javax-4.2.4.jar"/>
-	<classpathentry kind="lib" path="D:/0NewIMRespo/smack_4_2_4/libs/smack-resolver-minidns-4.2.4.jar"/>
-	<classpathentry kind="lib" path="D:/0NewIMRespo/smack_4_2_4/libs/smack-sasl-javax-4.2.4.jar"/>
-	<classpathentry kind="lib" path="D:/0NewIMRespo/smack_4_2_4/libs/smack-sasl-provided-4.2.4.jar"/>
-	<classpathentry kind="lib" path="D:/0NewIMRespo/smack_4_2_4/libs/smack-tcp-4.2.4.jar"/>
-	<classpathentry kind="lib" path="D:/0NewIMRespo/smack_4_2_4/libs/xpp3-1.1.4c.jar"/>
-	<classpathentry kind="lib" path="D:/0NewIMRespo/smack_4_2_4/libs/minidns-core-0.2.4.jar"/>
-	<classpathentry kind="lib" path="D:/0NewIMRespo/smack_4_2_4/libs/minidns-dnssec-0.2.4.jar"/>
-	<classpathentry kind="lib" path="D:/0NewIMRespo/smack_4_2_4/libs/minidns-hla-0.2.4.jar"/>
-	<classpathentry kind="lib" path="D:/0NewIMRespo/smack_4_2_4/libs/minidns-iterative-resolver-0.2.4.jar"/>
-	<classpathentry kind="lib" path="D:/0NewIMRespo/smack_4_2_4/libs/jxmpp-core-0.6.2.jar"/>
-	<classpathentry kind="lib" path="D:/0NewIMRespo/smack_4_2_4/libs/jxmpp-jid-0.6.2.jar"/>
-	<classpathentry kind="lib" path="D:/0NewIMRespo/smack_4_2_4/libs/jxmpp-util-cache-0.6.2.jar"/>
-	<classpathentry kind="lib" path="D:/0NewIMRespo/smack_4_2_4/libs/dnsjava-2003.jar"/>
-	<classpathentry kind="output" path="bin"/>
+	<classpathentry including="**/*.java" kind="src" output="target/classes" path="src">
+		<attributes>
+			<attribute name="optional" value="true"/>
+			<attribute name="maven.pomderived" value="true"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry excluding="**" kind="src" output="target/classes" path="res">
+		<attributes>
+			<attribute name="maven.pomderived" value="true"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8">
+		<attributes>
+			<attribute name="maven.pomderived" value="true"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="con" path="org.eclipse.m2e.MAVEN2_CLASSPATH_CONTAINER">
+		<attributes>
+			<attribute name="maven.pomderived" value="true"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="output" path="target/classes"/>
 </classpath>

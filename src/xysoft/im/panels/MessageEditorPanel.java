@@ -1,7 +1,6 @@
 package xysoft.im.panels;
 
-import com.melloware.jintellitype.HotkeyListener;
-import com.melloware.jintellitype.JIntellitype;
+
 import xysoft.im.components.*;
 import xysoft.im.components.message.ChatEditorPopupMenu;
 import xysoft.im.frames.ScreenShot;
@@ -59,24 +58,26 @@ public class MessageEditorPanel extends ParentAvailablePanel
             registerHotKey();
         }
     }
-
-    private void registerHotKey()
-    {
-        int SCREEN_SHOT_CODE = 10001;
-        JIntellitype.getInstance().registerHotKey(SCREEN_SHOT_CODE, JIntellitype.MOD_ALT, 'S');
-
-        JIntellitype.getInstance().addHotKeyListener(new HotkeyListener()
-        {
-            @Override
-            public void onHotKey(int markCode)
-            {
-                if (markCode == SCREEN_SHOT_CODE)
-                {
-                    screenShot();
-                }
-            }
-        });
+    private void registerHotKey(){
+    	
     }
+//    private void registerHotKey()
+//    {
+//        int SCREEN_SHOT_CODE = 10001;
+//        JIntellitype.getInstance().registerHotKey(SCREEN_SHOT_CODE, JIntellitype.MOD_ALT, 'S');
+//
+//        JIntellitype.getInstance().addHotKeyListener(new HotkeyListener()
+//        {
+//            @Override
+//            public void onHotKey(int markCode)
+//            {
+//                if (markCode == SCREEN_SHOT_CODE)
+//                {
+//                    screenShot();
+//                }
+//            }
+//        });
+//    }
 
     private void initComponents()
     {

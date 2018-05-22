@@ -853,7 +853,7 @@ public class ChatPanel extends ParentAvailablePanel {
 			sendOfflineFile(fileFullPath, roomId);
 		}
 		else{			
-			XmppFileService.sendFile(fileFullPath, fulljid);			
+			XmppFileService.sendFile(fileFullPath, fulljid,"");	//在线文件，description为空	
 			
 		}
 		

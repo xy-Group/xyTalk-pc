@@ -280,8 +280,7 @@ public class XmppLogin implements Login {
 			XMPPTCPConnectionConfiguration.Builder builder = XMPPTCPConnectionConfiguration.builder()
 					.setUsernameAndPassword(getUsername(), getPassword()).setResource(Launcher.RESOURCE)
 					.setPort(Launcher.HOSTPORT).setConnectTimeout(5000).setXmppDomain(Launcher.DOMAIN)
-					// .setServiceName(Launcher.DOMAIN)
-					.setHost("127.0.0.1").setHost(Launcher.HOSTNAME).setSecurityMode(SecurityMode.disabled)
+					.setHost(Launcher.HOSTNAME).setHostAddress(InetAddress.getByName(Launcher.HOSTNAME)) .setSecurityMode(SecurityMode.disabled)
 					.setDebuggerEnabled(true);
 			DebugUtil.debug("builder:" + builder.toString());
 			return builder.build();

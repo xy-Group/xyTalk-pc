@@ -14,8 +14,6 @@ import sun.audio.AudioPlayer;
 import sun.audio.AudioStream;
 import javax.swing.*;
 
-import com.bulenkov.darcula.DarculaLaf;
-
 import java.awt.*;
 import java.awt.event.*;
 import java.io.InputStream;

@@ -1,14 +1,7 @@
 package xysoft.im.utils;
 
 import xysoft.im.app.Launcher;
-import com.sun.image.codec.jpeg.JPEGCodec;
-import com.sun.image.codec.jpeg.JPEGImageEncoder;
 import org.apache.log4j.Logger;
-
-import javax.imageio.ImageIO;
-import javax.swing.*;
-import java.awt.*;
-import java.awt.image.BufferedImage;
 import java.io.*;
 import java.text.DecimalFormat;
 
