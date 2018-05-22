@@ -86,7 +86,7 @@ public class AvatarUtil
                 // 如果尚未从服务器获取群成员，则获取默认群组头像
                 if (members == null || members.length < 1)
                 {
-                    String sign = type.equals("p") ? "#" : "##";
+                    String sign = type.equals("q") ? "#" : "##";
                     avatar = getCachedImageAvatar(sign);
 
                     // 默认群组头像不存在，则生成

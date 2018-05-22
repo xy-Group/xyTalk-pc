@@ -10,6 +10,6 @@ public class DebugUtil {
 
 	public static void debug(String str){
 		if (Launcher.IS_DEBUGMODE)
-		System.out.println(str);
+			System.out.println(str);
 	}
 }

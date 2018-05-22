@@ -186,6 +186,7 @@ public class XmppLogin implements Login {
 			manager.addFileTransferListener(XmppFileService.fileListener());
 
 			UserCache.CurrentUserName = sessionManager.getUsername();
+			UserCache.CurrentUserRealName = Launcher.contactsUserService.findByUsername(UserCache.CurrentUserName).getName();
 			UserCache.CurrentUserPassword = sessionManager.getPassword();
 			UserCache.CurrentUserToken = "";
 			UserCache.CurrentBareJid = sessionManager.getUserBareAddress();

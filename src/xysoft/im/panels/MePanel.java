@@ -1,6 +1,7 @@
 package xysoft.im.panels;
 
 import xysoft.im.app.Launcher;
+import xysoft.im.cache.UserCache;
 import xysoft.im.components.Colors;
 import xysoft.im.components.GBC;
 import xysoft.im.components.RCButton;
@@ -19,16 +20,18 @@ import java.awt.event.MouseEvent;
 
 public class MePanel extends JPanel
 {
-    private JPanel contentPanel;
+    /**
+	 * 配置项的"我的"
+	 */
+	private static final long serialVersionUID = -951392978782341733L;
+	private JPanel contentPanel;
     private JLabel imageLabel;
     private JLabel nameLabel;
     private RCButton button;
-    private CurrentUserService currentUserService = Launcher.currentUserService;
-    private CurrentUser currentUser;
+
 
     public MePanel()
     {
-        currentUser = currentUserService.findAll().get(0);
         initComponents();
         initView();
         setListeners();
@@ -40,11 +43,11 @@ public class MePanel extends JPanel
         contentPanel.setLayout(new VerticalFlowLayout(VerticalFlowLayout.CENTER, 0, 20, true, false));
 
         imageLabel = new JLabel();
-        ImageIcon icon = new ImageIcon(AvatarUtil.createOrLoadUserAvatar(currentUser.getUsername()).getScaledInstance(100,100, Image.SCALE_SMOOTH));
+        ImageIcon icon = new ImageIcon(AvatarUtil.createOrLoadUserAvatar(UserCache.CurrentUserName).getScaledInstance(100,100, Image.SCALE_SMOOTH));
         imageLabel.setIcon(icon);
 
         nameLabel = new JLabel();
-        nameLabel.setText(currentUser.getUsername());
+        nameLabel.setText("<html><b>"+UserCache.CurrentUserRealName +"</b><br>" +UserCache.CurrentUserName+"</html>");
         nameLabel.setFont(FontUtil.getDefaultFont(20));
 
         button = new RCButton("退出登录", Colors.MAIN_COLOR, Colors.MAIN_COLOR_DARKER, Colors.MAIN_COLOR_DARKER);

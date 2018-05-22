@@ -169,7 +169,7 @@ public class MucChatService {
 		room.setRoomId(message.getFrom().asEntityBareJidIfPossible().toString()); // 注意邀请消息和muc消息的from不同
 		room.setTotalReadCount(0);
 		room.setUpdatedAt("2018-01-01T06:38:55.119Z");
-		room.setType("c");
+		room.setType("m");
 		room.setUnreadCount(0);
 		room.setCreatorName(JID.usernameByJid(message.getFrom().asEntityBareJidIfPossible().toString()));
 		room.setCreatorId(JID.usernameByJid(message.getFrom().asEntityBareJidIfPossible().toString()));
@@ -188,7 +188,7 @@ public class MucChatService {
 		room.setRoomId(jid);
 		room.setTotalReadCount(0);
 		room.setUpdatedAt("2018-01-01T06:38:55.119Z");
-		room.setType("c");
+		room.setType("m");
 		room.setUnreadCount(0);
 		room.setCreatorName(UserCache.CurrentUserName);
 		room.setCreatorId(UserCache.CurrentUserName);
@@ -208,7 +208,7 @@ public class MucChatService {
 		room.setRoomId(jid);
 		room.setTotalReadCount(0);
 		room.setUpdatedAt("2018-01-01T06:38:55.119Z");
-		room.setType("c");
+		room.setType("m");
 		room.setUnreadCount(0);
 		room.setCreatorName(UserCache.CurrentUserName);
 		room.setCreatorId(UserCache.CurrentUserName);
@@ -476,7 +476,7 @@ public class MucChatService {
 			NotConnectedException, InterruptedException, NotAMucServiceException {
 		// TODO 启动MUC房间订阅，订阅全部房间
 		// 在sqlite库中查询MUC群组
-		List<Room> dbMucRooms = Launcher.roomService.findByType("c");
+		List<Room> dbMucRooms = Launcher.roomService.findByType("m");
 		for (Room roomDb : dbMucRooms) {
 			if (roomDb.getRoomId() != null && !roomDb.getRoomId().isEmpty() && roomDb.getRoomId().contains("@")) {
 				MultiUserChat room = MultiUserChatManager.getInstanceFor(Launcher.connection)

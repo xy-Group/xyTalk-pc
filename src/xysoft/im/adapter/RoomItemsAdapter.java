@@ -59,7 +59,7 @@ public class RoomItemsAdapter extends BaseAdapter<RoomItemViewHolder>
         ImageIcon icon = new ImageIcon();
         // 群组头像
         String type = item.getType();
-        if (type.equals("c") || type.equals("p"))
+        if (type.equals("m") || type.equals("q"))
         {
             String[] memberArr = getRoomMembers(item.getRoomId());
 
@@ -67,7 +67,7 @@ public class RoomItemsAdapter extends BaseAdapter<RoomItemViewHolder>
                     .getScaledInstance(40, 40, Image.SCALE_SMOOTH));
         }
         // 私聊头像
-        else if (type.equals("d"))
+        else if (type.equals("s"))
         {
             Image image = AvatarUtil.createOrLoadUserAvatar(item.getTitle()).getScaledInstance(40, 40, Image.SCALE_SMOOTH);
             icon.setImage(image);

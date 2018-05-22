@@ -22,7 +22,11 @@ import java.awt.event.MouseEvent;
 
 public class UserInfoPanel extends ParentAvailablePanel
 {
-    private JPanel contentPanel;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = -5439149022809519880L;
+	private JPanel contentPanel;
     private JLabel imageLabel;
     private JLabel nameLabel;
     private RCButton button;

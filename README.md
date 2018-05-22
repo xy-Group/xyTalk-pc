@@ -43,24 +43,22 @@ XyTalk.pc是XMPP协议的即时通讯IM客户端PC软件，可用于Windows/linu
 <br>
 3、登陆统计数据提交，用于分析登陆的资源和频度；
 <br>
-<H4>消息</H4>
+<H4>消息\聊天窗</H4>
 <br>
 1、来消息声音提示
 <br>
-2、tofix：MUC可能会重复推送已读消息，因为tigase离线消息持久化后不销毁，需要从服务器端解决
+2、tofix：MUC可能会重复推送已读消息
 <br>
 3、消息的回执状态处理和ui展示，“未读”、“已读”
 <br>
 4、消息撤回
 <br>
-<H4>聊天窗</H4>
-
+5、消息乱码（bug）
 <br>
-1、截图时隐藏当前窗口
+6、截图时隐藏当前窗口
 <br>
 
 <H4>UI</H4>
-
 <br>
 1、编辑头像时更专业的截取器，支持缩放、位移。兼容vacrd的小文件（小于30K），对大图做压缩处理
 <br>
@@ -101,3 +99,14 @@ XyTalk.pc是XMPP协议的即时通讯IM客户端PC软件，可用于Windows/linu
 <p><br>2018-05-22： 
 <br>1、转为Maven项目
 <br>2、图标拉伸处理更换为freeseawind/NinePatch
+<br>3、自动断线重连
+<br>4、左侧布局调整，使Insets更加合理
+
+
+<H2>## 联系作者     ##</H2>
+
+如有合作意向、Bug、建议邮箱至475660@qq.com
+<br>
+by XySoft team works
+<br>
+

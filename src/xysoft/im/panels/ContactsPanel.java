@@ -70,7 +70,7 @@ public class ContactsPanel extends ParentAvailablePanel
         for (ContactsUser contactsUser : contactsUsers)
         {
             ContactsItem item = new ContactsItem(contactsUser.getUserId(),
-                    contactsUser.getUsername(), "d");
+                    contactsUser.getUsername(), "s");
 
             contactsItemList.add(item);
         }
@@ -133,7 +133,12 @@ public class ContactsPanel extends ParentAvailablePanel
         {
             URL url = getClass().getResource("/avatar/" + username + ".png");
             DebugUtil.debug("getUserAvatar:"+username);
+            
             BufferedImage image = ImageIO.read(url);
+//          URL urlUnkown = getClass().getResource("/avatar/chat1.png");            
+//            if (image==null){
+//                image = ImageIO.read(urlUnkown);          	
+//            }
             
             processAvatarData(image, username);
         }

@@ -122,7 +122,7 @@ public class RoomMembersPanel extends ParentAvailablePanel
             getRoomMembers();
 
             // 单独聊天，不显示退出按钮
-            if (room.getType().equals("d"))
+            if (room.getType().equals("s"))
             {
                 leaveButton.setVisible(false);
             }
@@ -152,7 +152,7 @@ public class RoomMembersPanel extends ParentAvailablePanel
         members.clear();
 
         // 单独聊天，成员只显示两人
-        if (room.getType().equals("d"))
+        if (room.getType().equals("s"))
         {
             members.add(currentUser.getUsername());
             members.add(JID.usernameByJid(room.getRoomId()));

@@ -66,7 +66,7 @@ public class SearchPanel extends ParentAvailablePanel
         this.add(searchTextField, new GBC(0, 0)
                 .setFill(GBC.HORIZONTAL)
                 .setWeight(1, 1)
-                .setInsets(0, 15, 0, 15)
+                .setInsets(0, 15, 10, 15)
         );
     }
 
@@ -316,7 +316,7 @@ public class SearchPanel extends ParentAvailablePanel
         SearchResultItem item;
         for (ContactsUser user : contactsUsers)
         {
-            item = new SearchResultItem(user.getUserId(), user.getUsername(), "d");
+            item = new SearchResultItem(user.getUserId(), user.getUsername(), "s");
             retList.add(item);
         }
         return retList;

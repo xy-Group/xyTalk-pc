@@ -2,7 +2,10 @@ package xysoft.im.entity;
 
 import xysoft.im.db.model.ImageAttachment;
 
-
+/**
+ * 图片型消息item
+ *
+ */
 public class ImageAttachmentItem
 {
     private String id;

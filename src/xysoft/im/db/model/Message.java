@@ -18,8 +18,14 @@ public class Message extends BasicModel
 
     private String fileAttachmentId;
     private String imageAttachmentId;
+    private String audioAttachmentId;
+    private String videoAttachmentId;
+    private String x1AttachmentId;
+    private String x2AttachmentId;
+    private String x3AttachmentId;
 
-    public Message()
+    
+	public Message()
     {
     }
 
@@ -162,5 +168,46 @@ public class Message extends BasicModel
     {
         this.imageAttachmentId = imageAttachmentId;
     }
+    
+    public String getAudioAttachmentId() {
+		return audioAttachmentId;
+	}
+
+	public void setAudioAttachmentId(String audioAttachmentId) {
+		this.audioAttachmentId = audioAttachmentId;
+	}
+
+	public String getVideoAttachmentId() {
+		return videoAttachmentId;
+	}
+
+	public void setVideoAttachmentId(String videoAttachmentId) {
+		this.videoAttachmentId = videoAttachmentId;
+	}
+
+	public String getX1AttachmentId() {
+		return x1AttachmentId;
+	}
+
+	public void setX1AttachmentId(String x1AttachmentId) {
+		this.x1AttachmentId = x1AttachmentId;
+	}
+
+	public String getX2AttachmentId() {
+		return x2AttachmentId;
+	}
+
+	public void setX2AttachmentId(String x2AttachmentId) {
+		this.x2AttachmentId = x2AttachmentId;
+	}
+
+	public String getX3AttachmentId() {
+		return x3AttachmentId;
+	}
+
+	public void setX3AttachmentId(String x3AttachmentId) {
+		this.x3AttachmentId = x3AttachmentId;
+	}
+
 }
 

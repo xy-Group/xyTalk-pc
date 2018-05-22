@@ -15,10 +15,14 @@ public class MessageItem implements Comparable<MessageItem>
     public static final int LEFT_TEXT = 1;
     public static final int LEFT_IMAGE = 2;
     public static final int LEFT_ATTACHMENT = 3;
+    public static final int LEFT_AUDIO = 4;
+    public static final int LEFT_VIDEO = 5;
 
     public static final int RIGHT_TEXT = -1;
     public static final int RIGHT_IMAGE = -2;
     public static final int RIGHT_ATTACHMENT = -3;
+    public static final int RIGHT_AUDIO = -4;
+    public static final int RIGHT_VIDEO = -5;
 
 
     private String id;
@@ -39,6 +43,8 @@ public class MessageItem implements Comparable<MessageItem>
     List<ImageAttachmentItem> imageAttachments = new ArrayList<>();*/
 
     private FileAttachmentItem fileAttachment;
+    private FileAttachmentItem audioAttachment;
+    private FileAttachmentItem videoAttachment;
     private ImageAttachmentItem imageAttachment;
 
     public MessageItem()
@@ -62,6 +68,8 @@ public class MessageItem implements Comparable<MessageItem>
 
         boolean isFileAttachment = false;
         boolean isImageAttachment = false;
+        boolean isAudioAttachment = false;
+        boolean isVideoAttachment = false;
 
         if (message.getFileAttachmentId() != null)
         {
@@ -77,6 +85,23 @@ public class MessageItem implements Comparable<MessageItem>
             ImageAttachment ia = Launcher.imageAttachmentService.findById(message.getImageAttachmentId());
             this.imageAttachment = new ImageAttachmentItem(ia);
         }
+
+        if (message.getAudioAttachmentId() != null)
+        {
+        	isAudioAttachment = true;
+
+            FileAttachment ia = Launcher.fileAttachmentService.findById(message.getAudioAttachmentId());
+            this.audioAttachment = new FileAttachmentItem(ia);
+        }
+
+        if (message.getVideoAttachmentId() != null)
+        {
+        	isVideoAttachment = true;
+
+            FileAttachment ia = Launcher.fileAttachmentService.findById(message.getVideoAttachmentId());
+            this.videoAttachment = new FileAttachmentItem(ia);
+        }
+
 
         /*for (FileAttachment fa : message.getFileAttachments())
         {
@@ -107,13 +132,21 @@ public class MessageItem implements Comparable<MessageItem>
                 {
                     this.setMessageType(RIGHT_IMAGE);
                 }
+                else if (isAudioAttachment)
+                {
+                    this.setMessageType(RIGHT_AUDIO);
+                }
+                else if (isVideoAttachment)
+                {
+                    this.setMessageType(RIGHT_VIDEO);
+                }
                 // 普通文本消息
                 else
                 {
                     this.setMessageType(RIGHT_TEXT);
                 }
             }
-            else
+            else //别人发的消息
             {
                 // 文件附件
                 if (isFileAttachment)
@@ -125,6 +158,14 @@ public class MessageItem implements Comparable<MessageItem>
                 {
                     this.setMessageType(LEFT_IMAGE);
                 }
+                else if (isAudioAttachment)
+                {
+                    this.setMessageType(LEFT_AUDIO);
+                }
+                else if (isVideoAttachment)
+                {
+                    this.setMessageType(LEFT_VIDEO);
+                }
                 // 普通文本消息
                 else
                 {
@@ -134,9 +175,11 @@ public class MessageItem implements Comparable<MessageItem>
         }
     }
 
-    @Override
+
+	@Override
     public int compareTo( MessageItem o)
     {
+    	//时间排序
         return (int) (this.getTimestamp() - o.getTimestamp());
 
     }
@@ -290,5 +333,22 @@ public class MessageItem implements Comparable<MessageItem>
     {
         this.imageAttachment = imageAttachment;
     }
+    
+    public FileAttachmentItem getAudioAttachment() {
+		return audioAttachment;
+	}
+
+	public void setAudioAttachment(FileAttachmentItem audioAttachment) {
+		this.audioAttachment = audioAttachment;
+	}
+
+	public FileAttachmentItem getVideoAttachment() {
+		return videoAttachment;
+	}
+
+	public void setVideoAttachment(FileAttachmentItem videoAttachment) {
+		this.videoAttachment = videoAttachment;
+	}
+
 }
 

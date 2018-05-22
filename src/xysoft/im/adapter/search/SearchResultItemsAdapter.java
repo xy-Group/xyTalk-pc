@@ -72,7 +72,7 @@ public class SearchResultItemsAdapter extends BaseAdapter<SearchResultItemViewHo
     {
         // return super.getItemViewType(position);
         String type = searchResultItems.get(position).getType();
-        if (type.equals("d") || type.equals("c") || type.equals("p") || type.equals("searchMessage") || type.equals("searchFile"))
+        if (type.equals("s") || type.equals("m") || type.equals("q") || type.equals("searchMessage") || type.equals("searchFile"))
         {
             return VIEW_TYPE_CONTACTS_ROOM;
         }
@@ -262,13 +262,13 @@ public class SearchResultItemsAdapter extends BaseAdapter<SearchResultItemViewHo
                 if (e.getButton() == MouseEvent.BUTTON1)
                 {
 
-                    if (item.getType().equals("d"))
+                    if (item.getType().equals("s"))
                     {
                         String roomId = roomService.findRelativeRoomIdByUserId(item.getId()).getRoomId();
                         enterRoom(roomId, 0L);
                         clearSearchText();
                     }
-                    else if (item.getType().equals("c") || item.getType().equals("p"))
+                    else if (item.getType().equals("m") || item.getType().equals("q"))
                     {
                         enterRoom(item.getId(), 0L);
                         clearSearchText();
@@ -328,7 +328,7 @@ public class SearchResultItemsAdapter extends BaseAdapter<SearchResultItemViewHo
         // 群组头像
         String type = item.getType();
 
-        if (type.equals("c") || type.equals("p") || type.equals("d"))
+        if (type.equals("m") || type.equals("q") || type.equals("s"))
         {
             icon.setImage(getRoomAvatar(type, item.getName(), null));
         }
@@ -366,16 +366,16 @@ public class SearchResultItemsAdapter extends BaseAdapter<SearchResultItemViewHo
      */
     /*private Image getRoomAvatar(String type, String name)
     {
-        if (type.equals("c"))
+        if (type.equals("m"))
         {
             return AvatarUtil.createOrLoadGroupAvatar("##", name).getScaledInstance(35, 35, Image.SCALE_SMOOTH);
         }
-        else if (type.equals("p"))
+        else if (type.equals("q"))
         {
             return AvatarUtil.createOrLoadGroupAvatar("#", name).getScaledInstance(35, 35, Image.SCALE_SMOOTH);
         }
         // 私聊头像
-        else if (type.equals("d"))
+        else if (type.equals("s"))
         {
             return AvatarUtil.createOrLoadUserAvatar(name).getScaledInstance(35, 35, Image.SCALE_SMOOTH);
         }
@@ -392,12 +392,12 @@ public class SearchResultItemsAdapter extends BaseAdapter<SearchResultItemViewHo
      */
     private Image getRoomAvatar(String type, String name, String[] members)
     {
-        if (type.equals("c") || type.equals("p"))
+        if (type.equals("m") || type.equals("q"))
         {
             return AvatarUtil.createOrLoadGroupAvatar(name, members, type).getScaledInstance(35, 35, Image.SCALE_SMOOTH);
         }
         // 私聊头像
-        else if (type.equals("d"))
+        else if (type.equals("s"))
         {
             return AvatarUtil.createOrLoadUserAvatar(name).getScaledInstance(35, 35, Image.SCALE_SMOOTH);
         }

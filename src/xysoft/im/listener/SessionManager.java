@@ -1,5 +1,6 @@
 package xysoft.im.listener;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import org.jivesoftware.smack.AbstractXMPPConnection;
@@ -11,7 +12,6 @@ import org.jivesoftware.smackx.disco.ServiceDiscoveryManager;
 import org.jivesoftware.smackx.disco.packet.DiscoverItems;
 import org.jivesoftware.smackx.iqprivate.PrivateDataManager;
 import xysoft.im.app.Launcher;
-import xysoft.im.cache.UserCache;
 import xysoft.im.utils.DebugUtil;
 
 public final class SessionManager implements ConnectionListener {
@@ -114,24 +114,6 @@ public final class SessionManager implements ConnectionListener {
     public void authenticated( XMPPConnection xmppConnection, boolean b )
     {
     	DebugUtil.debug("authenticated");
-    	
-//    	CurrentUser cu = Launcher.currentUserService.findById("c1");
-//    	if (cu==null){
-//    		CurrentUser cuNew = new CurrentUser();
-//    		cuNew.setUserId("c1");
-//    		cuNew.setUsername(username);
-//    		cuNew.setAuthToken("-");
-//    		cuNew.setPassword(PasswordUtil.encryptPassword(password));
-//    		cuNew.setRawPassword(password);	
-//    		Launcher.currentUserService.insert(cu);
-//    	}
-//    	else{    		
-//	    	cu.setUsername(username);
-//	    	cu.setAuthToken("-");
-//	    	cu.setPassword(PasswordUtil.encryptPassword(password));
-//	    	cu.setRawPassword(password);
-//	    	Launcher.currentUserService.update(cu);
-//    	}
     }
 
     public void connectionClosed() {
@@ -152,7 +134,15 @@ public final class SessionManager implements ConnectionListener {
     }
 
     public void reconnectingIn(int i) {
-    	DebugUtil.debug("reconnectingIn");
+    	DebugUtil.debug("reconnecting...");
+    	//自动断线重连
+		try {
+			Launcher.connection.connect();
+			Launcher.connection.login();
+		} catch (SmackException | IOException | XMPPException |InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}			 
     }
 
 

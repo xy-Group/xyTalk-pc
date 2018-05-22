@@ -9,7 +9,10 @@ import org.jivesoftware.smackx.xdata.FormField;
 import org.jxmpp.jid.EntityBareJid;
 import org.jxmpp.jid.Jid;
 
-//Smack里的RoomInfo并没有管理员和拥有者信息，MucRoomInfo加入以进行成员的持久化
+/**
+ * Smack里的RoomInfo并没有管理员和拥有者信息，MucRoomInfo加入以进行成员的持久化
+ *
+ */
 public class MucRoomInfo {
 
 	private  EntityBareJid room;

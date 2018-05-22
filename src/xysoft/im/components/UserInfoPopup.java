@@ -154,7 +154,7 @@ public class UserInfoPopup extends JPopupMenu
 		room.setRoomId(username + "@"+Launcher.DOMAIN);
 		room.setTotalReadCount(0);
 		room.setUpdatedAt("2018-01-01T06:38:55.119Z");
-		room.setType("d"); //单聊
+		room.setType("s"); //单聊
 		room.setUnreadCount(1);
 		Launcher.roomService.insertOrUpdate(room);
 		

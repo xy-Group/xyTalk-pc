@@ -51,7 +51,7 @@ public class MyInfoPanel extends ParentAvailablePanel
     {
 
         //GImage.setBorder(new SubtleSquareBorder(true));
-        currentUsername = currentUserService.findAll().get(0).getUsername();
+        currentUsername = UserCache.CurrentUserRealName;
         avatar = new JLabel();
         avatar.setIcon(new ImageIcon(AvatarUtil.createOrLoadUserAvatar(currentUsername).getScaledInstance(50,50,Image.SCALE_SMOOTH)));
 
@@ -110,7 +110,7 @@ public class MyInfoPanel extends ParentAvailablePanel
         this.setBackground(Colors.DARK);
         this.setLayout(new GridBagLayout());
 
-        add(avatar, new GBC(0, 0).setFill(GBC.NONE).setWeight(2, 1));
+        add(avatar, new GBC(0, 0).setFill(GBC.NONE).setWeight(2, 1).setInsets(10, 5, 10, 5));
         add(username, new GBC(1, 0).setFill(GBC.BOTH).setWeight(7, 1));
         add(menuIcon, new GBC(2, 0).setFill(GBC.BOTH).setWeight(1, 1));
     }

@@ -6,7 +6,7 @@
 	<version>0.2.1</version>
 	<packaging>jar</packaging>
 	<name>XyTalk.pc</name>
-	<description>XyTalk.pc</description>
+	<description>开源im,企业im定制平台. Xy.Platform是一个高性能\可扩展\安全的企业通信和协作平台</description>
 	<url>https://github.com/xy-Group/xyTalk-pc</url>
 
 	<build>

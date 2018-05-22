@@ -150,7 +150,7 @@ public class ChatService {
 		room.setRoomId(message.getFrom().asBareJid().toString());
 		room.setTotalReadCount(0);
 		room.setUpdatedAt("2018-01-01T06:38:55.119Z");
-		room.setType("d");
+		room.setType("s");
 		room.setUnreadCount(1);
 		Launcher.roomService.insertOrUpdate(room);
 

@@ -514,7 +514,7 @@ public class ChatPanel extends ParentAvailablePanel {
 	 */
 	public void updateRoomTitle() {
 		String title = room.getName();
-		if (!room.getType().equals("d")) {
+		if (!room.getType().equals("s")) {
 			// 加载本地群成员
 			loadLocalRoomMembers();
 

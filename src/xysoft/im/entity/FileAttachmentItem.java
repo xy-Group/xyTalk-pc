@@ -2,7 +2,10 @@ package xysoft.im.entity;
 
 import xysoft.im.db.model.FileAttachment;
 
-
+/**
+ * 文件型消息item
+ *
+ */
 
 public class FileAttachmentItem
 {
@@ -11,32 +14,21 @@ public class FileAttachmentItem
     private String link;
     private String description;
 
-    public FileAttachmentItem()
-    {
+    public FileAttachmentItem(){
 
     }
 
-    public FileAttachmentItem(String link)
-    {
+    public FileAttachmentItem(String link){
 
         this.link = link;
     }
 
-    public FileAttachmentItem(FileAttachment fa)
-    {
+    public FileAttachmentItem(FileAttachment fa){
         this.id = fa.getId();
         this.title = fa.getTitle();
         this.link = fa.getLink();
         this.description = fa.getDescription();
     }
-
-    /*public FileAttachmentItem(FileAttachment fa)
-    {
-        this.id = fa.getId();
-        this.title = fa.getTitle();
-        this.link = fa.getLink();
-        this.description = fa.getDescription();
-    }*/
 
     public String getId()
     {
