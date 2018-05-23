@@ -25,7 +25,11 @@ import static xysoft.im.app.Launcher.roomService;
 
 public class CreateGroupDialog extends JDialog
 {
-    private static CreateGroupDialog context;
+    /**
+	 * 创建群组UI
+	 */
+	private static final long serialVersionUID = 7698690365922458008L;
+	private static CreateGroupDialog context;
     private JPanel editorPanel;
     private RCTextField groupNameTextField;
     private JCheckBox privateCheckBox;
@@ -60,10 +64,6 @@ public class CreateGroupDialog extends JDialog
         List<ContactsUser> contactsUsers = contactsUserService.findAll();
         for (ContactsUser con : contactsUsers)
         {
-            /*if (con.getUsername().equals("admin") || con.getUsername().equals("appStoreTest"))
-            {
-                continue;
-            }*/
             userList.add(new SelectUserData(con.getUsername(), false));
         }
 
@@ -174,7 +174,7 @@ public class CreateGroupDialog extends JDialog
 						MucChatService.createChatRoom(groupNameTextField.getText(),selectedUsers, UserCache.CurrentUserName+"-"+UserCache.CurrentUserRealName)
 							.join(Resourcepart.from(UserCache.CurrentUserName + "-" + UserCache.CurrentUserRealName));
 					} catch (Exception e1) {
-						// TODO Auto-generated catch block
+
 						e1.printStackTrace();
 					}
                 }

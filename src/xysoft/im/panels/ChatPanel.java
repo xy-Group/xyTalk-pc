@@ -220,7 +220,7 @@ public class ChatPanel extends ParentAvailablePanel {
 				// 加载本地消息
 				loadLocalHistory(); // 初次打开房间时加载历史消息
 
-				// TODO：从服务器获取本地最后一条消息之后的消，并追回到消息列表
+				// TODO：从服务器获取本地最后一条消息之后的消息，并追回到消息列表
 			}
 		}
 	}

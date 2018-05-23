@@ -1,16 +1,19 @@
-package xysoft.im.forms;
+package xysoft.im.components;
 
-import javax.swing.*;
-import java.awt.*;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseWheelEvent;
-import java.awt.font.LineMetrics;
-import java.util.*;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.Image;
+import java.awt.RenderingHints;
+import javax.swing.JLabel;
 
 
 public class ImageLabel extends JLabel
 {
-    private Image image;
+    /**
+	 * 图片控件
+	 */
+	private static final long serialVersionUID = 167292037548442130L;
+	private Image image;
     private Image lastImage;
     private int xDistance = 0;
     private int yDistance = 0;

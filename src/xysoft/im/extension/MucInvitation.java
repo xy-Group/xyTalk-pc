@@ -7,7 +7,7 @@ import org.jivesoftware.smack.packet.ExtensionElement;
 import org.jivesoftware.smack.provider.ExtensionElementProvider;
 import org.xmlpull.v1.XmlPullParser;
 /**
- * 离线存储的例子：
+ * 用于离线存储加入群组邀请，作为Message的扩展属性，例子：
  * <message to="test2@win7-1803071731" id="wKmRm-190" from="wangxin@win7-1803071731/pc" type="chat" xmlns="jabber:client">
  * <body>请加入会议</body>
  * <x xmlns="xytalk:muc:invitation">

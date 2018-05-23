@@ -13,12 +13,12 @@ import xysoft.im.utils.OSUtil;
 import sun.audio.AudioPlayer;
 import sun.audio.AudioStream;
 import javax.swing.*;
-
 import java.awt.*;
 import java.awt.event.*;
 import java.io.InputStream;
 
 
+@SuppressWarnings("restriction")
 public class MainFrame extends JFrame
 {
     /**
@@ -39,7 +39,7 @@ public class MainFrame extends JFrame
     private Image emptyTrayIcon; // 闪动时的任务栏图标
     private TrayIcon trayIcon;
     private boolean trayFlashing = false;
-    private AudioStream messageSound; //消息到来时候的提示间
+	private AudioStream messageSound; //消息到来时候的提示间
 
     public MainFrame()
     {
@@ -66,7 +66,7 @@ public class MainFrame extends JFrame
     /**
      * 播放消息提示间
      */
-    public void playMessageSound()
+	public void playMessageSound()
     {
         try
         {

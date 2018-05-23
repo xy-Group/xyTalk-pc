@@ -70,7 +70,6 @@ public class MucRoomInfo {
         Boolean subjectmod = null;
         URL logs = null;
         String pubsub = null;
-        // Get the information based on the discovered extended information
         form = Form.getFormFrom(info);
         if (form != null) {
             FormField descField = form.getField("muc#roominfo_description");

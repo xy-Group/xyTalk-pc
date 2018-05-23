@@ -1,7 +1,7 @@
 package xysoft.im.components;
 
 import xysoft.im.components.message.FileEditorThumbnail;
-import xysoft.im.forms.ImageViewerFrame;
+import xysoft.im.frames.ImageViewerFrame;
 import xysoft.im.utils.ClipboardUtil;
 
 import javax.swing.*;

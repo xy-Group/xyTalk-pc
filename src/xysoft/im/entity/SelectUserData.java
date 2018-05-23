@@ -6,30 +6,25 @@ public class SelectUserData
     private String name;
     private boolean selected;
 
-    public SelectUserData(String name, boolean selected)
-    {
+    public SelectUserData(String name, boolean selected){
         this.name = name;
         this.selected = selected;
     }
 
 
-    public String getName()
-    {
+    public String getName(){
         return name;
     }
 
-    public void setName(String name)
-    {
+    public void setName(String name){
         this.name = name;
     }
 
-    public boolean isSelected()
-    {
+    public boolean isSelected(){
         return selected;
     }
 
-    public void setSelected(boolean selected)
-    {
+    public void setSelected(boolean selected){
         this.selected = selected;
     }
 }

@@ -19,7 +19,11 @@ import java.util.Date;
 
 public class ScreenShot extends JFrame
 {
-    private int startX;
+    /**
+	 * 截屏UI
+	 */
+	private static final long serialVersionUID = -4959467997738833616L;
+	private int startX;
     private int startY;
     private int endX;
     private int endY;

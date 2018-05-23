@@ -7,6 +7,9 @@ import org.jivesoftware.smack.packet.ExtensionElement;
 import org.jivesoftware.smack.provider.ExtensionElementProvider;
 import org.xmlpull.v1.XmlPullParser;
 
+/**
+ * 发送离线文件后，发送给离线机器人的消息。离线机器人接收消息后会根据fileGUID来创建新文件夹，待实际接收者上线后将对应文件发出
+ */
 public class OfflineFileRobot implements ExtensionElement{
 
 	public static final String ELEMENT_NAME = "x";

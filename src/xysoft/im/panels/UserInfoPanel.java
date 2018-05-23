@@ -29,7 +29,10 @@ public class UserInfoPanel extends ParentAvailablePanel
 	private JPanel contentPanel;
     private JLabel imageLabel;
     private JLabel nameLabel;
+    private JLabel infoLabel;
+
     private RCButton button;
+    private RCButton moreButton;
 
     private String username;
     private RoomService roomService = Launcher.roomService;
@@ -53,13 +56,23 @@ public class UserInfoPanel extends ParentAvailablePanel
         imageLabel.setIcon(icon);
 
         nameLabel = new JLabel();
-        nameLabel.setText("Song");
         nameLabel.setFont(FontUtil.getDefaultFont(20));
+        
+        infoLabel = new JLabel();
+        infoLabel.setFont(FontUtil.getDefaultFont(14));
 
-        button = new RCButton("发消息", Colors.MAIN_COLOR, Colors.MAIN_COLOR_DARKER, Colors.MAIN_COLOR_DARKER);
+
+        button = new RCButton("发送消息", Colors.MAIN_COLOR, Colors.MAIN_COLOR_DARKER, Colors.MAIN_COLOR_DARKER);
         button.setBackground(Colors.PROGRESS_BAR_START);
-        button.setPreferredSize(new Dimension(200, 40));
+        button.setPreferredSize(new Dimension(150, 40));
         button.setFont(FontUtil.getDefaultFont(16));
+        
+        moreButton = new RCButton("查看更多", Colors.MAIN_COLOR, Colors.MAIN_COLOR_DARKER, Colors.MAIN_COLOR_DARKER);
+        moreButton.setBackground(Colors.PROGRESS_BAR_START);
+        moreButton.setPreferredSize(new Dimension(150, 40));
+        moreButton.setFont(FontUtil.getDefaultFont(16));
+        
+        
 
     }
 
@@ -71,19 +84,42 @@ public class UserInfoPanel extends ParentAvailablePanel
         avatarNamePanel.setLayout(new FlowLayout(FlowLayout.CENTER, 15, 0));
         avatarNamePanel.add(imageLabel, BorderLayout.WEST);
         avatarNamePanel.add(nameLabel, BorderLayout.CENTER);
+        avatarNamePanel.add(infoLabel, BorderLayout.CENTER);
 
         //add(avatarNamePanel, new GBC(0,0).setAnchor(GBC.CENTER).setWeight(1,1).setInsets(0,0,0,0));
         //add(button, new GBC(0,1).setAnchor(GBC.CENTER).setWeight(1,1).setInsets(0,0,0,0));
         contentPanel.add(avatarNamePanel);
         contentPanel.add(button);
+        contentPanel.add(moreButton);
 
-        add(contentPanel, new GBC(0,0).setWeight(1,1).setAnchor(GBC.CENTER).setInsets(0,0,250,0));
+        //add(contentPanel, new GBC(0,0).setWeight(1,1).setAnchor(GBC.CENTER).setInsets(0,0,250,0));
+        add(avatarNamePanel, new GBC(0,0).setWeight(1,1));
+        add(contentPanel, new GBC(0,1).setWeight(1,1));
     }
 
     public void setUsername(String username)
     {
+    	ContactsUser cu = contactsUserService.findByUsername(username);
+    	
         this.username = username;
-        nameLabel.setText(username);
+        StringBuilder sb = new StringBuilder();
+        sb.append("<html>");
+        sb.append(cu.getName());     
+        sb.append("</html>");
+        
+        nameLabel.setText(sb.toString());
+        StringBuilder sbInfo = new StringBuilder();
+        sbInfo.append("<html>登录名:");
+        sbInfo.append(username);     
+        sbInfo.append("<p><br>手机:");
+        sbInfo.append(cu.getPhone());     
+        sbInfo.append("<p><br>邮箱:");
+        sbInfo.append(cu.getMail());     
+        sbInfo.append("<p><br>办公位置:");
+        sbInfo.append(cu.getLocation());     
+        sbInfo.append("</html>");
+             
+        infoLabel.setText(sbInfo.toString());
 
         ImageIcon icon = new ImageIcon(AvatarUtil.createOrLoadUserAvatar(username).getScaledInstance(100,100, Image.SCALE_SMOOTH));
         imageLabel.setIcon(icon);
@@ -96,8 +132,17 @@ public class UserInfoPanel extends ParentAvailablePanel
             @Override
             public void mouseClicked(MouseEvent e)
             {
-
                 openOrCreateDirectChat();
+                super.mouseClicked(e);
+            }
+        });
+        
+        moreButton.addMouseListener(new MouseAdapter()
+        {
+            @Override
+            public void mouseClicked(MouseEvent e)
+            {
+            	more();
                 super.mouseClicked(e);
             }
         });
@@ -106,7 +151,7 @@ public class UserInfoPanel extends ParentAvailablePanel
     private void openOrCreateDirectChat()
     {
         ContactsUser user  = contactsUserService.find("username", username).get(0);
-        String userId = user.getUserId();
+        String userId = user.getUserId()+"@"+Launcher.DOMAIN;
         Room room = roomService.findRelativeRoomIdByUserId(userId);
 
         // 房间已存在，直接打开，否则发送请求创建房间
@@ -124,11 +169,12 @@ public class UserInfoPanel extends ParentAvailablePanel
      *
      * @param username
      */
-    private void createDirectChat(String username)
-    {
+    private void createDirectChat(String username){
         JOptionPane.showMessageDialog(MainFrame.getContext(), "发起聊天", "发起聊天", JOptionPane.INFORMATION_MESSAGE);
     }
 
-
+    private void more() {
+        JOptionPane.showMessageDialog(MainFrame.getContext(), "在门户查看更多资料", "在门户查看更多资料", JOptionPane.INFORMATION_MESSAGE);
+	}
 
 }

@@ -24,7 +24,7 @@ public class CollectionsPanel extends ParentAvailablePanel
 
     private void initComponents()
     {
-        tipLabel = new JLabel("工作台");
+        tipLabel = new JLabel("企业工作台");
         tipLabel.setForeground(Colors.FONT_GRAY);
     }
 

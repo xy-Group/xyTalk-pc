@@ -795,11 +795,11 @@ class ImageAdjustLabel extends JLabel
             x = x + w > imageWidth ? imageWidth - w : x;
             y = y + h > imageHeight ? imageHeight - h : y;
 
-            BufferedImage selectedImage = new BufferedImage(w, h, BufferedImage.TYPE_INT_RGB);
+            BufferedImage selectedImage = new BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB);
             selectedImage.getGraphics().drawImage(image.getSubimage(x, y, w, h), 0, 0, w, h, null);
 
-            BufferedImage outputImage = new BufferedImage(200, 200, BufferedImage.TYPE_INT_RGB);
-            outputImage.getGraphics().drawImage(selectedImage.getScaledInstance(200, 200, Image.SCALE_SMOOTH), 0, 0, null);
+            BufferedImage outputImage = new BufferedImage(80, 80, BufferedImage.TYPE_INT_ARGB);
+            outputImage.getGraphics().drawImage(selectedImage.getScaledInstance(80, 80, Image.SCALE_SMOOTH), 0, 0, null);
 
             return outputImage;
         }

@@ -8,6 +8,7 @@ import javax.swing.JComponent;
 import xysoft.im.components.Colors;
 import xysoft.im.listener.AbstractMouseListener;
 
+
 public class SwingAnimation {
  
 	/*

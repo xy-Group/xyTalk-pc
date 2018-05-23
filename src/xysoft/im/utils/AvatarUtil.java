@@ -5,6 +5,10 @@ import xysoft.im.components.Colors;
 import javax.imageio.ImageIO;
 import javax.imageio.stream.FileImageInputStream;
 import javax.imageio.stream.ImageInputStream;
+import javax.swing.ImageIcon;
+
+import org.jivesoftware.smackx.vcardtemp.packet.VCard;
+
 import java.awt.*;
 import java.awt.geom.RoundRectangle2D;
 import java.awt.image.BufferedImage;
@@ -78,7 +82,9 @@ public class AvatarUtil
         // 如果在内存中的缓存
         if (avatar == null)
         {
-            avatar = getCachedImageAvatar(groupName);
+        	//已有缓存
+            //avatar = getCachedImageAvatar(groupName);
+            avatar = getCachedImageAvatar("群");
 
             // 如果在硬盘中有缓存的文件
             if (avatar == null)
@@ -86,7 +92,7 @@ public class AvatarUtil
                 // 如果尚未从服务器获取群成员，则获取默认群组头像
                 if (members == null || members.length < 1)
                 {
-                    String sign = type.equals("q") ? "#" : "##";
+                    String sign = type.equals("q") ? "群" : "群聊";
                     avatar = getCachedImageAvatar(sign);
 
                     // 默认群组头像不存在，则生成
@@ -100,7 +106,8 @@ public class AvatarUtil
                 else
                 {
                     System.out.println("创建群组个性头像 : " + groupName);
-                    avatar = createGroupAvatar(groupName, members);
+                    //avatar = createGroupAvatar(groupName, members);
+                    avatar = getCachedImageAvatar("群组");
                 }
             }
 
@@ -153,8 +160,8 @@ public class AvatarUtil
 
         try
         {
-            int width = 200;
-            int height = 200;
+            int width = 80;
+            int height = 80;
 
             // 创建BufferedImage对象
             Font font = FontUtil.getDefaultFont(96, Font.PLAIN);
@@ -178,7 +185,7 @@ public class AvatarUtil
 
             g2d.drawString(drawString, x, strHeight);
 
-            BufferedImage roundImage = ImageUtil.setRadius(image, width, height, 35);
+            BufferedImage roundImage = ImageUtil.setRadius(image, width, height, 10);
 
             g2d.dispose();
             File file = new File(AVATAR_CACHE_ROOT + "/" + sign + ".png");
@@ -207,7 +214,7 @@ public class AvatarUtil
 
     public static void saveMyAvatar(BufferedImage image, String username)
     {
-        saveAvatar(image, username, DEFAULT_AVATAR);
+        saveAvatar(image, username, CUSTOM_AVATAR);
     }
 
     private static void saveAvatar(BufferedImage image, String username, int type)
@@ -232,7 +239,7 @@ public class AvatarUtil
         {
             if (image != null)
             {
-                BufferedImage bufferedImage = ImageUtil.setRadius(image, image.getWidth(), image.getHeight(), 35);
+                BufferedImage bufferedImage = ImageUtil.setRadius(image, image.getWidth(), image.getHeight(), 10);
                 ImageIO.write(bufferedImage, "png", avatarPath);
             }
             else
@@ -267,6 +274,27 @@ public class AvatarUtil
             return null;
         }
     }
+    
+    public static BufferedImage getCachedImageBufferedAvatar(String username)
+    {
+        if (customAvatarExist(username))
+        {
+            String path = CUSTOM_AVATAR_CACHE_ROOT + "/" + username + ".png";
+
+            return readImage(path);
+        }
+        else if (defaultAvatarExist(username))
+        {
+            String path = AVATAR_CACHE_ROOT + "/" + username + ".png";
+            return readImage(path);
+        }
+        else
+        {
+            return null;
+        }
+    }
+    
+    
 
     private static BufferedImage readImage(String path)
     {
@@ -318,7 +346,7 @@ public class AvatarUtil
         }
     }
 
-
+    //群组自动头像
     public static Image createGroupAvatar(String groupName, String[] users)
     {
 
@@ -620,5 +648,18 @@ public class AvatarUtil
         }
 
         return rectangles;
+    }
+    
+    public static ImageIcon getAvatarIcon(VCard vcard,boolean isScale) {
+        //avatar从vcard中来
+        byte[] bytes = vcard.getAvatar();
+        if (bytes != null && bytes.length > 0) {
+            ImageIcon icon = new ImageIcon(bytes);
+            if (isScale)
+            	return GraphicUtils.scaleImageIcon(icon, 50, 50);
+            else
+            	return icon;
+        }
+        return null;
     }
 }

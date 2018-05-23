@@ -62,6 +62,7 @@ public class SearchResultItem implements Comparable<SearchResultItem>
     @Override
     public int compareTo(SearchResultItem o)
     {
+    	//待比较
         return 0;
     }
 

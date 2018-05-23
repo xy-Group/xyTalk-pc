@@ -5,10 +5,15 @@ package xysoft.im.db.model;
 public class ContactsUser extends BasicModel
 {
     private String userId;
-
     private String username;
-
     private String name;
+    private String phone;
+    private String mail;
+	private String location;
+	private String sp;
+	private String attr1;
+	private String attr2;
+	private String attr3;
 
     public ContactsUser()
     {
@@ -50,6 +55,63 @@ public class ContactsUser extends BasicModel
     {
         this.name = name;
     }
+    
+    public String getPhone() {
+		return phone;
+	}
+
+	public void setPhone(String phone) {
+		this.phone = phone;
+	}
+
+	public String getMail() {
+		return mail;
+	}
+
+	public void setMail(String mail) {
+		this.mail = mail;
+	}
+
+	public String getLocation() {
+		return location;
+	}
+
+	public void setLocation(String location) {
+		this.location = location;
+	}
+
+	public String getSp() {
+		return sp;
+	}
+
+	public void setSp(String sp) {
+		this.sp = sp;
+	}
+
+	public String getAttr1() {
+		return attr1;
+	}
+
+	public void setAttr1(String attr1) {
+		this.attr1 = attr1;
+	}
+
+	public String getAttr2() {
+		return attr2;
+	}
+
+	public void setAttr2(String attr2) {
+		this.attr2 = attr2;
+	}
+
+	public String getAttr3() {
+		return attr3;
+	}
+
+	public void setAttr3(String attr3) {
+		this.attr3 = attr3;
+	}
+
 
     @Override
     public String toString()

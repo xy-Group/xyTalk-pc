@@ -15,6 +15,7 @@ import xysoft.im.listener.AbstractMouseListener;
 import xysoft.im.panels.ChatPanel;
 import xysoft.im.utils.AvatarUtil;
 import xysoft.im.utils.DebugUtil;
+import xysoft.im.utils.JID;
 import xysoft.im.utils.TimeUtil;
 
 
@@ -69,7 +70,8 @@ public class RoomItemsAdapter extends BaseAdapter<RoomItemViewHolder>
         // 私聊头像
         else if (type.equals("s"))
         {
-            Image image = AvatarUtil.createOrLoadUserAvatar(item.getTitle()).getScaledInstance(40, 40, Image.SCALE_SMOOTH);
+            //Image image = AvatarUtil.createOrLoadUserAvatar(item.getTitle()).getScaledInstance(40, 40, Image.SCALE_SMOOTH);
+            Image image = AvatarUtil.getCachedImageBufferedAvatar(JID.usernameByJid(item.getRoomId())).getScaledInstance(40, 40, Image.SCALE_SMOOTH);
             icon.setImage(image);
         }
         viewHolder.avatar.setIcon(icon);

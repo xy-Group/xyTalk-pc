@@ -101,6 +101,13 @@ XyTalk.pc是XMPP协议的即时通讯IM客户端PC软件，可用于Windows/linu
 <br>2、图标拉伸处理更换为freeseawind/NinePatch
 <br>3、自动断线重连
 <br>4、左侧布局调整，使Insets更加合理
+<p><br>2018-05-23： 
+<br>1、整理MessageItem类
+<br>2、头像从服务器的获取
+<br>3、UI里的头像区域做了xmpp Avatar兼容，并且做了缓存、更新机制
+<br>4、联系人资料里建立更多附加属性
+
+
 
 
 <H2>## 联系作者     ##</H2>

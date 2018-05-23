@@ -20,7 +20,11 @@ import java.util.List;
 
 public class AddOrRemoveMemberDialog extends JDialog
 {
-    private JPanel editorPanel;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 6326533522141139458L;
+	private JPanel editorPanel;
     private RCTextField searchTextField;
 
     private SelectUserPanel selectUserPanel;

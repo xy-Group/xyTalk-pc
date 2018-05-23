@@ -100,7 +100,7 @@ public class RoomItem implements Comparable<RoomItem>
     @Override
     public int compareTo(RoomItem o)
     {
-        // 注意，不能强制转int, 两个时间相差太远时有可能溢出
+        // 注意，不能强制转int，而是long, 两个时间相差太远时有可能溢出
         // 忽略结果为0的情况，两个item必有先后，没有相同
         long ret = o.getTimestamp() - this.getTimestamp();
         return ret > 0 ? 1 : -1;

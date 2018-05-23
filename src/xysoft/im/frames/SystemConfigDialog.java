@@ -13,7 +13,11 @@ import java.awt.event.MouseEvent;
 
 public class SystemConfigDialog extends JDialog
 {
-    private static SystemConfigDialog context;
+    /**
+	 * 系统配置UI，内容区使用cardLayout切换
+	 */
+	private static final long serialVersionUID = -8589252870208818272L;
+	private static SystemConfigDialog context;
     private JPanel buttonPanel;
     //private JButton cancelButton;
     private JButton okButton;
@@ -182,7 +186,7 @@ public class SystemConfigDialog extends JDialog
 
         MouseAdapter itemMouseListener = new MouseAdapter()
         {
-            @Override
+           
             public void mouseEntered(MouseEvent e)
             {
                 JLabel source = ((JLabel) e.getSource());
@@ -193,7 +197,6 @@ public class SystemConfigDialog extends JDialog
                 super.mouseEntered(e);
             }
 
-            @Override
             public void mouseExited(MouseEvent e)
             {
                 JLabel source = ((JLabel) e.getSource());
@@ -204,7 +207,6 @@ public class SystemConfigDialog extends JDialog
                 super.mouseExited(e);
             }
 
-            @Override
             public void mouseClicked(MouseEvent e)
             {
                 JLabel source = ((JLabel) e.getSource());

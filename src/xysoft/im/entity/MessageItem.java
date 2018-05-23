@@ -8,7 +8,11 @@ import xysoft.im.db.model.Message;
 import java.util.ArrayList;
 import java.util.List;
 
-
+/**
+ * 单条消息的实体类，支持文本消息、图片、小视频、音频、文件，其中小视频、音频同样使用
+ * @author Administrator
+ *
+ */
 public class MessageItem implements Comparable<MessageItem>
 {
     public static final int SYSTEM_MESSAGE = 0;
@@ -33,14 +37,10 @@ public class MessageItem implements Comparable<MessageItem>
     private String senderUsername;
     private String senderId;
     private long updatedAt;
-    private int unreadCount;
     private boolean needToResend;
     private int progress;
     private boolean deleted;
     private int messageType;
-
-    /*List<FileAttachmentItem> fileAttachments = new ArrayList<>();
-    List<ImageAttachmentItem> imageAttachments = new ArrayList<>();*/
 
     private FileAttachmentItem fileAttachment;
     private FileAttachmentItem audioAttachment;
@@ -101,17 +101,6 @@ public class MessageItem implements Comparable<MessageItem>
             FileAttachment ia = Launcher.fileAttachmentService.findById(message.getVideoAttachmentId());
             this.videoAttachment = new FileAttachmentItem(ia);
         }
-
-
-        /*for (FileAttachment fa : message.getFileAttachments())
-        {
-            this.fileAttachments.add(new FileAttachmentItem(fa));
-        }
-
-        for (ImageAttachment ia : message.getImageAttachments())
-        {
-            this.imageAttachments.add(new ImageAttachmentItem(ia));
-        }*/
 
         if (message.isSystemMessage())
         {
@@ -262,16 +251,6 @@ public class MessageItem implements Comparable<MessageItem>
     public void setUpdatedAt(long updatedAt)
     {
         this.updatedAt = updatedAt;
-    }
-
-    public int getUnreadCount()
-    {
-        return unreadCount;
-    }
-
-    public void setUnreadCount(int unreadCount)
-    {
-        this.unreadCount = unreadCount;
     }
 
     public boolean isNeedToResend()

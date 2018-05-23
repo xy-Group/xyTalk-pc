@@ -1,16 +1,21 @@
-package xysoft.im.forms;
+package xysoft.im.frames;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
+import xysoft.im.components.ImageLabel;
+import xysoft.im.components.RCMenuItemUI;
 import java.awt.*;
 import java.awt.event.*;
-import java.awt.image.BufferedImage;
 import java.io.*;
 
 
 public class ImageViewerFrame extends JDialog
 {
-    private int minWidth;
+    /**
+	 * 图片视图UI
+	 */
+	private static final long serialVersionUID = 3470702446288117352L;
+	private int minWidth;
     private int minHeight;
 
     private int maxWidth;
@@ -90,7 +95,7 @@ public class ImageViewerFrame extends JDialog
 
         imageLabel = new ImageLabel();
 
-        setIconImage(new ImageIcon(getClass().getResource("ic_launcher.png")).getImage());
+        setIconImage(new ImageIcon(getClass().getResource("/image/if_Messages_32.png")).getImage());
 
     }
 

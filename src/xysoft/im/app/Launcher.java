@@ -15,7 +15,6 @@ import xysoft.im.db.service.FileAttachmentService;
 import xysoft.im.db.service.ImageAttachmentService;
 import xysoft.im.db.service.MessageService;
 import xysoft.im.db.service.RoomService;
-import xysoft.im.frames.AutoLoginFrame;
 import xysoft.im.frames.LoginFrame;
 import xysoft.im.frames.MainFrame;
 import xysoft.im.utils.DbUtils;
@@ -116,7 +115,7 @@ public class Launcher
         // TODO 原来登录过,则自动登陆
         if (checkLoginInfo())
         {
-            currentFrame = new AutoLoginFrame();
+            //currentFrame = new AutoLoginFrame();
         }
         // 从未登录过，未记住密码和用户名
         else

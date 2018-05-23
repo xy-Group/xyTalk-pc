@@ -8,7 +8,7 @@ import org.jivesoftware.smack.provider.ExtensionElementProvider;
 import org.xmlpull.v1.XmlPullParser;
 
 /**
- * 离线文件请求，用于收到该离线消息后向离线机器人发送文件请求
+ * 离线文件请求，用于文件接收者收到该离线消息后向离线机器人发送文件请求
  * 例：
  * <message to="test2@win7-1803071731" id="0j66I-230" type="chat">
   <body>用户  发给您离线文件，即将接收：南粤银行动态令牌高并发高可用技术方案.docx</body>

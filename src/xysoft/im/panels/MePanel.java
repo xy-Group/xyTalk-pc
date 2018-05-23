@@ -47,7 +47,7 @@ public class MePanel extends JPanel
         imageLabel.setIcon(icon);
 
         nameLabel = new JLabel();
-        nameLabel.setText("<html><b>"+UserCache.CurrentUserRealName +"</b><br>" +UserCache.CurrentUserName+"</html>");
+        nameLabel.setText("<html>"+UserCache.CurrentUserRealName +"<br> (" +UserCache.CurrentUserName+")</html>");
         nameLabel.setFont(FontUtil.getDefaultFont(20));
 
         button = new RCButton("退出登录", Colors.MAIN_COLOR, Colors.MAIN_COLOR_DARKER, Colors.MAIN_COLOR_DARKER);

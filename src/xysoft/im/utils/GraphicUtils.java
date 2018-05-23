@@ -654,6 +654,8 @@ public final class GraphicUtils {
 	bg.dispose();
 	return bi;
     }
+    
+    
 
     /**
      * Loading an image via a MediaTracker
@@ -725,7 +727,7 @@ public final class GraphicUtils {
 	if (width > newWidth) {
 	    width = newWidth;
 	}
-	img = img.getScaledInstance(width, height, Image.SCALE_SMOOTH);
+	img = img.getScaledInstance(width, height, Image.SCALE_DEFAULT);
 	return new ImageIcon(img);
     }
 

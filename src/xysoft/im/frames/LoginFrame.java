@@ -1,6 +1,5 @@
 package xysoft.im.frames;
 
-import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
@@ -13,12 +12,9 @@ import java.awt.event.KeyListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
-
-import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.SwingUtilities;
 import javax.swing.SwingWorker;
 import javax.swing.border.LineBorder;
 import org.apache.ibatis.session.SqlSession;
@@ -34,10 +30,8 @@ import xysoft.im.components.VerticalFlowLayout;
 import xysoft.im.db.model.CurrentUser;
 import xysoft.im.db.service.CurrentUserService;
 import xysoft.im.listener.AbstractMouseListener;
-import xysoft.im.service.login.Login;
 import xysoft.im.service.login.XmppLogin;
 import xysoft.im.utils.DbUtils;
-import xysoft.im.utils.DebugUtil;
 import xysoft.im.utils.FontUtil;
 import xysoft.im.utils.IconUtil;
 import xysoft.im.utils.OSUtil;
@@ -67,7 +61,7 @@ public class LoginFrame extends JFrame {
 
 	private SqlSession sqlSession;
 	private CurrentUserService currentUserService;
-	private String username;
+	//private String username;
 
 	public LoginFrame() {
 		initService();
@@ -80,7 +74,7 @@ public class LoginFrame extends JFrame {
 
 	public LoginFrame(String username) {
 		this();
-		this.username = username;
+		//this.username = username;
 		if (username != null && !username.isEmpty()) {
 			usernameField.setText(username);
 		}
@@ -95,8 +89,6 @@ public class LoginFrame extends JFrame {
 		Dimension windowSize = new Dimension(windowWidth, windowHeight);
 		setMinimumSize(windowSize);
 		setMaximumSize(windowSize);
-		
-		
 
 		controlPanel = new JPanel();
 		controlPanel.setLayout(new FlowLayout(FlowLayout.RIGHT, 10, 5));
@@ -279,7 +271,7 @@ public class LoginFrame extends JFrame {
 		} else {
 			statusLabel.setVisible(false);
 			
-			SwingWorker aWorker = new SwingWorker() 
+			SwingWorker<?, ?> aWorker = new SwingWorker<Object, Object>() 
 	    	{
 			@Override
 			protected Object doInBackground() throws Exception {
@@ -317,30 +309,6 @@ public class LoginFrame extends JFrame {
 	    	statusLabel.setVisible(true);
 	    	statusLabel.setText("加载数据......");
 			 
-
-			// HttpPostTask task = new HttpPostTask();
-			// task.setListener(new HttpResponseListener<JSONObject>()
-			// {
-			// @Override
-			// public void onSuccess(JSONObject ret)
-			// {
-			// processLoginResult(ret);
-			// }
-			//
-			// @Override
-			// public void onFailed()
-			// {
-			// showMessage("登录失败，请检查网络设置");
-			// loginButton.setEnabled(true);
-			// usernameField.setEditable(true);
-			// passwordField.setEditable(true);
-			// }
-			// });
-			//
-			// task.addRequestParam("username", usernameField.getText());
-			// task.addRequestParam("password", new
-			// String(passwordField.getPassword()));
-			// task.execute(Launcher.HOSTNAME + "/api/v1/login");
 		}
 
 	}
