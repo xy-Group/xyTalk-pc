@@ -32,38 +32,392 @@ XyTalk.pc是XMPP协议的即时通讯IM客户端PC软件，可用于Windows/linu
 </UL>
 <br>
 <p>
-<H2>## TODO LIST 待开发项  ##</H2>
+<H2>## 功能   ##</H2>
 
- 
-<H4>登陆</H4>
-<br>
-1、登陆记住密码；
-<br>
-2、登陆自动登陆Jframe；
-<br>
-3、登陆统计数据提交，用于分析登陆的资源和频度；
-<br>
-<H4>消息\聊天窗</H4>
-<br>
-1、来消息声音提示
-<br>
-2、tofix：MUC可能会重复推送已读消息
-<br>
-3、消息的回执状态处理和ui展示，“未读”、“已读”
-<br>
-4、消息撤回
-<br>
-5、消息乱码（bug）
-<br>
-6、截图时隐藏当前窗口
-<br>
+ <TABLE>
+  <TR>
+	<Th>功能</Th>
+	<Th>开源版</Th>
+	<Th>企业版</Th>
+  </TR>
+  <TR>
+	<Th>基础功能</Th>
+	<Th></Th>
+	<Th></Th>
+  </TR>
+  <TR>
+	<TD>登陆。IM账户、企业原HRM账号、OA账号、AD域账号登陆</TD>
+	<TD>仅IM账户登陆</TD>
+	<TD>已有</TD>
+  </TR>
+  <TR>
+	<TD>个人资料修改。头像,昵称,电话,邮件等</TD>
+	<TD>同企业版同步</TD>
+	<TD>已有</TD>
+  </TR>
+  <TR>
+	<TD>组织架构初始化工具</TD>
+	<TD>无</TD>
+	<TD>已有</TD>
+  </TR>
+  <TR>
+	<TD>单聊、群聊消息</TD>
+	<TD>同企业版同步</TD>
+	<TD>已有</TD>
+  </TR>
+  <TR>
+	<TD>消息复制</TD>
+	<TD>同企业版同步</TD>
+	<TD>已有</TD>
+  </TR>
+  <TR>
+	<TD>消息撤回</TD>
+	<TD>同企业版同步</TD>
+	<TD>已有</TD>
+  </TR>
+  <TR>
+	<TD>消息转发</TD>
+	<TD>同企业版同步</TD>
+	<TD>已有</TD>
+  </TR>
+  <TR>
+	<TD>图片消息</TD>
+	<TD>同企业版同步</TD>
+	<TD>已有</TD>
+  </TR>
+  <TR>
+	<TD>文件消息</TD>
+	<TD>同企业版同步</TD>
+	<TD>已有</TD>
+  </TR>
+  <TR>
+	<TD>短语音消息</TD>
+	<TD>无</TD>
+	<TD>已有</TD>
+  </TR>
+  <TR>
+	<TD>短视频消息</TD>
+	<TD>无</TD>
+	<TD>已有</TD>
+  </TR>
+  <TR>
+	<TD>离线文件</TD>
+	<TD>同企业版同步</TD>
+	<TD>已有</TD>
+  </TR>
+  <TR>
+	<TD>离线文件服务器程序</TD>
+	<TD>无</TD>
+	<TD>已有</TD>
+  </TR>
+  <TR>
+	<TD>GB级大文件传输</TD>
+	<TD>无</TD>
+	<TD>已有</TD>
+  </TR>
+  <TR>
+	<TD>置顶会话</TD>
+	<TD>无</TD>
+	<TD>已有</TD>
+  </TR>
+  <TR>
+	<TD>消息加密</TD>
+	<TD>无</TD>
+	<TD>已有</TD>
+  </TR>
+  <TR>
+	<TD>离线消息</TD>
+	<TD>同企业版同步</TD>
+	<TD>已有</TD>
+  </TR>
+  <TR>
+	<TD>消息存档</TD>
+	<TD>同企业版同步</TD>
+	<TD>已有</TD>
+  </TR>
+  <TR>
+	<TD>消息搜索</TD>
+	<TD>同企业版同步</TD>
+	<TD>已有</TD>
+  </TR>
+  <TR>
+	<TD>截屏编辑</TD>
+	<TD>同企业版同步</TD>
+	<TD>已有</TD>
+  </TR>
+  <TR>
+	<TD>截屏传输及展示</TD>
+	<TD>同企业版同步</TD>
+	<TD>已有</TD>
+  </TR>
+  <TR>
+	<TD>表情</TD>
+	<TD>同企业版同步</TD>
+	<TD>已有</TD>
+  </TR>
+  <TR>
+	<TD>员工位置</TD>
+	<TD>同企业版同步</TD>
+	<TD>已有</TD>
+  </TR>
+  <TR>
+	<TD>最近联系人</TD>
+	<TD>同企业版同步</TD>
+	<TD>已有</TD>
+  </TR>
+  <TR>
+	<TD>联系人列表</TD>
+	<TD>同企业版同步</TD>
+	<TD>已有</TD>
+  </TR>
+  <TR>
+	<TD>联系人模糊搜索。按名称、缩拼、电话、部门</TD>
+	<TD>同企业版同步</TD>
+	<TD>已有</TD>
+  </TR>
+  <TR>
+	<TD>组织架构展示</TD>
+	<TD>无</TD>
+	<TD>已有</TD>
+  </TR>
+  <TR>
+	<TD>联系人电子名片</TD>
+	<TD>同企业版同步</TD>
+	<TD>已有</TD>
+  </TR>
+  <TR>
+	<TD>同事二维码扫描添加</TD>
+	<TD>同企业版同步</TD>
+	<TD>已有</TD>
+  </TR>
+  <TR>
+	<TD>发起群聊</TD>
+	<TD>同企业版同步</TD>
+	<TD>已有</TD>
+  </TR>
+  <TR>
+	<TD>群聊列表</TD>
+	<TD>同企业版同步</TD>
+	<TD>已有</TD>
+  </TR>
+  <TR>
+	<TD>群组加人</TD>
+	<TD>同企业版同步</TD>
+	<TD>已有</TD>
+  </TR>
+  <TR>
+	<TD>群主踢人</TD>
+	<TD>同企业版同步</TD>
+	<TD>已有</TD>
+  </TR>
+  <TR>
+	<TD>群名称。可修改</TD>
+	<TD>同企业版同步</TD>
+	<TD>已有</TD>
+  </TR>
+  <TR>
+	<TD>群组公告</TD>
+	<TD>同企业版同步</TD>
+	<TD>已有</TD>
+  </TR>
+  <TR>
+	<TD>群组权限控制</TD>
+	<TD>同企业版同步</TD>
+	<TD>已有</TD>
+  </TR>
+  <TR>
+	<TD>群组离线消息</TD>
+	<TD>同企业版同步</TD>
+	<TD>已有</TD>
+  </TR>
+  <TR>
+	<TD>群发\广播信息。管理员可群发</TD>
+	<TD>同企业版同步</TD>
+	<TD>已有</TD>
+  </TR>
+  <TR>
+	<TD>单聊拖拽转多人会话</TD>
+	<TD>同企业版同步</TD>
+	<TD>已有</TD>
+  </TR>
+  <TR>
+	<TD>退出群</TD>
+	<TD>同企业版同步</TD>
+	<TD>已有</TD>
+  </TR>
+  <TR>
+	<TD>删除群</TD>
+	<TD>同企业版同步</TD>
+	<TD>已有</TD>
+  </TR>
+  <TR>
+	<TD>聊天记录还原备份</TD>
+	<TD>无</TD>
+	<TD>已有</TD>
+  </TR>
+  <TR>
+	<TD>记事本</TD>
+	<TD>同企业版同步</TD>
+	<TD>已有</TD>
+  </TR>
+  <TR>
+	<TD>链接收藏管理</TD>
+	<TD>同企业版同步</TD>
+	<TD>已有</TD>
+  </TR>
+  <TR>
+	<TD>系统设置</TD>
+	<TD>无</TD>
+	<TD>已有功能</TD>
+  </TR>
+  <TR>
+	<TD>自动升级</TD>
+	<TD>无</TD>
+	<TD>已有功能</TD>
+  </TR>
+  <TR>
+	<TD>类微信UI操作体验</TD>
+	<TD>同企业版同步</TD>
+	<TD>已有</TD>
+  </TR>
+    <TR>
+	<Th>功能</Th>
+	<Th>开源版</Th>
+	<Th>企业版</Th>
+  </TR>
+    <TR>
+	<Th>企业功能</Th>
+	<Th></Th>
+	<Th></Th>
+  </TR>
+  <TR>
+	<TD>HTTP API。为企业提供IM服务调用</TD>
+	<TD>无</TD>
+	<TD>已有功能</TD>
+  </TR>
+  <TR>
+	<TD>组织架构同步</TD>
+	<TD>无</TD>
+	<TD>需定制</TD>
+  </TR>
+  <TR>
+	<TD>移动门户后台管理</TD>
+	<TD>无</TD>
+	<TD>已有功能</TD>
+  </TR>
+  <TR>
+	<TD>移动门户Web消息</TD>
+	<TD>无</TD>
+	<TD>已有功能</TD>
+  </TR>
+  <TR>
+	<TD>移动门户企业网盘</TD>
+	<TD>无</TD>
+	<TD>已有功能</TD>
+  </TR>
+  <TR>
+	<TD>移动门户BPM工作流</TD>
+	<TD>无</TD>
+	<TD>已有功能</TD>
+  </TR>
+  <TR>
+	<TD>移动门户会议预定</TD>
+	<TD>无</TD>
+	<TD>已有功能</TD>
+  </TR>
+  <TR>
+	<TD>移动门户会议提醒</TD>
+	<TD>无</TD>
+	<TD>已有功能</TD>
+  </TR>
+  <TR>
+	<TD>移动门户会议日历</TD>
+	<TD>无</TD>
+	<TD>已有功能</TD>
+  </TR>
+  <TR>
+	<TD>移动门户会议记录</TD>
+	<TD>无</TD>
+	<TD>已有功能</TD>
+  </TR>
+  <TR>
+	<TD>移动门户日程提醒、定时提醒</TD>
+	<TD></TD>
+	<TD></TD>
+  </TR>
+  <TR>
+	<TD>移动门户同事圈</TD>
+	<TD>无</TD>
+	<TD>已有功能</TD>
+  </TR>
+  <TR>
+	<TD>移动门户通告</TD>
+	<TD>无</TD>
+	<TD>已有功能</TD>
+  </TR>
+  <TR>
+	<TD>移动门户通讯录</TD>
+	<TD>无</TD>
+	<TD>已有功能</TD>
+  </TR>
+  <TR>
+	<TD>移动门户电子投票</TD>
+	<TD></TD>
+	<TD></TD>
+  </TR>
+  <TR>
+	<TD>文件私有云分布式存储</TD>
+	<TD>无</TD>
+	<TD>已有功能</TD>
+  </TR>
+  <TR>
+	<TD>集成邮件系统</TD>
+	<TD>无</TD>
+	<TD>已有功能</TD>
+  </TR>
+  <TR>
+	<TD>企业LOGO定制</TD>
+	<TD>无</TD>
+	<TD>需定制</TD>
+  </TR>
+  <TR>
+	<TD>企业原办公OA集成</TD>
+	<TD>无</TD>
+	<TD>需定制</TD>
+  </TR>
+  <TR>
+	<TD>单点登陆集成</TD>
+	<TD>无</TD>
+	<TD>需定制</TD>
+  </TR>
+  <TR>
+	<TD>电子考勤（GPS定位考勤）</TD>
+	<TD>无</TD>
+	<TD>已有功能</TD>
+  </TR>
+  <TR>
+	<TD>集成短信系统--移动电信联通</TD>
+	<TD>无</TD>
+	<TD>需定制</TD>
+  </TR>
+  <TR>
+	<TD>集成短信系统--回复支持</TD>
+	<TD>无</TD>
+	<TD>需定制</TD>
+  </TR>
+  <TR>
+	<TD>集成短信系统--群发支持</TD>
+	<TD>无</TD>
+	<TD>需定制</TD>
+  </TR>
+  <TR>
+	<TD></TD>
+	<TD></TD>
+	<TD></TD>
+  </TR>
 
-<H4>UI</H4>
-<br>
-1、编辑头像时更专业的截取器，支持缩放、位移。兼容vacrd的小文件（小于30K），对大图做压缩处理
-<br>
-2、在登陆后mainframe出来前增加一个过场frame，用于loading，改善用户体验
-<br>
+  </TABLE>
+  
 <p>
 <H2>## 更新日志 ##</H2>
 2018-05-06以前没有记录了，从6号开始更新
@@ -107,7 +461,8 @@ XyTalk.pc是XMPP协议的即时通讯IM客户端PC软件，可用于Windows/linu
 <br>3、UI里的头像区域做了xmpp Avatar兼容，并且做了缓存、更新机制
 <br>4、联系人资料里建立更多附加属性
 
-
+<p><br>2018-05-24： 
+<br>1、整理功能清单
 
 
 <H2>## 联系作者     ##</H2>
