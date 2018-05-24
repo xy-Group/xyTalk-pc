@@ -40,6 +40,12 @@ XyTalk.pc是XMPP协议的即时通讯IM客户端PC软件，可用于Windows/linu
 	&nbsp;&nbsp;为企业提供IM服务开发调用，提供安全可扩展的方式服务集成对接。</TD>
   </TR>
     <TR>
+	<TD></TD>
+	<TD></TD>
+	<TD></TD>
+	<TD></TD>
+  </TR>
+    <TR>
 	<TD><p><br><img alt="XyTalk IM" src="http://111.230.157.216/img/sync-64.png" width="64" height="64" /></TD>
 	<TD><p><br><img alt="XyTalk IM" src="http://111.230.157.216/img/file-64.png" width="64" height="64" /></TD>
 	<TD><p><br><img alt="XyTalk IM" src="http://111.230.157.216/img/push-64.png" width="64" height="64" /></TD>
@@ -53,9 +59,9 @@ XyTalk.pc是XMPP协议的即时通讯IM客户端PC软件，可用于Windows/linu
   </TR>
   <TR>
 	<TD>
-	&nbsp;&nbsp;保留原有的员工登陆管理，组织架构同步、入职自动启用、离职即时清除等。</TD>
+	&nbsp;&nbsp;利用企业原有的组织架构和登陆认证体系，组织架构同步、入职自动账户启用、离职即时清除等。</TD>
 	<TD>
-	&nbsp;&nbsp;企业文档库。个人、群组网盘。对海量需求还提供分布式文件系统。</TD>
+	&nbsp;&nbsp;企业文档库。个人、群组网盘。对海量存储需求还提供分布式文件系统。</TD>
 	<TD>
 	&nbsp;&nbsp;iOS APNS和安卓消息推送服务，用于离线消息的提醒。</TD>
 	<TD>
@@ -384,8 +390,8 @@ XyTalk.pc是XMPP协议的即时通讯IM客户端PC软件，可用于Windows/linu
   </TR>
   <TR>
 	<TD>移动门户日程提醒、定时提醒</TD>
-	<TD></TD>
-	<TD></TD>
+	<TD>无</TD>
+	<TD>已有功能</TD>
   </TR>
   <TR>
 	<TD>移动门户同事圈</TD>
@@ -404,8 +410,8 @@ XyTalk.pc是XMPP协议的即时通讯IM客户端PC软件，可用于Windows/linu
   </TR>
   <TR>
 	<TD>移动门户电子投票</TD>
-	<TD></TD>
-	<TD></TD>
+	<TD>无</TD>
+	<TD>已有功能</TD>
   </TR>
   <TR>
 	<TD>文件私有云分布式存储</TD>
@@ -480,6 +486,18 @@ XyTalk.pc是XMPP协议的即时通讯IM客户端PC软件，可用于Windows/linu
   <LI>其他客户端：Android、iOS、Web
 </UL>
 <p>
+<br>
+<H2>## 截图预览  ##</H2>
+PC版界面:
+<br>
+<img alt="XyTalk IM" src="http://111.230.157.216/img/chat.png" />
+<br>
+Android版界面:
+<br>
+iOS版界面:
+<br>
+后台管理界面:
+<br>
 <br>
 
 <H2>## 更新日志 ##</H2>
