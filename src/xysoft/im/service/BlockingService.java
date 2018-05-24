@@ -17,7 +17,6 @@ public class BlockingService {
 		
 		//初始化实例Blocking Command Manager
 		BlockingCommandManager blockingCommandManager = BlockingCommandManager.getInstanceFor(Launcher.connection);
-
 		//检查是否有阻止服务支持
 		try {
 			boolean isSupported = blockingCommandManager.isSupportedByServer();
