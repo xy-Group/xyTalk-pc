@@ -8,18 +8,20 @@ public class JID {
 		// TODO Auto-generated constructor stub
 	}
 
-	public static String bare(String from) {
-		// TODO Auto-generated method stub
-		return "test1@win7-1803071731";
+	public static String bare(String username) {
+
+		return username + "@"+ Launcher.DOMAIN;
 	}
 
 	public static String usernameByJid(String from) {
-
-		return from.substring(0, from.indexOf("@"));
+		if (from!=null && !from.isEmpty())
+			return from.substring(0, from.indexOf("@"));
+		else
+			return "";
 	}
 
 	public static String nameByMuc(String fromfull) {
-		// TODO Auto-generated method stub
+		// TODO 获取MUC里的人员姓名
 		return "群友";
 	}
 

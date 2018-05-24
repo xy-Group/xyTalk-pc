@@ -52,8 +52,8 @@ public class UserInfoPanel extends ParentAvailablePanel
         contentPanel.setLayout(new VerticalFlowLayout(VerticalFlowLayout.CENTER, 0, 20, true, false));
 
         imageLabel = new JLabel();
-        ImageIcon icon = new ImageIcon(AvatarUtil.createOrLoadUserAvatar("song").getScaledInstance(100,100, Image.SCALE_SMOOTH));
-        imageLabel.setIcon(icon);
+//        ImageIcon icon = new ImageIcon(AvatarUtil.createOrLoadUserAvatar("me").getScaledInstance(100,100, Image.SCALE_SMOOTH));
+//        imageLabel.setIcon(icon);
 
         nameLabel = new JLabel();
         nameLabel.setFont(FontUtil.getDefaultFont(20));
@@ -102,20 +102,18 @@ public class UserInfoPanel extends ParentAvailablePanel
     	ContactsUser cu = contactsUserService.findByUsername(username);
     	
         this.username = username;
-        StringBuilder sb = new StringBuilder();
-        sb.append("<html>");
-        sb.append(cu.getName());     
-        sb.append("</html>");
         
-        nameLabel.setText(sb.toString());
+        //nameLabel.setText(sb.toString());
         StringBuilder sbInfo = new StringBuilder();
-        sbInfo.append("<html>登录名:");
+        sbInfo.append("<html>姓名: ");
+        sbInfo.append(cu.getName());     
+        sbInfo.append("<p><br>登录名: ");
         sbInfo.append(username);     
-        sbInfo.append("<p><br>手机:");
+        sbInfo.append("<p><br>手机: ");
         sbInfo.append(cu.getPhone());     
-        sbInfo.append("<p><br>邮箱:");
+        sbInfo.append("<p><br>邮箱: ");
         sbInfo.append(cu.getMail());     
-        sbInfo.append("<p><br>办公位置:");
+        sbInfo.append("<p><br>办公位置: ");
         sbInfo.append(cu.getLocation());     
         sbInfo.append("</html>");
              

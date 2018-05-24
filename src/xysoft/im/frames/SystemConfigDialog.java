@@ -26,13 +26,16 @@ public class SystemConfigDialog extends JDialog
     private JPanel settingMenuPanel;
     private JPanel settingAreaPanel;
     private JLabel changeAvatarLabel;
-    private JLabel changePasswordLabel;
+    //private JLabel changeVcardLabel;
+    //private JLabel changePasswordLabel;
+
     private JLabel meLabel;
     private JLabel aboutLabel;
     private JLabel clearCacheLabel;
 
     private ChangeAvatarPanel changeAvatarPanel;
-    private ChangePasswordPanel changePasswordPanel;
+    //private ChangePasswordPanel changePasswordPanel;
+    //private ChangeVcardPanel changeVcardPanel;
     private MePanel mePanel;
     private AboutPanel aboutPanel;
     private ClearCachePanel clearCachePanel;
@@ -42,6 +45,8 @@ public class SystemConfigDialog extends JDialog
 
     public static final String CHANGE_AVATAR = "CHANGE_AVATAR";
     public static final String CHANGE_PASSWORD = "CHANGE_PASSWORD";
+    public static final String CHANGE_SIGN = "CHANGE_SIGN";
+    
     public static final String ME = "ME";
     public static final String ABOUT = "ABOUT";
     public static final String CLEAR_CHACE = "CLEAR_CHACE";
@@ -106,9 +111,12 @@ public class SystemConfigDialog extends JDialog
         changeAvatarLabel = new JLabel("更改头像");
         processButtonLabel(changeAvatarLabel);
 
+        //changeVcardLabel = new JLabel("心情签名");
+        //processButtonLabel(changeVcardLabel);
+        
         // 更改密码按钮
-        changePasswordLabel = new JLabel("修改密码");
-        processButtonLabel(changePasswordLabel);
+        //changePasswordLabel = new JLabel("修改密码");
+        //processButtonLabel(changePasswordLabel);
 
         // "我" 按钮
         meLabel = new JLabel("我");
@@ -127,7 +135,10 @@ public class SystemConfigDialog extends JDialog
         changeAvatarPanel = new ChangeAvatarPanel();
 
         // 更改密码面板
-        changePasswordPanel = new ChangePasswordPanel();
+        //changePasswordPanel = new ChangePasswordPanel();
+        
+        // 更改心情签名等用户资料
+        //changeVcardPanel = new ChangeVcardPanel();
 
         // "我" 面板
         mePanel = new MePanel();
@@ -153,14 +164,17 @@ public class SystemConfigDialog extends JDialog
         settingMenuPanel.setLayout(new VerticalFlowLayout(VerticalFlowLayout.TOP, 0, 0, true, false));
         settingMenuPanel.add(meLabel);
         settingMenuPanel.add(changeAvatarLabel);
-        settingMenuPanel.add(changePasswordLabel);
+        //settingMenuPanel.add(changePasswordLabel);       
+        //settingMenuPanel.add(changeVcardLabel);
         settingMenuPanel.add(clearCacheLabel);
         settingMenuPanel.add(aboutLabel);
 
         settingAreaPanel.setLayout(cardLayout);
         settingAreaPanel.add(mePanel, ME);
         settingAreaPanel.add(changeAvatarPanel, CHANGE_AVATAR);
-        settingAreaPanel.add(changePasswordPanel, CHANGE_PASSWORD);
+//        settingAreaPanel.add(changePasswordPanel, CHANGE_PASSWORD);
+        //settingAreaPanel.add(changeVcardPanel, CHANGE_SIGN);
+        
         settingAreaPanel.add(aboutPanel, ABOUT);
         settingAreaPanel.add(clearCachePanel, CLEAR_CHACE);
 
@@ -223,6 +237,10 @@ public class SystemConfigDialog extends JDialog
                     {
                         cardLayout.show(settingAreaPanel, CHANGE_PASSWORD);
                     }
+                    else if (source.getText().equals("心情签名"))
+                    {
+                        cardLayout.show(settingAreaPanel, CHANGE_SIGN);
+                    }
                     else if (source.getText().equals("我"))
                     {
                         cardLayout.show(settingAreaPanel, ME);
@@ -243,7 +261,8 @@ public class SystemConfigDialog extends JDialog
         };
 
         changeAvatarLabel.addMouseListener(itemMouseListener);
-        changePasswordLabel.addMouseListener(itemMouseListener);
+        //changeVcardLabel.addMouseListener(itemMouseListener);
+        //changePasswordLabel.addMouseListener(itemMouseListener);
         meLabel.addMouseListener(itemMouseListener);
         aboutLabel.addMouseListener(itemMouseListener);
         clearCacheLabel.addMouseListener(itemMouseListener);

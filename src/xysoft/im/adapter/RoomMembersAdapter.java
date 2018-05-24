@@ -1,6 +1,7 @@
 package xysoft.im.adapter;
 
 import xysoft.im.app.Launcher;
+import xysoft.im.cache.UserCache;
 import xysoft.im.components.Colors;
 import xysoft.im.db.model.CurrentUser;
 import xysoft.im.db.service.ContactsUserService;
@@ -8,6 +9,7 @@ import xysoft.im.db.service.CurrentUserService;
 import xysoft.im.components.UserInfoPopup;
 import xysoft.im.listener.AbstractMouseListener;
 import xysoft.im.utils.AvatarUtil;
+import xysoft.im.utils.DebugUtil;
 
 import javax.swing.*;
 import java.awt.*;
@@ -21,7 +23,6 @@ public class RoomMembersAdapter extends BaseAdapter<RoomMembersItemViewHolder>
 {
     private List<String> members;
     private List<RoomMembersItemViewHolder> viewHolders = new ArrayList<>();
-    private CurrentUser currentUser;
     private CurrentUserService currentUserService = Launcher.currentUserService;
     private ContactsUserService contactsUserService = Launcher.contactsUserService;
     private MouseAdapter addMemberButtonMouseListener;
@@ -31,7 +32,6 @@ public class RoomMembersAdapter extends BaseAdapter<RoomMembersItemViewHolder>
     public RoomMembersAdapter(List<String> members)
     {
         this.members = members;
-        currentUser = currentUserService.findAll().get(0);
     }
 
     @Override
@@ -49,7 +49,15 @@ public class RoomMembersAdapter extends BaseAdapter<RoomMembersItemViewHolder>
         }
 
         String name = members.get(position);
-        viewHolder.roomName.setText(name);
+
+        if (name.equals("添加成员") || name.equals("删除成员") ){
+            viewHolder.roomName.setText(name);        	
+        }
+        else{
+            String realName = Launcher.contactsUserService.findByUsername(name).getName();
+            viewHolder.roomName.setText(realName +" - " + name);       	
+        }
+
 
         if (name.equals("添加成员"))
         {
@@ -128,7 +136,7 @@ public class RoomMembersAdapter extends BaseAdapter<RoomMembersItemViewHolder>
             UserInfoPopup userInfoPopup = new UserInfoPopup(name);
 
 
-            if (!name.equals(currentUser.getUsername()))
+            if (!name.equals(UserCache.CurrentUserName))
             {
                 viewHolder.addMouseListener(new AbstractMouseListener()
                 {

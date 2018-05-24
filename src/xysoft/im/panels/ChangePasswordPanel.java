@@ -11,11 +11,15 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
 /**
- * 修改头像面板
+ * 修改密码
  */
 public class ChangePasswordPanel extends JPanel
 {
-    private static ChangePasswordPanel context;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 855278001078650595L;
+	private static ChangePasswordPanel context;
     private RCPasswordField textField;
     private RCPasswordField textFieldConfirm;
     private RCButton okButton;

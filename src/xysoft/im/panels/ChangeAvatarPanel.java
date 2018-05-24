@@ -9,14 +9,12 @@ import xysoft.im.db.model.CurrentUser;
 import xysoft.im.frames.MainFrame;
 import xysoft.im.utils.AvatarUtil;
 import xysoft.im.utils.DebugUtil;
-import xysoft.im.utils.GraphicUtils;
 import xysoft.im.utils.IconUtil;
 import org.apache.commons.codec.binary.Base64;
 import org.jivesoftware.smack.SmackException.NoResponseException;
 import org.jivesoftware.smack.SmackException.NotConnectedException;
 import org.jivesoftware.smack.XMPPException;
 import org.jivesoftware.smack.XMPPException.XMPPErrorException;
-import org.jivesoftware.smack.packet.Presence;
 import org.jivesoftware.smackx.vcardtemp.VCardManager;
 import org.jivesoftware.smackx.vcardtemp.packet.VCard;
 import org.jxmpp.jid.impl.JidCreate;
@@ -33,12 +31,13 @@ import java.awt.image.RescaleOp;
 import java.io.*;
 import static xysoft.im.app.Launcher.currentUserService;
 
-/**
- * 修改头像面板
- */
 public class ChangeAvatarPanel extends JPanel
 {
-    private static ChangeAvatarPanel context;
+    /**
+	 * 修改头像面板
+	 */
+	private static final long serialVersionUID = 405309683586489977L;
+	private static ChangeAvatarPanel context;
     private ImageAdjustLabel imageLabel;
     private RCButton okButton;
     private RCButton openButton;
@@ -93,15 +92,11 @@ public class ChangeAvatarPanel extends JPanel
         //imageLabel.setBorder(new LineBorder(Colors.ITEM_SELECTED_LIGHT));
 
         //imageLabel.setIcon(new ImageIcon(AvatarUtil.createOrLoadUserAvatar(currentUser.getUsername()).getScaledInstance(200, 200, Image.SCALE_SMOOTH)));
-
-
         okButton = new RCButton("使用头像", Colors.MAIN_COLOR, Colors.MAIN_COLOR_DARKER, Colors.MAIN_COLOR_DARKER);
         okButton.setPreferredSize(new Dimension(100, 35));
-
         openButton = new RCButton("选择图片", Colors.MAIN_COLOR, Colors.MAIN_COLOR_DARKER, Colors.MAIN_COLOR_DARKER);
         openButton.setPreferredSize(new Dimension(100, 35));
         openButton.setToolTipText("点击上传本地头像");
-
 
         statusLabel = new JLabel();
         statusLabel.setText("头像应用成功");
@@ -318,7 +313,9 @@ public class ChangeAvatarPanel extends JPanel
 
 class ImageAdjustLabel extends JLabel
 {
-    private BufferedImage image;
+
+	private static final long serialVersionUID = -466816743572838261L;
+	private BufferedImage image;
     private BufferedImage scaledImage;
     private int imageMaxWidth;
     private int imageMaxHeight;

@@ -73,6 +73,16 @@ public class AvatarUtil
         }
     }
 
+    public static Image staticGroupAvatar()
+    {
+    	Image avatar = getCachedImageAvatar("群");
+    	if (avatar == null)
+        {
+            avatar = createAvatar("群", "muc");
+        }
+    	
+    	return avatar;
+    }
 
     public static Image createOrLoadGroupAvatar(String groupName, String[] members, String type)
     {
@@ -92,7 +102,7 @@ public class AvatarUtil
                 // 如果尚未从服务器获取群成员，则获取默认群组头像
                 if (members == null || members.length < 1)
                 {
-                    String sign = type.equals("q") ? "群" : "群聊";
+                    String sign = type.equals("q") ? "群" : "群";
                     avatar = getCachedImageAvatar(sign);
 
                     // 默认群组头像不存在，则生成
@@ -107,7 +117,7 @@ public class AvatarUtil
                 {
                     System.out.println("创建群组个性头像 : " + groupName);
                     //avatar = createGroupAvatar(groupName, members);
-                    avatar = getCachedImageAvatar("群组");
+                    avatar = getCachedImageAvatar("群");
                 }
             }
 
@@ -160,8 +170,8 @@ public class AvatarUtil
 
         try
         {
-            int width = 80;
-            int height = 80;
+            int width = 200;
+            int height = 200;
 
             // 创建BufferedImage对象
             Font font = FontUtil.getDefaultFont(96, Font.PLAIN);
@@ -185,7 +195,7 @@ public class AvatarUtil
 
             g2d.drawString(drawString, x, strHeight);
 
-            BufferedImage roundImage = ImageUtil.setRadius(image, width, height, 10);
+            BufferedImage roundImage = ImageUtil.setRadius(image, width, height, 35);
 
             g2d.dispose();
             File file = new File(AVATAR_CACHE_ROOT + "/" + sign + ".png");
@@ -199,6 +209,7 @@ public class AvatarUtil
 
         return null;
     }
+
 
 
     private static Color getColor(String username)

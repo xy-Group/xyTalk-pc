@@ -85,8 +85,7 @@ public class XmppFileService {
 		        final File downloadedFile = new File(path, fileName);
 		        
 				try {
-					transfer.recieveFile(downloadedFile);
-					
+					transfer.recieveFile(downloadedFile);					
 				} catch (SmackException | IOException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();

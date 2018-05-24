@@ -30,11 +30,8 @@ public class MyInfoPanel extends ParentAvailablePanel
     private JLabel avatar;
     private JLabel username;
     private JLabel menuIcon;
-    private CurrentUserService currentUserService = Launcher.currentUserService;
 
     MainOperationPopupMenu mainOperationPopupMenu;
-    private String currentUsername;
-
 
     public MyInfoPanel(JPanel parent)
     {
@@ -50,17 +47,15 @@ public class MyInfoPanel extends ParentAvailablePanel
     private void initComponents()
     {
 
-        //GImage.setBorder(new SubtleSquareBorder(true));
-        currentUsername = UserCache.CurrentUserRealName;
         avatar = new JLabel();
-        avatar.setIcon(new ImageIcon(AvatarUtil.createOrLoadUserAvatar(currentUsername).getScaledInstance(50,50,Image.SCALE_SMOOTH)));
+        avatar.setIcon(new ImageIcon(AvatarUtil.createOrLoadUserAvatar(UserCache.CurrentUserName).getScaledInstance(50,50,Image.SCALE_SMOOTH)));
 
         avatar.setPreferredSize(new Dimension(50, 50));
         avatar.setCursor(new Cursor(Cursor.HAND_CURSOR));
 
 
         username = new JLabel();
-        username.setText(currentUsername);
+        username.setText(UserCache.CurrentUserRealName);
         username.setFont(FontUtil.getDefaultFont(16));
         username.setForeground(Colors.FONT_WHITE);
 
@@ -117,10 +112,9 @@ public class MyInfoPanel extends ParentAvailablePanel
 
     public void reloadAvatar()
     {
-        currentUsername = UserCache.CurrentUserName;// currentUserService.findAll().get(0).getUsername();
         //Image image = AvatarUtil.createOrLoadUserAvatar(currentUsername);
         //avatar.setImage(image);
-        avatar.setIcon(new ImageIcon(AvatarUtil.createOrLoadUserAvatar(currentUsername).getScaledInstance(50,50,Image.SCALE_SMOOTH)));
+        avatar.setIcon(new ImageIcon(AvatarUtil.createOrLoadUserAvatar(UserCache.CurrentUserName).getScaledInstance(50,50,Image.SCALE_SMOOTH)));
 
         avatar.revalidate();
         avatar.repaint();

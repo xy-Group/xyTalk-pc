@@ -84,18 +84,18 @@ public class ContactsItemsAdapter extends BaseAdapter<ContactsItemViewHolder>
         ContactsItem item = contactsItems.get(position);
 
         ImageIcon icon = new ImageIcon();
-        icon.setImage(AvatarUtil.createOrLoadUserAvatar(item.getName())
+        icon.setImage(AvatarUtil.createOrLoadUserAvatar(item.getId())
                 .getScaledInstance(30, 30, Image.SCALE_SMOOTH));
         viewHolder.avatar.setIcon(icon);
 
-        viewHolder.roomName.setText(item.getName());
+        viewHolder.roomName.setText(item.getName() + " - " + item.getId());
 
         viewHolder.addMouseListener(new AbstractMouseListener()
         {
             @Override
             public void mouseClicked(MouseEvent e)
             {
-                RightPanel.getContext().getUserInfoPanel().setUsername(item.getName());
+                RightPanel.getContext().getUserInfoPanel().setUsername(item.getId());
                 RightPanel.getContext().showPanel(RightPanel.USER_INFO);
 
                 setBackground(viewHolder, Colors.ITEM_SELECTED);

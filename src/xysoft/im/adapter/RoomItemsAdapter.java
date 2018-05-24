@@ -64,14 +64,15 @@ public class RoomItemsAdapter extends BaseAdapter<RoomItemViewHolder>
         {
             String[] memberArr = getRoomMembers(item.getRoomId());
 
-            icon.setImage(AvatarUtil.createOrLoadGroupAvatar(item.getTitle(), memberArr, type)
-                    .getScaledInstance(40, 40, Image.SCALE_SMOOTH));
+//            icon.setImage(AvatarUtil.createOrLoadGroupAvatar(item.getTitle(), memberArr, type)
+//                    .getScaledInstance(40, 40, Image.SCALE_SMOOTH));
+            icon.setImage( AvatarUtil.staticGroupAvatar().getScaledInstance(40, 40, Image.SCALE_SMOOTH));
         }
         // 私聊头像
         else if (type.equals("s"))
         {
-            //Image image = AvatarUtil.createOrLoadUserAvatar(item.getTitle()).getScaledInstance(40, 40, Image.SCALE_SMOOTH);
-            Image image = AvatarUtil.getCachedImageBufferedAvatar(JID.usernameByJid(item.getRoomId())).getScaledInstance(40, 40, Image.SCALE_SMOOTH);
+            Image image = AvatarUtil.createOrLoadUserAvatar(JID.usernameByJid(item.getRoomId())).getScaledInstance(40, 40, Image.SCALE_SMOOTH);
+            //Image image = AvatarUtil.getCachedImageBufferedAvatar(JID.usernameByJid(item.getRoomId())).getScaledInstance(40, 40, Image.SCALE_SMOOTH);
             icon.setImage(image);
         }
         viewHolder.avatar.setIcon(icon);

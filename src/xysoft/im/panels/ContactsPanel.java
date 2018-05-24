@@ -19,6 +19,7 @@ import org.jxmpp.jid.impl.JidCreate;
 
 import xysoft.im.adapter.ContactsItemsAdapter;
 import xysoft.im.app.Launcher;
+import xysoft.im.cache.UserCache;
 import xysoft.im.components.Colors;
 import xysoft.im.components.GBC;
 import xysoft.im.components.RCListView;
@@ -72,7 +73,7 @@ public class ContactsPanel extends ParentAvailablePanel {
 
 		List<ContactsUser> contactsUsers = contactsUserService.findAll();
 		for (ContactsUser contactsUser : contactsUsers) {
-			ContactsItem item = new ContactsItem(contactsUser.getUserId(), contactsUser.getUsername(), "s");
+			ContactsItem item = new ContactsItem(contactsUser.getUserId(), contactsUser.getName(), "s");
 
 			contactsItemList.add(item);
 		}
@@ -102,14 +103,13 @@ public class ContactsPanel extends ParentAvailablePanel {
 				for (ContactsItem user : contactsItemList) {
 					if (!AvatarUtil.customAvatarExist(user.getName())) {
 						final String username = user.getName();
-						// logger.debug("获取头像:" + username);
+
 						getUserAvatar(username, true);
 					}
 				}
 
 				// 自己的头像每次启动都去获取
-				currentUsername = currentUserService.findAll().get(0).getUsername();
-				getUserAvatar(currentUsername, true);
+				getUserAvatar(UserCache.CurrentUserName, true);
 			}
 		}).start();
 
@@ -128,7 +128,7 @@ public class ContactsPanel extends ParentAvailablePanel {
 		try {
 			BufferedImage image = null;
 
-			if (hotRefresh) {// TODO: 服务器获取头像，这里从资源文件夹中获取
+			if (hotRefresh) {// TODO: 服务器获取头像
 				VCard vcard;
 				try {
 

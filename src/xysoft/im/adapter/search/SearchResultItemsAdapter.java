@@ -394,7 +394,8 @@ public class SearchResultItemsAdapter extends BaseAdapter<SearchResultItemViewHo
     {
         if (type.equals("m") || type.equals("q"))
         {
-            return AvatarUtil.createOrLoadGroupAvatar(name, members, type).getScaledInstance(35, 35, Image.SCALE_SMOOTH);
+            //return AvatarUtil.createOrLoadGroupAvatar(name, members, type).getScaledInstance(35, 35, Image.SCALE_SMOOTH);
+        	return AvatarUtil.staticGroupAvatar().getScaledInstance(35, 35, Image.SCALE_SMOOTH);
         }
         // 私聊头像
         else if (type.equals("s"))
