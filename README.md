@@ -34,7 +34,7 @@ XyTalk.pc是XMPP协议的即时通讯IM客户端PC软件，可用于Windows/linu
 <p>
 <H2>## 功能   ##</H2>
 
- <TABLE>
+  <TABLE width="100%">
   <TR>
 	<Th>功能</Th>
 	<Th>开源版</Th>
