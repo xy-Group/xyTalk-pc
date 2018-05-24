@@ -36,26 +36,26 @@ XyTalk.pc是XMPP协议的即时通讯IM客户端PC软件，可用于Windows/linu
 <TABLE width="100%">
   <TR>
 	<TD width="25%">
-	<img alt="XyTalk IM" src="https://github.com/xy-Group/xyTalk-pc/blob/master/icon/im_64.png" width="64" height="64" />
+	<img alt="XyTalk IM" src="http://111.230.157.216/img/im_64.png" width="64" height="64" />
 	<br>
 	<H3>XyTalk IM</H3>
 	<br>
 	&nbsp;&nbsp;企业IM服务和客户端，提供完备的功能和使用体验，注重企业特性。
 	</TD>
 	<TD width="25%">
-	<img alt="XyTalk IM" src="https://github.com/xy-Group/xyTalk-pc/blob/master/icon/muc-64.png" width="64" height="64" />
+	<img alt="XyTalk IM" src="http://111.230.157.216/img/muc-64.png" width="64" height="64" />
 	<br>
 	<H3>XyTalk MUC</H3>
 		<br>
 	&nbsp;&nbsp;企业特性的群组服务，是IM产品的核心价值之一。</TD>
 	<TD width="25%">
-	<img alt="XyTalk IM" src="https://github.com/xy-Group/xyTalk-pc/blob/master/icon/portal-64.png" width="64" height="64" />
+	<img alt="XyTalk IM" src="http://111.230.157.216/img/portal-64.png" width="64" height="64" />
 	<br>
 	<H3>XyTalk Portal</H3>
 		<br>
 	&nbsp;&nbsp;一体化办公门户平台，提供网盘、会议管理、流程审批、内容管理等。</TD>
 	<TD width="25%">
-	<img alt="XyTalk IM" src="https://github.com/xy-Group/xyTalk-pc/blob/master/icon/api-64.png" width="64" height="64" />
+	<img alt="XyTalk IM" src="http://111.230.157.216/img/api-64.png" width="64" height="64" />
 	<br>
 	<H3>XyTalk HTTP API</H3>
 		<br>
@@ -63,25 +63,25 @@ XyTalk.pc是XMPP协议的即时通讯IM客户端PC软件，可用于Windows/linu
   </TR>
   <TR>
 	<TD>
-	<img alt="XyTalk IM" src="https://github.com/xy-Group/xyTalk-pc/blob/master/icon/sync-64.png" width="64" height="64" />
+	<img alt="XyTalk IM" src="http://111.230.157.216/img/sync-64.png" width="64" height="64" />
 	<br>
 	<H3>XyTalk Sync</H3>
 		<br>
 	&nbsp;&nbsp;组织架构同步管理，用于保留原有的员工登陆管理，组织架构展示同步、新员工账户自动启用、员工离职即时清除等功能。</TD>
 	<TD>
-	<img alt="XyTalk IM" src="https://github.com/xy-Group/xyTalk-pc/blob/master/icon/file-64.png" width="64" height="64" />
+	<img alt="XyTalk IM" src="http://111.230.157.216/img/file-64.png" width="64" height="64" />
 	<br>
 	<H3>XyTalk File Storage</H3>
 		<br>
 	&nbsp;&nbsp;企业文档库，个人、群组网盘。</TD>
 	<TD>
-	<img alt="XyTalk IM" src="https://github.com/xy-Group/xyTalk-pc/blob/master/icon/push-64.png" width="64" height="64" />
+	<img alt="XyTalk IM" src="http://111.230.157.216/img/push-64.png" width="64" height="64" />
 	<br>
 	<H3>XyTalk Push</H3>
 		<br>
 	&nbsp;&nbsp;iOS APNS和安卓消息推送服务。</TD>
 	<TD>
-	<img alt="XyTalk IM" src="https://github.com/xy-Group/xyTalk-pc/blob/master/icon/client-64.png" width="64" height="64" />
+	<img alt="XyTalk IM" src="http://111.230.157.216/img/client-64.png" width="64" height="64" />
 	<br>
 	<H3>XyTalk Full Client</H3>
 		<br>
