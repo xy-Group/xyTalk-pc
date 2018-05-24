@@ -33,58 +33,46 @@ XyTalk.pc是XMPP协议的即时通讯IM客户端PC软件，可用于Windows/linu
 <br>
 <p>
 <H2>## 特性   ##</H2>
-<TABLE width="100%">
+ <TABLE width="100%">
   <TR>
 	<TD width="25%">
 	<img alt="XyTalk IM" src="http://111.230.157.216/img/im_64.png" width="64" height="64" />
-	<br>
-	<H3>XyTalk IM</H3>
-	<br>
+	<H3>XyTalk IM 即时通讯</H3>
 	&nbsp;&nbsp;企业IM服务和客户端，提供完备的功能和使用体验，注重企业特性。
 	</TD>
 	<TD width="25%">
 	<img alt="XyTalk IM" src="http://111.230.157.216/img/muc-64.png" width="64" height="64" />
-	<br>
-	<H3>XyTalk MUC</H3>
-		<br>
+	<H3>XyTalk MUC 群组</H3>
 	&nbsp;&nbsp;企业特性的群组服务，是IM产品的核心价值之一。</TD>
 	<TD width="25%">
 	<img alt="XyTalk IM" src="http://111.230.157.216/img/portal-64.png" width="64" height="64" />
-	<br>
-	<H3>XyTalk Portal</H3>
-		<br>
+	<H3>XyTalk Portal 办公门户</H3>
 	&nbsp;&nbsp;一体化办公门户平台，提供网盘、会议管理、流程审批、内容管理等。</TD>
 	<TD width="25%">
 	<img alt="XyTalk IM" src="http://111.230.157.216/img/api-64.png" width="64" height="64" />
-	<br>
 	<H3>XyTalk HTTP API</H3>
-		<br>
-	&nbsp;&nbsp;为企业提供IM服务开发调用。</TD>
+	&nbsp;&nbsp;为企业提供IM服务开发调用，提供安全可扩展的方式服务集成对接。</TD>
   </TR>
   <TR>
 	<TD>
+	<p><br>
 	<img alt="XyTalk IM" src="http://111.230.157.216/img/sync-64.png" width="64" height="64" />
-	<br>
-	<H3>XyTalk Sync</H3>
-		<br>
-	&nbsp;&nbsp;组织架构同步管理，用于保留原有的员工登陆管理，组织架构展示同步、新员工账户自动启用、员工离职即时清除等功能。</TD>
+	<H3>XyTalk Sync 同步服务</H3>
+	&nbsp;&nbsp;保留原有的员工登陆管理，组织架构同步、入职自动启用、离职即时清除等。</TD>
 	<TD>
+		<p><br>
 	<img alt="XyTalk IM" src="http://111.230.157.216/img/file-64.png" width="64" height="64" />
-	<br>
-	<H3>XyTalk File Storage</H3>
-		<br>
-	&nbsp;&nbsp;企业文档库，个人、群组网盘。</TD>
+	<H3>XyTalk File Storage 文档库</H3>
+	&nbsp;&nbsp;企业文档库，个人、群组网盘。对海量需求还提供分布式文件系统。</TD>
 	<TD>
+		<p><br>
 	<img alt="XyTalk IM" src="http://111.230.157.216/img/push-64.png" width="64" height="64" />
-	<br>
-	<H3>XyTalk Push</H3>
-		<br>
-	&nbsp;&nbsp;iOS APNS和安卓消息推送服务。</TD>
+	<H3>XyTalk Push 推送服务</H3>
+	&nbsp;&nbsp;iOS APNS和安卓消息推送服务，用于离线消息的提醒。</TD>
 	<TD>
+		<p><br>
 	<img alt="XyTalk IM" src="http://111.230.157.216/img/client-64.png" width="64" height="64" />
-	<br>
-	<H3>XyTalk Full Client</H3>
-		<br>
+	<H3>XyTalk Full Client 全栈客户端</H3>
 	&nbsp;&nbsp;完备的客户端体系，包含Windows\android\iOS\web\linux。</TD>
   </TR>
  
@@ -131,6 +119,11 @@ XyTalk.pc是XMPP协议的即时通讯IM客户端PC软件，可用于Windows/linu
   <TR>
 	<TD>消息复制</TD>
 	<TD>同企业版同步</TD>
+	<TD>已有</TD>
+  </TR>
+  <TR>
+	<TD>消息推送。iOS APNS和安卓消息推送</TD>
+	<TD>无</TD>
 	<TD>已有</TD>
   </TR>
   <TR>
