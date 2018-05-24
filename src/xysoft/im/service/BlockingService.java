@@ -30,7 +30,6 @@ public class BlockingService {
 			e.printStackTrace();
 		}
 
-
 		//阻止一个人
 		//blockingCommandManager.blockContact(jid);
 		//解锁Unblock 
