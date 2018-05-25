@@ -11,6 +11,8 @@ public class ContactsUser extends BasicModel
     private String mail;
 	private String location;
 	private String sp;
+	private String sex;
+	private String dept;
 	private String attr1;
 	private String attr2;
 	private String attr3;
@@ -110,6 +112,22 @@ public class ContactsUser extends BasicModel
 
 	public void setAttr3(String attr3) {
 		this.attr3 = attr3;
+	}
+
+	public String getSex() {
+		return sex;
+	}
+
+	public void setSex(String sex) {
+		this.sex = sex;
+	}
+
+	public String getDept() {
+		return dept;
+	}
+
+	public void setDept(String dept) {
+		this.dept = dept;
 	}
 
 

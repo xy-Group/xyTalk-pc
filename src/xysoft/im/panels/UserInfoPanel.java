@@ -113,6 +113,8 @@ public class UserInfoPanel extends ParentAvailablePanel
         sbInfo.append(cu.getPhone());     
         sbInfo.append("<p><br>邮箱: ");
         sbInfo.append(cu.getMail());     
+        sbInfo.append("<p><br>部门: ");
+        sbInfo.append(cu.getDept());     
         sbInfo.append("<p><br>办公位置: ");
         sbInfo.append(cu.getLocation());     
         sbInfo.append("</html>");

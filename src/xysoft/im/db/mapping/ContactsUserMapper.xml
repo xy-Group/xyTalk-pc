@@ -5,7 +5,7 @@
 <mapper namespace="xysoft.im.db.dao.ContactsUserDao">
     <insert id="insert">
 		INSERT INTO contacts_user(userId, username,name,phone,mail,location,sp,attr1,attr2,attr3)
-		VALUES (#{userId}, #{username}, #{name}, #{phone}, #{mail}, #{location}, #{sp}, #{attr1}, #{attr2}, #{attr3})
+		VALUES (#{userId}, #{username}, #{name}, #{phone}, #{mail}, #{location}, #{sp}, #{sex}, #{dept}, #{attr1}, #{attr2}, #{attr3})
 	</insert>
 
 
@@ -53,6 +53,8 @@
             mail=#{mail},
             location=#{location},
             sp=#{sp},
+            sex=#{sex},
+            dept=#{dept},
             attr1=#{attr1},
             attr2=#{attr2},
             attr3=#{attr3},
@@ -70,6 +72,8 @@
             <if test="mail!= null">mail=#{mail},</if>
             <if test="location!= null">location=#{location},</if>
             <if test="sp!= null">sp=#{sp},</if>
+            <if test="sex!= null">sex=#{sex},</if>
+            <if test="dept!= null">dept=#{dept},</if>
             <if test="attr1!= null">attr1=#{attr1},</if>
             <if test="attr2!= null">attr2=#{attr2},</if>
             <if test="attr3!= null">attr3=#{attr3},</if>

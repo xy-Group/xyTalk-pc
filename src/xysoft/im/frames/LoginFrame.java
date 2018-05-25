@@ -12,6 +12,14 @@ import java.awt.event.KeyListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.RandomAccessFile;
+import java.nio.channels.FileChannel;
+import java.nio.channels.FileLock;
+
+import javax.swing.JCheckBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -32,6 +40,8 @@ import xysoft.im.db.service.CurrentUserService;
 import xysoft.im.listener.AbstractMouseListener;
 import xysoft.im.service.login.XmppLogin;
 import xysoft.im.utils.DbUtils;
+import xysoft.im.utils.Encryptor;
+import xysoft.im.utils.FilesIO;
 import xysoft.im.utils.FontUtil;
 import xysoft.im.utils.IconUtil;
 import xysoft.im.utils.OSUtil;
@@ -56,7 +66,8 @@ public class LoginFrame extends JFrame {
 	private JLabel statusLabel;
 	private JLabel titleLabel;
 	private JLabel downloadLabel;
-
+	private JCheckBox remberPsw;
+	
 	private static Point origin = new Point();
 
 	private SqlSession sqlSession;
@@ -107,6 +118,9 @@ public class LoginFrame extends JFrame {
 		downloadLabel = new JLabel();
 		downloadLabel.setText("下载客户端软件");
 		downloadLabel.setFont(FontUtil.getDefaultFont(14));
+		
+		remberPsw = new JCheckBox("记住密码", true);
+		remberPsw.setFont(FontUtil.getDefaultFont(14));
 
 		editPanel = new JPanel();
 		editPanel.setLayout(new VerticalFlowLayout(VerticalFlowLayout.TOP, 0, 5, true, false));
@@ -130,15 +144,35 @@ public class LoginFrame extends JFrame {
 
 		loginButton = new RCButton("登 录", Colors.MAIN_COLOR, Colors.MAIN_COLOR_DARKER, Colors.MAIN_COLOR_DARKER);
 		loginButton.setFont(FontUtil.getDefaultFont(14));
-		loginButton.setPreferredSize(new Dimension(200, 40));
+		loginButton.setPreferredSize(new Dimension(300, 40));
 
 		statusLabel = new JLabel();
 		statusLabel.setForeground(Colors.RED);
 		statusLabel.setText("密码不正确");
 		statusLabel.setVisible(false);
 		
-		usernameField.setText("wangxin");
-		passwordField.setText("1");
+		usernameField.setText(readName());
+		passwordField.setText(readPassword());
+	}
+
+	private String readPassword() {
+		String path = Launcher.appFilesBasePath + System.getProperty("file.separator") + "setting"
+				+  System.getProperty("file.separator") + "password";
+		String password = FilesIO.fileRead(path);
+		if (password == null || password.isEmpty())
+			return "";
+		else
+			return Encryptor.decrypt(password);
+	}
+
+	private String readName() {
+		String path = Launcher.appFilesBasePath + System.getProperty("file.separator") + "setting"
+				+  System.getProperty("file.separator") + "username";
+		String username = FilesIO.fileRead(path);
+		if (username == null || username.isEmpty())
+			return "";
+		else
+			return username;
 	}
 
 	private void initView() {
@@ -158,15 +192,17 @@ public class LoginFrame extends JFrame {
 
 		JPanel buttonPanel = new JPanel();
 		buttonPanel.setLayout(new GridBagLayout());
-		buttonPanel.add(loginButton, new GBC(0, 0).setFill(GBC.HORIZONTAL).setWeight(1, 1).setInsets(10, 0, 0, 0));
-		buttonPanel.add(downloadLabel, new GBC(0, 1).setFill(GBC.HORIZONTAL).setWeight(1, 1).setInsets(20, 90, 0, 0));
+		//buttonPanel.add(loginButton, new GBC(0, 0).setFill(GBC.HORIZONTAL).setWeight(2, 1).setInsets(10, 0, 0, 0));		
+		buttonPanel.add(remberPsw, new GBC(0, 1).setFill(GBC.HORIZONTAL).setWeight(1, 1).setInsets(20, 10, 0, 0));
+		buttonPanel.add(downloadLabel, new GBC(1, 1).setFill(GBC.HORIZONTAL).setWeight(1, 1).setInsets(20, 10, 0, 0));
 		editPanel.add(usernameField);
 		editPanel.add(passwordField);
+		editPanel.add(loginButton);
 		editPanel.add(buttonPanel);
 		editPanel.add(statusLabel);
 		add(contentPanel);
-		contentPanel.add(titlePanel, new GBC(0, 1).setFill(GBC.BOTH).setWeight(1, 1).setInsets(10, 10, 0, 10));
-		contentPanel.add(editPanel, new GBC(0, 2).setFill(GBC.BOTH).setWeight(1, 10).setInsets(10, 10, 0, 10));
+		contentPanel.add(titlePanel, new GBC(0, 1).setFill(GBC.BOTH).setWeight(2, 1).setInsets(10, 10, 0, 10));
+		contentPanel.add(editPanel, new GBC(0, 2).setFill(GBC.BOTH).setWeight(2, 10).setInsets(10, 10, 0, 10));
 	
         Toolkit tk = Toolkit.getDefaultToolkit();
         Launcher.currentWindowWidth = tk.getScreenSize().width;
@@ -279,7 +315,11 @@ public class LoginFrame extends JFrame {
 				login.setUsername(name);
 				login.setPassword(pwd);
 				String flag = login.login();
-
+				SaveUsernameTofile(usernameField.getText());
+				if (remberPsw.isSelected()){
+					SavePasswordTofile(passwordField.getText());
+				}
+				
 				if (flag.equals("ok")) {					
 					MainFrame frame = new MainFrame();
 					frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -334,6 +374,7 @@ public class LoginFrame extends JFrame {
 			currentUserService.insertOrUpdate(currentUser);
 
 			hideMe();
+			
 
 			MainFrame frame = new MainFrame();
 			frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -354,4 +395,66 @@ public class LoginFrame extends JFrame {
 
 		statusLabel.setText(message);
 	}
+	
+	private static void SaveUsernameTofile(String username)
+    {
+        try
+        {
+            String path = Launcher.appFilesBasePath + System.getProperty("file.separator") + "setting";
+            File dir = new File(path);
+            if (!dir.exists())
+            {
+                dir.mkdirs();
+            }
+
+            File file = new File(path + System.getProperty("file.separator") + "username");
+            if (!file.exists())
+            {
+            	file.createNewFile();
+            }
+
+           FilesIO.fileWrite(file.getPath(), username,false);
+        }
+        catch (FileNotFoundException e1)
+        {
+            e1.printStackTrace();
+        }
+        catch (IOException e)
+        {
+            e.printStackTrace();
+        }
+    }
+	
+	private static void SavePasswordTofile(String password)
+    {
+        try
+        {
+            String path = Launcher.appFilesBasePath + System.getProperty("file.separator") + "setting";
+            File dir = new File(path);
+            if (!dir.exists())
+            {
+                dir.mkdirs();
+            }
+
+            File file = new File(path + System.getProperty("file.separator") + "password");
+            if (!file.exists())
+            {
+            	file.createNewFile();
+            }
+
+           try {
+			FilesIO.fileWrite(file.getPath(),Encryptor.encrypt(password) ,false);
+		} catch (Exception e) {
+			
+		}
+        }
+        catch (FileNotFoundException e1)
+        {
+            e1.printStackTrace();
+        }
+        catch (IOException e)
+        {
+            e.printStackTrace();
+        }
+    }
 }

@@ -12,17 +12,16 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
-import java.io.RandomAccessFile;
 import java.nio.channels.FileChannel;
 import javax.swing.JOptionPane;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import xysoft.im.constant.Config;
 import xysoft.im.constant.Res;
 
 
@@ -34,6 +33,76 @@ public class FilesIO {
 	static Logger log = LoggerFactory.getLogger(FilesIO.class);
 	public static void bufferedWrite(String filename, String str) {
 		File f = new File(filename);
+		OutputStreamWriter writer = null;
+		BufferedWriter bw = null;
+		try {
+			OutputStream os = new FileOutputStream(f);
+			writer = new OutputStreamWriter(os, "UTF-8");
+			bw = new BufferedWriter(writer);
+
+			bw.write(str);
+
+			bw.flush();
+
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				bw.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+	}
+	
+	public static void fileWrite(String path, String str, boolean append) {
+		FileWriter fw = null;  
+        try {  
+            fw = new FileWriter(path, append);  
+            fw.write(str);  
+        } catch (Exception e) {  
+
+        } finally {  
+            if (fw != null)  
+                try {  
+                    fw.close();  
+                } catch (IOException e) {  
+                    throw new RuntimeException("关闭失败！");  
+                }  
+        }  
+	}
+	
+
+	public static String fileRead(String path) {
+		FileReader fr = null;  
+		StringBuilder sb = new StringBuilder();
+        try {  
+        	fr = new FileReader(path);  
+
+        	char [] a = new char[30];
+        	fr.read(a);
+            for(char c : a){
+            	if (c != '\0')
+            		sb.append(c);
+            }
+            return sb.toString(); 
+            
+        } catch (Exception e) {  
+        	return "";
+        } finally {  
+            if (fr != null)  
+                try {  
+                	fr.close();  
+                } catch (IOException e) {  
+                    throw new RuntimeException("关闭失败！");  
+                }  
+        }  
+	}
+	
+	public static void bufferedWrite(File f, String str) {
+		
 		OutputStreamWriter writer = null;
 		BufferedWriter bw = null;
 		try {
@@ -197,86 +266,7 @@ public class FilesIO {
 		}  
 		return copySizes;  
 	}
-	/**
-	 * 检查数据库文件是否完整
-	 */
-	public static  void checkDBFile(File userDbFile){
-		//获取数据库连接之前检查数据库文件是否存在，不存在则直接copy到appdata目录
-		if(!userDbFile.exists()){
-			try {
-				
-				File dir=	userDbFile.getParentFile();
-				if(!dir.exists()){
-					dir.mkdirs();
-				}
-
-				File dbFile=new File(Config.USER_HOME + File.separator + userDbFile.getName());
-				if(dbFile.exists()){
-					FilesIO.CopyFile(dbFile, userDbFile);
-				}
-
-			} catch (IOException e) {
-				log.error(e.getMessage());
-				e.printStackTrace();
-			}catch (Exception e) {
-				log.error(e.getMessage());
-				e.printStackTrace();
-			}
-		}
-	}
-
-	/**
-	 * 
-	 * 锁住当前登录用户，防止再次登录
-	 * 
-	 */
-	public static void lockFile(String userName){
-		String lockFile = Config.USER_HOME +"/user/"+userName+"@im/Lock.File";
-		File F=new File(lockFile);
-		if(F.exists()){
-			try {
-				F.createNewFile();
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
-		RandomAccessFile raf;
-		try {
-			raf = new RandomAccessFile(F, "rws");
-			FileChannel fc = raf.getChannel();
-			fc.tryLock();
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
-	/**
-	 * 判断文件是否被锁住，如果被占用说明当前用户已登录
-	 * @param userName  用户名
-	 * @return   返回是否登录
-	 */
-	public static boolean hasLogin(String userName){
-		String lockFile=Config.USER_HOME + "/user/"+userName+"@im/Lock.File";
-
-		File F=new File(lockFile);
-
-		if(!F.exists()){
-			F.getParentFile().mkdirs();
-			try {
-				F.createNewFile();
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
-		if(F.renameTo(F)){    
-			return false;
-		}else{        
-			return true;
-		}
-	}
+	
 	
 	public static boolean deleteDir(File dir) {
 

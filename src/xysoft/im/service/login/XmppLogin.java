@@ -126,7 +126,7 @@ public class XmppLogin implements Login {
 			reconnectionManager.enableAutomaticReconnection();// 开启重联机制
 
 			StanzaFilter filterMsg = new StanzaTypeFilter(Message.class);
-			StanzaFilter filterIQ = new StanzaTypeFilter(IQ.class);
+//			StanzaFilter filterIQ = new StanzaTypeFilter(IQ.class);
 			// PacketCollector myCollector =
 			// Launcher.connection.createPacketCollector(filterMsg);
 			StanzaListener listenerMsg = new StanzaListener() {
@@ -141,18 +141,18 @@ public class XmppLogin implements Login {
 				
 			};
 
-			StanzaListener listenerIQ = new StanzaListener() {
-
-				@Override
-				public void processStanza(Stanza stanza)
-						throws NotConnectedException, InterruptedException, NotLoggedInException {
-
-					if (stanza instanceof IQ) {
-						// TODO IQ包
-						
-					}
-				}
-			};
+//			StanzaListener listenerIQ = new StanzaListener() {
+//
+//				@Override
+//				public void processStanza(Stanza stanza)
+//						throws NotConnectedException, InterruptedException, NotLoggedInException {
+//
+//					if (stanza instanceof IQ) {
+//						// TODO IQ包
+//						
+//					}
+//				}
+//			};
 
 			//加入异步监听
 			Launcher.connection.addAsyncStanzaListener(listenerMsg, filterMsg);
