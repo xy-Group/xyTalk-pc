@@ -18,7 +18,11 @@ import java.text.DecimalFormat;
 
 public class ClearCachePanel extends JPanel
 {
-    private JLabel infoLabel;
+    /**
+	 * 清除缓存
+	 */
+	private static final long serialVersionUID = 2674994848671235793L;
+	private JLabel infoLabel;
     private RCButton clearButton;
     private String fileCachePath;
     private String imageCachePath;

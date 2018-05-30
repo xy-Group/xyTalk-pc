@@ -10,7 +10,11 @@ import java.awt.*;
 
 public class TipPanel extends ParentAvailablePanel
 {
-    private JLabel imageLabel;
+    /**
+	 * 默认首次进入的界面
+	 */
+	private static final long serialVersionUID = -8943855187877504201L;
+	private JLabel imageLabel;
 
     public TipPanel(JPanel parent)
     {
@@ -22,7 +26,7 @@ public class TipPanel extends ParentAvailablePanel
     private void initComponents()
     {
         imageLabel = new JLabel();
-        imageLabel.setIcon(IconUtil.getIcon(this, "/image/bg.png", 140, 140));
+        imageLabel.setIcon(IconUtil.getIcon(this, "/image/bg.png",64,64));
     }
 
     private void initView()

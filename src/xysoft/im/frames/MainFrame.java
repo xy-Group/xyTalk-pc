@@ -91,7 +91,7 @@ public class MainFrame extends JFrame
         {
             if (OSUtil.getOsType() == OSUtil.Mac_OS)
             {
-                normalTrayIcon = IconUtil.getIcon(this, "/image/ic_launcher_dark.png", 20, 20).getImage();
+                normalTrayIcon = IconUtil.getIcon(this, "/image/ic_launcher.png", 20, 20).getImage();
             }
             else
             {

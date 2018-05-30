@@ -22,6 +22,7 @@ import java.nio.channels.FileLock;
 import javax.swing.JCheckBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.SwingWorker;
 import javax.swing.border.LineBorder;
@@ -155,25 +156,7 @@ public class LoginFrame extends JFrame {
 		passwordField.setText(readPassword());
 	}
 
-	private String readPassword() {
-		String path = Launcher.appFilesBasePath + System.getProperty("file.separator") + "setting"
-				+  System.getProperty("file.separator") + "password";
-		String password = FilesIO.fileRead(path);
-		if (password == null || password.isEmpty())
-			return "";
-		else
-			return Encryptor.decrypt(password);
-	}
 
-	private String readName() {
-		String path = Launcher.appFilesBasePath + System.getProperty("file.separator") + "setting"
-				+  System.getProperty("file.separator") + "username";
-		String username = FilesIO.fileRead(path);
-		if (username == null || username.isEmpty())
-			return "";
-		else
-			return username;
-	}
 
 	private void initView() {
 		JPanel contentPanel = new JPanel();
@@ -412,8 +395,17 @@ public class LoginFrame extends JFrame {
             {
             	file.createNewFile();
             }
-
-           FilesIO.fileWrite(file.getPath(), username,false);
+            
+            String oldusername = readName();
+            
+            if (oldusername!=null && !oldusername.isEmpty())
+            {
+            	if (!oldusername.equals(username) && ! Launcher.roomService.findAll().isEmpty()){
+            		JOptionPane.showMessageDialog(null, "您更换了登陆账户，并且原账户数据并未清除，所以切换操作不被允许，将自动退出。如确实需要更换账户，请先删除原账户所有数据库记录。", "提示",JOptionPane.WARNING_MESSAGE);  
+            		System.exit(1);
+            	}            		
+            }
+            FilesIO.fileWrite(file.getPath(), username,false);
         }
         catch (FileNotFoundException e1)
         {
@@ -457,4 +449,24 @@ public class LoginFrame extends JFrame {
             e.printStackTrace();
         }
     }
+	
+	private String readPassword() {
+		String path = Launcher.appFilesBasePath + System.getProperty("file.separator") + "setting"
+				+  System.getProperty("file.separator") + "password";
+		String password = FilesIO.fileRead(path);
+		if (password == null || password.isEmpty())
+			return "";
+		else
+			return Encryptor.decrypt(password);
+	}
+
+	private static String readName() {
+		String path = Launcher.appFilesBasePath + System.getProperty("file.separator") + "setting"
+				+  System.getProperty("file.separator") + "username";
+		String username = FilesIO.fileRead(path);
+		if (username == null || username.isEmpty())
+			return "";
+		else
+			return username;
+	}
 }

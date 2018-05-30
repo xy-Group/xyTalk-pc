@@ -75,9 +75,6 @@ public class Launcher
     public static int currentWindowWidth ;
     public static int currentWindowHeight ;
 
-
-    
-
     static
     {
         sqlSession = DbUtils.getSqlSession();

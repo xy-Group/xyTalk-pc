@@ -1,5 +1,6 @@
 package xysoft.im.components.message;
 
+import xysoft.im.app.Launcher;
 import xysoft.im.components.Colors;
 import xysoft.im.components.RCMainOperationMenuItemUI;
 import xysoft.im.frames.CreateGroupDialog;
@@ -21,11 +22,12 @@ public class MainOperationPopupMenu extends JPopupMenu
 
     private void initMenuItem()
     {
-        JMenuItem item1 = new JMenuItem("创建群组");
-        JMenuItem item2 = new JMenuItem("设置");
+        JMenuItem itemNewMUC = new JMenuItem("创建群组");
+        JMenuItem itemConfig = new JMenuItem("设置");
+        JMenuItem itemExit = new JMenuItem("退出");
 
-        item1.setUI(new RCMainOperationMenuItemUI());
-        item1.addActionListener(new AbstractAction()
+        itemNewMUC.setUI(new RCMainOperationMenuItemUI());
+        itemNewMUC.addActionListener(new AbstractAction()
         {
             @Override
             public void actionPerformed(ActionEvent e)
@@ -35,12 +37,12 @@ public class MainOperationPopupMenu extends JPopupMenu
         });
         ImageIcon icon1 = new ImageIcon(getClass().getResource("/image/chat.png"));
         icon1.setImage(icon1.getImage().getScaledInstance(20, 20, Image.SCALE_SMOOTH));
-        item1.setIcon(icon1);
-        item1.setIconTextGap(5);
+        itemNewMUC.setIcon(icon1);
+        itemNewMUC.setIconTextGap(5);
 
 
-        item2.setUI(new RCMainOperationMenuItemUI());
-        item2.addActionListener(new AbstractAction()
+        itemConfig.setUI(new RCMainOperationMenuItemUI());
+        itemConfig.addActionListener(new AbstractAction()
         {
             @Override
             public void actionPerformed(ActionEvent e)
@@ -52,12 +54,28 @@ public class MainOperationPopupMenu extends JPopupMenu
         });
         ImageIcon icon2 = new ImageIcon(getClass().getResource("/image/setting.png"));
         icon2.setImage(icon2.getImage().getScaledInstance(20, 20, Image.SCALE_SMOOTH));
-        item2.setIcon(icon2);
-        item2.setIconTextGap(5);
+        itemConfig.setIcon(icon2);
+        itemConfig.setIconTextGap(5);
+
+        itemExit.setUI(new RCMainOperationMenuItemUI());
+        itemExit.addActionListener(new AbstractAction()
+        {
+            @Override
+            public void actionPerformed(ActionEvent e)
+            {
+            	Launcher.connection.disconnect();
+                System.exit(1);
+            }
+        });
+        ImageIcon icon3 = new ImageIcon(getClass().getResource("/image/logout.png"));
+        icon3.setImage(icon3.getImage().getScaledInstance(20, 20, Image.SCALE_SMOOTH));
+        itemExit.setIcon(icon3);
+        itemExit.setIconTextGap(5);
 
 
-        this.add(item1);
-        this.add(item2);
+        this.add(itemNewMUC);
+        this.add(itemConfig);
+        this.add(itemExit);
 
         setBorder(new LineBorder(Colors.SCROLL_BAR_TRACK_LIGHT));
         setBackground(Colors.FONT_WHITE);

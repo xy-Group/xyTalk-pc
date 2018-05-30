@@ -32,6 +32,7 @@ public class SystemConfigDialog extends JDialog
     private JLabel meLabel;
     private JLabel aboutLabel;
     private JLabel clearCacheLabel;
+    private JLabel clearDBLabel;
 
     private ChangeAvatarPanel changeAvatarPanel;
     //private ChangePasswordPanel changePasswordPanel;
@@ -39,7 +40,7 @@ public class SystemConfigDialog extends JDialog
     private MePanel mePanel;
     private AboutPanel aboutPanel;
     private ClearCachePanel clearCachePanel;
-
+    private ClearDBPanel clearDBPanel;
 
     private JLabel selectedLabel;
 
@@ -50,6 +51,8 @@ public class SystemConfigDialog extends JDialog
     public static final String ME = "ME";
     public static final String ABOUT = "ABOUT";
     public static final String CLEAR_CHACE = "CLEAR_CHACE";
+    public static final String CLEAR_DB = "CLEAR_DB";
+    
 
     private CardLayout cardLayout = new CardLayout();
 
@@ -130,6 +133,9 @@ public class SystemConfigDialog extends JDialog
         clearCacheLabel = new JLabel("清除缓存");
         processButtonLabel(clearCacheLabel);
 
+        // 清除缓存 按钮
+        clearDBLabel = new JLabel("清除数据库");
+        processButtonLabel(clearDBLabel);
 
         // 更改头像面板
         changeAvatarPanel = new ChangeAvatarPanel();
@@ -145,7 +151,9 @@ public class SystemConfigDialog extends JDialog
 
         // 关于面板
         aboutPanel = new AboutPanel();
-
+        
+        // 清除数据库面板
+        clearDBPanel = new ClearDBPanel();
         // 清除缓存面板
         clearCachePanel = new ClearCachePanel();
 
@@ -166,6 +174,7 @@ public class SystemConfigDialog extends JDialog
         settingMenuPanel.add(changeAvatarLabel);
         //settingMenuPanel.add(changePasswordLabel);       
         //settingMenuPanel.add(changeVcardLabel);
+        settingMenuPanel.add(clearDBLabel);
         settingMenuPanel.add(clearCacheLabel);
         settingMenuPanel.add(aboutLabel);
 
@@ -176,6 +185,7 @@ public class SystemConfigDialog extends JDialog
         //settingAreaPanel.add(changeVcardPanel, CHANGE_SIGN);
         
         settingAreaPanel.add(aboutPanel, ABOUT);
+        settingAreaPanel.add(clearDBPanel, CLEAR_DB);
         settingAreaPanel.add(clearCachePanel, CLEAR_CHACE);
 
 
@@ -253,6 +263,10 @@ public class SystemConfigDialog extends JDialog
                     {
                         cardLayout.show(settingAreaPanel, CLEAR_CHACE);
                     }
+                    else if (source.getText().equals("清除数据库"))
+                    {
+                        cardLayout.show(settingAreaPanel, CLEAR_DB);
+                    }
                 }
 
 
@@ -266,6 +280,7 @@ public class SystemConfigDialog extends JDialog
         meLabel.addMouseListener(itemMouseListener);
         aboutLabel.addMouseListener(itemMouseListener);
         clearCacheLabel.addMouseListener(itemMouseListener);
+        clearDBLabel.addMouseListener(itemMouseListener);
     }
 
     private void selectedLabel(JLabel label)
