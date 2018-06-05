@@ -89,7 +89,7 @@ public class SelectUserItemsAdapter extends BaseAdapter<SelectUserItemViewHolder
     public void onBindViewHolder(SelectUserItemViewHolder viewHolder, int position)
     {
         viewHolders.add(position, viewHolder);
-        String name  = userList.get(position).getName();
+        String name  = userList.get(position).getUserName();
 
         // 头像
         ImageIcon imageIcon = new ImageIcon(AvatarUtil.createOrLoadUserAvatar(name).getScaledInstance(30,30,Image.SCALE_SMOOTH));
@@ -128,7 +128,7 @@ public class SelectUserItemsAdapter extends BaseAdapter<SelectUserItemViewHolder
         String lastChara = "";
         for (SelectUserData item : userList)
         {
-            String ch = CharacterParser.getSelling(item.getName()).substring(0, 1).toUpperCase();
+            String ch = CharacterParser.getSelling(item.getUserName()).substring(0, 1).toUpperCase();
             if (!ch.equals(lastChara))
             {
                 lastChara = ch;

@@ -21,5 +21,8 @@
 			<attribute name="maven.pomderived" value="true"/>
 		</attributes>
 	</classpathentry>
+	<classpathentry kind="lib" path="D:/0NewIMRespo/smacklibs/jxbrowser-6.14.2-refine/jxbrowser-6.14.2-refine.jar"/>
+	<classpathentry kind="lib" path="D:/0NewIMRespo/smacklibs/jxbrowser-6.14.2-refine/jxbrowser-win32-6.14.2.jar"/>
+	<classpathentry kind="lib" path="D:/0NewIMRespo/smacklibs/jxbrowser-6.14.2-refine/license.jar"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>

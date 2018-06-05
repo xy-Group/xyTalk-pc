@@ -293,7 +293,7 @@ public class RoomMembersPanel extends ParentAvailablePanel
                     String[] userArr = new String[selectedUsers.size()];
                     for (int i = 0; i < selectedUsers.size(); i++)
                     {
-                        userArr[i] = selectedUsers.get(i).getName();
+                        userArr[i] = selectedUsers.get(i).getUserName();
                     }
 
                     inviteOrKick(userArr, "invite");
@@ -333,7 +333,7 @@ public class RoomMembersPanel extends ParentAvailablePanel
                     String[] userArr = new String[selectedUsers.size()];
                     for (int i = 0; i < selectedUsers.size(); i++)
                     {
-                        userArr[i] = selectedUsers.get(i).getName();
+                        userArr[i] = selectedUsers.get(i).getUserName();
                     }
 
                     inviteOrKick(userArr, "kick");

@@ -15,6 +15,7 @@ import xysoft.im.entity.SearchResultItem;
 import xysoft.im.panels.ChatPanel;
 import xysoft.im.panels.ListPanel;
 import xysoft.im.panels.SearchPanel;
+import xysoft.im.service.ChatService;
 import xysoft.im.helper.AttachmentIconHelper;
 import xysoft.im.listener.AbstractMouseListener;
 import xysoft.im.tasks.DownloadTask;
@@ -264,8 +265,17 @@ public class SearchResultItemsAdapter extends BaseAdapter<SearchResultItemViewHo
 
                     if (item.getType().equals("s"))
                     {
-                        String roomId = roomService.findRelativeRoomIdByUserId(item.getId()).getRoomId();
-                        enterRoom(roomId, 0L);
+                    	String roomId = null;
+                    	Room roomExist = roomService.findRelativeRoomIdByUserId(item.getId());
+                    	if (roomExist==null ){
+                    		//发起新会话
+                        	roomId = item.getId()+"@"+Launcher.DOMAIN;
+                        	ChatService.createNewRoom(roomId);    
+                    	}else{
+                        	roomId = roomExist.getRoomId();                    		
+                    	}
+
+                        enterRoom(roomId, 0L);    
                         clearSearchText();
                     }
                     else if (item.getType().equals("m") || item.getType().equals("q"))

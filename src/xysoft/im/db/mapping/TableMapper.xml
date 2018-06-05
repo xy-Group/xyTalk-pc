@@ -3,19 +3,30 @@
 	PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"     
 	"http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
 <mapper namespace="xysoft.im.db.dao.TableDao">
-	<update id="createCurrentUserTable">
-		create table current_user(userId VARCHAR(20) PRIMARY KEY, username VARCHAR(20),
-		authToken VARCHAR(64),password VARCHAR(20),rawPassword VARCHAR(64),
-		expireDate VARCHAR(20),realName VARCHAR(20),bcrypt VARCHAR(64),
-		avatarOrigin VARCHAR(1024));
-	</update>
 
 	<update id="createRoomTable">
-		create table room(roomId VARCHAR(20) PRIMARY KEY, type VARCHAR(10),
-		name VARCHAR(64),topic VARCHAR(64),muted VARCHAR(20),
-		member VARCHAR(10240),sysMes BOOLEAN ,msgSum INTEGER,
-		lastChatAt INTEGER, creatorName VARCHAR(64), creatorId VARCHAR(20), jitsiTimeout VARCHAR(20), readOnly BOOLEAN,
-		archived BOOLEAN, defaultRoom BOOLEAN, createdAt VARCHAR(20), updatedAt VARCHAR(20), unreadCount INTEGER, totalReadCount INTEGER, lastMessage VARCHAR(1024));
+		create table room(
+		roomId VARCHAR(20) PRIMARY KEY, 
+		type VARCHAR(10),
+		name VARCHAR(64),
+		topic VARCHAR(64),
+		muted VARCHAR(20),
+		member VARCHAR(1024),
+		sysMes BOOLEAN ,
+		msgSum INTEGER,
+		lastChatAt INTEGER, 
+		creatorName VARCHAR(64), 
+		creatorId VARCHAR(20), 
+		jitsiTimeout VARCHAR(20), 
+		readOnly BOOLEAN,
+		archived BOOLEAN, 
+		defaultRoom BOOLEAN, 
+		createdAt VARCHAR(20), 
+		updatedAt VARCHAR(20), 
+		unreadCount INTEGER, 
+		totalReadCount INTEGER, 
+		topOrder INTEGER,
+		lastMessage VARCHAR(100));
 	</update>
 
 	<update id="createMessageTable">
@@ -33,6 +44,9 @@
 		deleted BOOLEAN,
 		systemMessage BOOLEAN,
 		fileAttachmentId VARCHAR(20),
+		audioAttachmentId VARCHAR(20),
+		videoAttachmentId VARCHAR(20),
+		audioAttachmentId VARCHAR(20),
 		imageAttachmentId VARCHAR(20));
 	</update>
 

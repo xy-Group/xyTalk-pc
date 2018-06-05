@@ -1,6 +1,8 @@
 package xysoft.im.panels;
 
 import java.awt.GridBagLayout;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.net.URL;
@@ -8,6 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
+import javax.swing.JButton;
 import javax.swing.JPanel;
 
 import org.jivesoftware.smack.SmackException.NoResponseException;
@@ -22,6 +25,7 @@ import xysoft.im.app.Launcher;
 import xysoft.im.cache.UserCache;
 import xysoft.im.components.Colors;
 import xysoft.im.components.GBC;
+import xysoft.im.components.RCButton;
 import xysoft.im.components.RCListView;
 import xysoft.im.db.model.ContactsUser;
 import xysoft.im.db.service.ContactsUserService;
@@ -34,7 +38,7 @@ import xysoft.im.utils.ImageUtil;
 
 public class ContactsPanel extends ParentAvailablePanel {
 	/**
-	 * 右侧浮动联系人列表
+	 * 企业员工联系人列表
 	 */
 	private static final long serialVersionUID = -4052544555492218547L;
 
@@ -44,6 +48,10 @@ public class ContactsPanel extends ParentAvailablePanel {
 	private ContactsUserService contactsUserService = Launcher.contactsUserService;
 	private CurrentUserService currentUserService = Launcher.currentUserService;
 	private String currentUsername;
+	String[] keys = new String[] { "0-9", "abc", "def", "ghi", "jkl", "mno", "pq", "rs" , "tu" , "vw", "xyz" };
+	//String[] keys = new String[] { "0-9", "abcd", "efgh", "ijkl", "mnop", "qrst", "uvwx", "yz" };
+
+	private JPanel keboardPanel;
 
 	public ContactsPanel(JPanel parent) {
 		super(parent);
@@ -59,25 +67,59 @@ public class ContactsPanel extends ParentAvailablePanel {
 	}
 
 	private void initComponents() {
+		keboardPanel = new JPanel();
+		keboardPanel.setBackground(Colors.DARK);
+		for (int i=0; i < keys.length; i++) {
+			JButton btn = new JButton();
+			btn.setBackground(Colors.DARK);
+			btn.setForeground(Colors.FONT_WHITE);
+			btn.setText(String.valueOf(keys[i]));
+			btn.addMouseListener(new MouseAdapter() {
+				@Override
+				public void mouseClicked(MouseEvent e) {
+					refreshData(btn.getText());
+					super.mouseClicked(e);
+				}
+			});
+			keboardPanel.add(btn);
+		}
 		contactsListView = new RCListView();
 	}
 
 	private void initView() {
 		setLayout(new GridBagLayout());
 		contactsListView.setContentPanelBackground(Colors.DARK);
-		add(contactsListView, new GBC(0, 0).setFill(GBC.BOTH).setWeight(1, 1));
+		add(keboardPanel, new GBC(0, 0).setFill(GBC.BOTH).setWeight(1, 1).setInsets(0, 0, 0, 0));
+		add(contactsListView, new GBC(0, 1).setFill(GBC.BOTH).setWeight(1, 5));
 	}
 
-	private void initData() {
+	private void refreshData(String key) {
 		contactsItemList.clear();
 
-		List<ContactsUser> contactsUsers = contactsUserService.findAll();
+		List<ContactsUser> contactsUsers = contactsUserService.findStartWith(key);
 		for (ContactsUser contactsUser : contactsUsers) {
 			ContactsItem item = new ContactsItem(contactsUser.getUserId(), contactsUser.getName(), "s");
 
 			contactsItemList.add(item);
 		}
 
+		((ContactsItemsAdapter) contactsListView.getAdapter()).processData();
+		contactsListView.notifyDataSetChanged(false);
+
+		// 通讯录更新后，获取头像
+		//getContactsUserAvatar();
+
+	}
+
+	private void initData() {
+		contactsItemList.clear();
+
+		List<ContactsUser> contactsUsers = contactsUserService.findSize(8);
+		for (ContactsUser contactsUser : contactsUsers) {
+			ContactsItem item = new ContactsItem(contactsUser.getUserId(), contactsUser.getName(), "s");
+
+			contactsItemList.add(item);
+		}
 	}
 
 	public void notifyDataSetChanged() {
@@ -136,17 +178,17 @@ public class ContactsPanel extends ParentAvailablePanel {
 							.loadVCard(JidCreate.entityBareFrom(username + "@" + Launcher.DOMAIN));
 					// getAvatarIcon的第二个参数如果为true,则对头像缩放
 					ImageIcon imageIcon = AvatarUtil.getAvatarIcon(vcard, false);
-					if (imageIcon ==null){
+					if (imageIcon == null) {
 						image = AvatarUtil.getCachedImageBufferedAvatar(username);
-					}else{
+					} else {
 						DebugUtil.debug("从服务器获取头像:" + username);
-						image = GraphicUtils.convert(imageIcon.getImage());						
+						image = GraphicUtils.convert(imageIcon.getImage());
 					}
 
 				} catch (NoResponseException | XMPPErrorException | NotConnectedException | InterruptedException e) {
 					image = AvatarUtil.getCachedImageBufferedAvatar(username);
 				}
-	
+
 			} else {// 从缓存中读取
 				image = AvatarUtil.getCachedImageBufferedAvatar(username);
 			}

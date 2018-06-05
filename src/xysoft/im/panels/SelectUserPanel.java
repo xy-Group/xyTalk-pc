@@ -72,8 +72,9 @@ public class SelectUserPanel extends JPanel
             public void mouseClicked(MouseEvent e)
             {
                 SelectUserItemViewHolder holder = (SelectUserItemViewHolder) e.getSource();
+                
 
-                String username = holder.username.getText();
+                String username = holder.username.getText();//.split("--")[0];
                 if (unSelectUser(username))
                 {
                     holder.icon.setIcon(uncheckIcon);
@@ -141,7 +142,7 @@ public class SelectUserPanel extends JPanel
     {
         for (SelectUserData item  : leftUserList)
         {
-            if (item.getName().equals(username))
+            if (item.getUserName().equals(username))
             {
                 selectedUserList.add(item);
                 selectedUserListView.notifyDataSetChanged(false);
@@ -157,7 +158,7 @@ public class SelectUserPanel extends JPanel
         while (itemIterator.hasNext())
         {
             SelectUserData user = itemIterator.next();
-            if (user.getName().equals(username))
+            if (user.getUserName().equals(username))
             {
                 dataChanged = true;
                 itemIterator.remove();

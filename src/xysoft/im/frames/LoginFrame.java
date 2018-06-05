@@ -18,6 +18,10 @@ import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.nio.channels.FileChannel;
 import java.nio.channels.FileLock;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.TimeUnit;
+import java.util.function.Consumer;
+import java.util.function.Supplier;
 
 import javax.swing.JCheckBox;
 import javax.swing.JFrame;
@@ -29,6 +33,9 @@ import javax.swing.border.LineBorder;
 import org.apache.ibatis.session.SqlSession;
 import org.json.JSONObject;
 
+import com.github.stuxuhai.jpinyin.PinyinFormat;
+import com.github.stuxuhai.jpinyin.PinyinHelper;
+
 import xysoft.im.app.Launcher;
 import xysoft.im.components.Colors;
 import xysoft.im.components.GBC;
@@ -36,10 +43,12 @@ import xysoft.im.components.RCButton;
 import xysoft.im.components.RCPasswordField;
 import xysoft.im.components.RCTextField;
 import xysoft.im.components.VerticalFlowLayout;
+import xysoft.im.db.model.ContactsUser;
 import xysoft.im.db.model.CurrentUser;
 import xysoft.im.db.service.CurrentUserService;
 import xysoft.im.listener.AbstractMouseListener;
 import xysoft.im.service.login.XmppLogin;
+import xysoft.im.swingDemo.SimulationUserData;
 import xysoft.im.utils.DbUtils;
 import xysoft.im.utils.Encryptor;
 import xysoft.im.utils.FilesIO;
@@ -290,10 +299,13 @@ public class LoginFrame extends JFrame {
 		} else {
 			statusLabel.setVisible(false);
 			
+			
+			
 			SwingWorker<?, ?> aWorker = new SwingWorker<Object, Object>() 
 	    	{
 			@Override
 			protected Object doInBackground() throws Exception {
+			
 				XmppLogin login = new XmppLogin();
 				login.setUsername(name);
 				login.setPassword(pwd);
@@ -320,8 +332,10 @@ public class LoginFrame extends JFrame {
 	            try {
 	            	done = (boolean) get();
 	                // Update UI
-	                if (done)
+	                if (done){
 	                	hideMe();
+	                	//InsertBigData();	
+	                }
 	            } catch (Exception ex) {
 	                ex.printStackTrace();
 	            }
@@ -468,5 +482,52 @@ public class LoginFrame extends JFrame {
 			return "";
 		else
 			return username;
+	}
+	
+	private String InsertBigData() {
+		CompletableFuture<String> resultCompletableFuture = CompletableFuture.supplyAsync(new Supplier<String>() {
+			public String get() {
+				try {
+					
+					SimulationUserData chineseName = new SimulationUserData();
+					for (int i = 0; i < 5001; i++) {
+						ContactsUser user = new ContactsUser();
+						
+						String cnName = chineseName.getName();
+						String fullPin = PinyinHelper.convertToPinyinString(cnName,"",PinyinFormat.WITHOUT_TONE);
+						String sp = PinyinHelper.getShortPinyin(cnName); 
+					    
+						user.setMail(fullPin + "@email.com");
+						user.setName(cnName);
+						user.setPhone("1370000" + i);
+						user.setUserId(fullPin+i);
+						user.setUsername(fullPin+i);
+						user.setSp(sp);
+//						user.setAttr1("");
+//						user.setAttr2("");
+//						user.setAttr3("");
+//						user.setDept("");
+//						user.setLocation("");
+						Launcher.contactsUserService.insert(user);
+					}
+					System.out.println("执行线程："+Thread.currentThread().getName());  
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				return "hello";
+			}
+		}, Launcher.executor);
+
+		resultCompletableFuture.thenAcceptAsync(new Consumer<String>() {  
+		    @Override  
+		    public void accept(String t) {  
+		    System.out.println(t);  
+		    System.out.println("回调线程："+Thread.currentThread().getName());  
+
+		    }  
+		}, Launcher.executor);  
+		System.out.println("直接不阻塞返回了######");  
+		return "直接不阻塞返回了######";
 	}
 }

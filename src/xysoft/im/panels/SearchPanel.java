@@ -82,6 +82,9 @@ public class SearchPanel extends ParentAvailablePanel
             @Override
             public void insertUpdate(DocumentEvent e)
             {
+            	//搜索框开始通讯录搜索设置为2字符起搜
+            	if (searchTextField.getText().length()<2)
+            		return;
                 ListPanel listPanel = ListPanel.getContext();
                 SearchResultPanel searchResultPanel = SearchResultPanel.getContext();
 
@@ -97,6 +100,7 @@ public class SearchPanel extends ParentAvailablePanel
             @Override
             public void removeUpdate(DocumentEvent e)
             {
+
                 ListPanel listPanel = ListPanel.getContext();
                 if (searchTextField.getText() == null || searchTextField.getText().isEmpty())
                 {

@@ -6,6 +6,9 @@ import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.nio.channels.FileChannel;
 import java.nio.channels.FileLock;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
 import javax.swing.JFrame;
 import org.apache.ibatis.session.SqlSession;
 import org.jivesoftware.smack.AbstractXMPPConnection;
@@ -63,7 +66,8 @@ public class Launcher
     public static ContactsUserService contactsUserService;
     public static ImageAttachmentService imageAttachmentService;
     public static FileAttachmentService fileAttachmentService;
-    public static  AbstractXMPPConnection connection = null;
+    public static AbstractXMPPConnection connection = null;
+    public static ExecutorService executor = Executors.newFixedThreadPool(5);
 	//来消息声音提示
 	public static final boolean IS_PLAYMESSAGESOUND = true;
 

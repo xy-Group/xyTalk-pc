@@ -324,7 +324,13 @@ XyTalk.pc是XMPP协议的即时通讯IM客户端PC软件，可用于Windows/linu
 	<Th></Th>
   </TR>
   <TR>
-	<TD>HTTP API。为企业提供IM服务调用</TD>
+	<TD>HTTP API。为企业提供IM服务调用:
+	<br>OAuth2.0认证
+	<br>SSO单点登陆接口
+	<br>HTTP文件上传
+	<br>HTTP文件下载
+	<br>OAuth2.0认证
+	</TD>
 	<TD>无</TD>
 	<TD>内置功能</TD>
   </TR>
@@ -473,9 +479,15 @@ XyTalk.pc是XMPP协议的即时通讯IM客户端PC软件，可用于Windows/linu
 <p>
 <br>
 <H2>## 截图预览  ##</H2>
-PC版界面:
+PC版会话界面:
 <br>
 <img alt="XyTalk IM" src="http://111.230.157.216/img/chat.png" />
+PC版联系人界面:
+<br>
+<img alt="XyTalk IM" src="http://111.230.157.216/img/contactlist.png" />
+PC版设置界面:
+<br>
+<img alt="XyTalk IM" src="http://111.230.157.216/img/contactsync.png" />
 <br>
 Android版界面:
 <br>
@@ -538,6 +550,11 @@ iOS版界面:
 <p><br>2018-05-30： 
 <br>1、登陆账户切换
 <br>2、设置里增加清除数据库功能
+<p><br>2018-05-31： 
+<br>1、通过通讯录或搜索发起新单聊会话
+<p><br>2018-06-05： 
+<br>1、通讯录键盘式卡片展示
+<br>2、搜索框开始通讯录搜索设置为2字符起搜
 
 
 <H2>## 联系作者     ##</H2>

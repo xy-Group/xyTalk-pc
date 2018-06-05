@@ -50,6 +50,7 @@ import org.jxmpp.stringprep.XmppStringprepException;
 import xysoft.im.app.Launcher;
 import xysoft.im.cache.UserCache;
 import xysoft.im.constant.Res;
+import xysoft.im.db.model.ContactsUser;
 import xysoft.im.db.model.Room;
 import xysoft.im.listener.SessionManager;
 import xysoft.im.service.ChatService;
@@ -60,6 +61,7 @@ import xysoft.im.service.MucChatService;
 import xysoft.im.service.ProviderRegister;
 import xysoft.im.service.StateService;
 import xysoft.im.service.XmppFileService;
+import xysoft.im.swingDemo.SimulationUserData;
 import xysoft.im.utils.DebugUtil;
 
 
@@ -242,6 +244,8 @@ public class XmppLogin implements Login {
 			// // TODO Auto-generated catch block
 			// e.printStackTrace();
 			// }
+			
+
 
 			MucChatService.joinAllRooms();
 			

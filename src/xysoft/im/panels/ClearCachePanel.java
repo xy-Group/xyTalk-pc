@@ -78,7 +78,7 @@ public class ClearCachePanel extends JPanel
     private void initComponents()
     {
         infoLabel = new JLabel("当前缓存占用磁盘空间：计算中...");
-        clearButton = new RCButton("清除缓存", Colors.MAIN_COLOR, Colors.MAIN_COLOR_DARKER, Colors.MAIN_COLOR_DARKER);
+        clearButton = new RCButton("清除文件缓存", Colors.MAIN_COLOR, Colors.MAIN_COLOR_DARKER, Colors.MAIN_COLOR_DARKER);
         clearButton.setPreferredSize(new Dimension(150, 35));
         ToolTipManager.sharedInstance().setDismissDelay(10000);
         clearButton.setToolTipText("清除已缓存的聊天图片及文件，清除后下次使用相应的图片或文件时会重新从服务器获取。");

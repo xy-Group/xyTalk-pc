@@ -83,6 +83,11 @@ public class RightPanel extends JPanel
         return roomMembersPanel;
     }
 
+    public TitlePanel getTitlePanel()
+    {
+        return titlePanel;
+    }
+
     public JPanel getTipPanel()
     {
         return tipPanel;

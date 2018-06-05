@@ -40,124 +40,124 @@
 				</configuration>
 			</plugin>
 
-			
-			<!-- 项目依赖插件  -->
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-dependency-plugin</artifactId>
-                <configuration>
-                    <outputDirectory>${project.build.directory}/lib</outputDirectory>
-                    <excludeTransitive>false</excludeTransitive> <!-- 表示是否不包含间接依赖的包 -->
-                    <stripVersion>false</stripVersion> <!-- 去除版本信息 -->
-                </configuration>
 
-                <executions>
-                    <execution>
-                        <id>copy-dependencies</id>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>copy-dependencies</goal>
-                        </goals>
-                        <configuration>
-                            <!-- 拷贝项目依赖包到lib/目录下 -->
-                            <outputDirectory>${project.build.directory}/lib</outputDirectory>
-                            <excludeTransitive>false</excludeTransitive>
-                            <stripVersion>false</stripVersion>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-            
-            <!-- 项目资源插件 -->
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-resources-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <id>copy-resources</id>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>copy-resources</goal>
-                        </goals>
-                        <configuration>
-                            <encoding>UTF-8</encoding>
-                            <!-- 拷贝项目src/main/resources/下，除.bat以外的所有文件到res/目录下 -->
-                            <outputDirectory>${project.build.directory}/res</outputDirectory>
-                            <resources>
-                                <resource>
-                                    <directory>res</directory>
-                                    <filtering>true</filtering>
-                                    <excludes>
-                                        <exclude>*.bat</exclude>
-                                    </excludes>
-                                </resource>                                
-                            </resources>
-                        </configuration>
-                    </execution>
-                    
-                </executions>
-            </plugin>
+			<!-- 项目依赖插件 -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-dependency-plugin</artifactId>
+				<configuration>
+					<outputDirectory>${project.build.directory}/lib</outputDirectory>
+					<excludeTransitive>false</excludeTransitive> <!-- 表示是否不包含间接依赖的包 -->
+					<stripVersion>false</stripVersion> <!-- 去除版本信息 -->
+				</configuration>
+
+				<executions>
+					<execution>
+						<id>copy-dependencies</id>
+						<phase>package</phase>
+						<goals>
+							<goal>copy-dependencies</goal>
+						</goals>
+						<configuration>
+							<!-- 拷贝项目依赖包到lib/目录下 -->
+							<outputDirectory>${project.build.directory}/lib</outputDirectory>
+							<excludeTransitive>false</excludeTransitive>
+							<stripVersion>false</stripVersion>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+
+			<!-- 项目资源插件 -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-resources-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>copy-resources</id>
+						<phase>package</phase>
+						<goals>
+							<goal>copy-resources</goal>
+						</goals>
+						<configuration>
+							<encoding>UTF-8</encoding>
+							<!-- 拷贝项目src/main/resources/下，除.bat以外的所有文件到res/目录下 -->
+							<outputDirectory>${project.build.directory}/res</outputDirectory>
+							<resources>
+								<resource>
+									<directory>res</directory>
+									<filtering>true</filtering>
+									<excludes>
+										<exclude>*.bat</exclude>
+									</excludes>
+								</resource>
+							</resources>
+						</configuration>
+					</execution>
+
+				</executions>
+			</plugin>
 			<!-- 打包插件 -->
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-jar-plugin</artifactId>
-                <configuration>
-                    <archive>
-                        <!-- 生成MANIFEST.MF的设置 -->
-                        <manifest>
-                            <!-- 为依赖包添加路径, 这些路径会写在MANIFEST文件的Class-Path下 -->
-                            <addClasspath>true</addClasspath>
-                            <classpathPrefix>lib/</classpathPrefix>
-                            <!-- jar启动入口类-->
-                            <mainClass>xysoft.im.StartUp</mainClass>
-                        </manifest>
-                        <manifestEntries>
-                            <!-- 在Class-Path下添加配置文件的路径 -->
-                            <Class-Path>res/</Class-Path>
-                            <Implementation-Title>XyTalk</Implementation-Title>
-                        </manifestEntries>
-                    </archive>
-                    <includes>
-                        <!-- 打jar包时，只打包class文件 -->
-                        <include>**/*.*</include>
-                    </includes>
-                </configuration>
-            </plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-jar-plugin</artifactId>
+				<configuration>
+					<archive>
+						<!-- 生成MANIFEST.MF的设置 -->
+						<manifest>
+							<!-- 为依赖包添加路径, 这些路径会写在MANIFEST文件的Class-Path下 -->
+							<addClasspath>true</addClasspath>
+							<classpathPrefix>lib/</classpathPrefix>
+							<!-- jar启动入口类 -->
+							<mainClass>xysoft.im.StartUp</mainClass>
+						</manifest>
+						<manifestEntries>
+							<!-- 在Class-Path下添加配置文件的路径 -->
+							<Class-Path>res/</Class-Path>
+							<Implementation-Title>XyTalk</Implementation-Title>
+						</manifestEntries>
+					</archive>
+					<includes>
+						<!-- 打jar包时，只打包class文件 -->
+						<include>**/*.*</include>
+					</includes>
+				</configuration>
+			</plugin>
 
 
 		</plugins>
-		
+
 		<!-- 解决eclipse下maven插件兼容性问题 -->
-        <pluginManagement>
-            <plugins>
-                <!-- Ignore/Execute plugin execution -->
-                <plugin>
-                    <groupId>org.eclipse.m2e</groupId>
-                    <artifactId>lifecycle-mapping</artifactId>
-                    <version>1.0.0</version>
-                    <configuration>
-                        <lifecycleMappingMetadata>
-                            <pluginExecutions>
-                                <!-- copy-dependency plugin -->
-                                <pluginExecution>
-                                    <pluginExecutionFilter>
-                                        <groupId>org.apache.maven.plugins</groupId>
-                                        <artifactId>maven-dependency-plugin</artifactId>
-                                        <versionRange>[1.0.0,)</versionRange>
-                                        <goals>
-                                            <goal>copy-dependencies</goal>
-                                        </goals>
-                                    </pluginExecutionFilter>
-                                    <action>
-                                        <ignore />
-                                    </action>
-                                </pluginExecution>
-                            </pluginExecutions>
-                        </lifecycleMappingMetadata>
-                    </configuration>
-                </plugin>
-            </plugins>
-        </pluginManagement>
+		<pluginManagement>
+			<plugins>
+				<!-- Ignore/Execute plugin execution -->
+				<plugin>
+					<groupId>org.eclipse.m2e</groupId>
+					<artifactId>lifecycle-mapping</artifactId>
+					<version>1.0.0</version>
+					<configuration>
+						<lifecycleMappingMetadata>
+							<pluginExecutions>
+								<!-- copy-dependency plugin -->
+								<pluginExecution>
+									<pluginExecutionFilter>
+										<groupId>org.apache.maven.plugins</groupId>
+										<artifactId>maven-dependency-plugin</artifactId>
+										<versionRange>[1.0.0,)</versionRange>
+										<goals>
+											<goal>copy-dependencies</goal>
+										</goals>
+									</pluginExecutionFilter>
+									<action>
+										<ignore />
+									</action>
+								</pluginExecution>
+							</pluginExecutions>
+						</lifecycleMappingMetadata>
+					</configuration>
+				</plugin>
+			</plugins>
+		</pluginManagement>
 
 
 	</build>
@@ -235,6 +235,17 @@
 			<groupId>org.apache.commons</groupId>
 			<artifactId>commons-lang3</artifactId>
 			<version>3.4</version>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/commons-io/commons-io -->
+		<dependency>
+			<groupId>commons-io</groupId>
+			<artifactId>commons-io</artifactId>
+			<version>2.6</version>
+		</dependency>
+		<dependency>
+			<groupId>com.github.stuxuhai</groupId>
+			<artifactId>jpinyin</artifactId>
+			<version>1.1.8</version>
 		</dependency>
 		<!-- https://mvnrepository.com/artifact/com.jhlabs/filters -->
 		<dependency>

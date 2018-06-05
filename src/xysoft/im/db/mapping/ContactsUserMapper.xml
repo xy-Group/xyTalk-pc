@@ -3,8 +3,9 @@
         PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
         "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
 <mapper namespace="xysoft.im.db.dao.ContactsUserDao">
+	<cache eviction="LRU" flushInterval="60000" size="512" readOnly="true"></cache>
     <insert id="insert">
-		INSERT INTO contacts_user(userId, username,name,phone,mail,location,sp,attr1,attr2,attr3)
+		INSERT INTO contacts_user(userId, username,name,phone,mail,location,sp,sex,dept,attr1,attr2,attr3)
 		VALUES (#{userId}, #{username}, #{name}, #{phone}, #{mail}, #{location}, #{sp}, #{sex}, #{dept}, #{attr1}, #{attr2}, #{attr3})
 	</insert>
 
@@ -20,8 +21,76 @@
     <select id="find" resultType="ContactsUser" statementType="STATEMENT" parameterType="map">
         SELECT * FROM contacts_user where ${field} = ${val}
     </select>
+    
+    
+    <select id="search100user" resultType="ContactsUser">
+		SELECT * FROM contacts_user order by userId limit 0,100;
+	</select>
 
+    <select id="findSize" resultType="ContactsUser">
+		SELECT * FROM contacts_user order by userId limit 0,#{size};
+	</select>
 
+    <select id="findStartWith" resultType="ContactsUser" statementType="STATEMENT" parameterType="map">
+		SELECT * FROM contacts_user where username like ${sp} or sp like ${sp};
+	</select>
+	
+    <select id="findStartWithNum" resultType="ContactsUser">
+		SELECT * FROM contacts_user where username like '0%' or username like '1%'  or username like '2%'  or username like '3%'
+		 or username like '4%'  or username like '5%'  or username like '6%'
+		  or username like '7%'  or username like '8%'  or username like '9%' ;
+	</select>
+	
+    <select id="findStartWithABC" resultType="ContactsUser">
+		SELECT * FROM contacts_user where username like 'a%' or username like 'b%'  or username like 'c%'  
+		  or sp like 'a%'  or sp like 'b%'  or sp like 'c%' ;
+	</select>
+	
+    <select id="findStartWithDEF" resultType="ContactsUser">
+		SELECT * FROM contacts_user where username like 'd%' or username like 'e%'  or username like 'f%'  
+		  or sp like 'd%'  or sp like 'e%'  or sp like 'f%' ;
+	</select>
+	
+    <select id="findStartWithGHI" resultType="ContactsUser">
+		SELECT * FROM contacts_user where username like 'g%' or username like 'h%'  or username like 'i%'  
+		  or sp like 'g%'  or sp like 'h%'  or sp like 'i%' ;
+	</select>
+	
+    <select id="findStartWithJKL" resultType="ContactsUser">
+		SELECT * FROM contacts_user where username like 'ja%' or username like 'k%'  or username like 'l%'  
+		  or sp like 'j%'  or sp like 'k%'  or sp like 'l%' ;
+	</select>
+	
+    <select id="findStartWithMNO" resultType="ContactsUser">
+		SELECT * FROM contacts_user where username like 'm%' or username like 'n%'  or username like 'o%'  
+		  or sp like 'm%'  or sp like 'n%'  or sp like 'o%' ;
+	</select>
+	
+    <select id="findStartWithPQ" resultType="ContactsUser">
+		SELECT * FROM contacts_user where username like 'p%' or username like 'q%'  
+		  or sp like 'p%'  or sp like 'q%'    ;
+	</select>
+	
+    <select id="findStartWithRS" resultType="ContactsUser">
+		SELECT * FROM contacts_user where username like 'r%' or username like 's%'  
+		  or sp like 'r%'  or sp like 's%'    ;
+	</select>
+	
+    <select id="findStartWithTU" resultType="ContactsUser">
+		SELECT * FROM contacts_user where username like 't%' or username like 'u%'  
+		  or sp like 't%'  or sp like 'u%'    ;
+	</select>
+	
+    <select id="findStartWithVW" resultType="ContactsUser">
+		SELECT * FROM contacts_user where username like 'v%' or username like 'w%'  
+		  or sp like 'v%'  or sp like 'w%'    ;
+	</select>
+
+    <select id="findStartWithXYZ" resultType="ContactsUser">
+		SELECT * FROM contacts_user where username like 'x%' or username like 'y%'  or username like 'z%'  
+		  or sp like 'x%'  or sp like 'y%'  or sp like 'z%' ;
+	</select>
+	
     <select id="searchByUsernameOrName" resultType="ContactsUser" statementType="STATEMENT" parameterType="map">
         SELECT * FROM contacts_user where username like ${usernameCondition} or name like ${nameCondition}
     </select>

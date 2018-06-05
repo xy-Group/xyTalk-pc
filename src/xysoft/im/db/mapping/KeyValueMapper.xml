@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="gbk" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
+        "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+<mapper namespace="xysoft.im.db.dao.KeyValueDao">
+
+    <cache/>
+
+    <insert id="insert">
+		INSERT INTO keyvalue(key,value)
+		VALUES (#{key}, #{value})
+	</insert>
+
+
+    <select id="findByKey" resultType="KeyValue">
+		SELECT * FROM keyvalue where key = #{key}
+	</select>
+
+    <select id="findAll" resultType="KeyValue">
+		SELECT * FROM keyvalue
+	</select>
+
+    <select id="find" resultType="KeyValue" statementType="STATEMENT" parameterType="map">
+        SELECT * FROM keyvalue where ${field} = ${val}
+    </select>
+
+    <select id="count" resultType="java.lang.Integer">
+		SELECT count(1) FROM keyvalue
+	</select>
+
+    <select id="exist" resultType="java.lang.Integer">
+		SELECT count(1) FROM keyvalue where key = #{key}
+	</select>
+
+    <delete id="deleteAll">
+		delete from keyvalue
+	</delete>
+
+    <update id="update">
+        UPDATE keyvalue
+        <set>
+            value=#{value}
+        </set>
+        WHERE key=#{key}
+    </update>
+
+    <update id="updateIgnoreNull">
+        UPDATE keyvalue
+        <set>
+            <if test="key != null">key=#{key},</if>
+            <if test="value != null">value=#{value},</if>
+        </set>
+        WHERE key=#{key}
+    </update>
+</mapper>
+
+
+
+
+
+
+
+
+

@@ -48,7 +48,7 @@ public class SelectedUserItemsAdapter extends BaseAdapter<SelectedUserItemViewHo
         SelectUserData user = userList.get(position);
 
         // 头像
-        ImageIcon imageIcon = new ImageIcon(AvatarUtil.createOrLoadUserAvatar(user.getName()).getScaledInstance(30,30,Image.SCALE_SMOOTH));
+        ImageIcon imageIcon = new ImageIcon(AvatarUtil.createOrLoadUserAvatar(user.getUserName()).getScaledInstance(30,30,Image.SCALE_SMOOTH));
         viewHolder.avatar.setIcon(imageIcon);
 
         // 名字
@@ -90,7 +90,7 @@ public class SelectedUserItemsAdapter extends BaseAdapter<SelectedUserItemViewHo
         String lastChara = "";
         for (SelectUserData user : userList)
         {
-            String ch = CharacterParser.getSelling(user.getName()).substring(0, 1).toUpperCase();
+            String ch = CharacterParser.getSelling(user.getUserName()).substring(0, 1).toUpperCase();
             if (!ch.equals(lastChara))
             {
                 lastChara = ch;

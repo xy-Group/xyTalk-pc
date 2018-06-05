@@ -3,7 +3,6 @@ package xysoft.im.panels;
 import java.awt.Component;
 import java.awt.Desktop;
 import java.awt.Dimension;
-import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
@@ -41,13 +40,7 @@ import javax.swing.text.StyleConstants;
 
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.log4j.Logger;
-import org.jivesoftware.smack.SmackException;
 import org.jivesoftware.smack.packet.Message.Type;
-import org.jivesoftware.smackx.filetransfer.FileTransferManager;
-import org.jivesoftware.smackx.filetransfer.OutgoingFileTransfer;
-import org.jxmpp.jid.Jid;
-import org.jxmpp.jid.impl.JidCreate;
-import org.jxmpp.stringprep.XmppStringprepException;
 
 import xysoft.im.adapter.message.BaseMessageViewHolder;
 import xysoft.im.adapter.message.MessageAdapter;
@@ -57,9 +50,6 @@ import xysoft.im.adapter.message.MessageLeftImageViewHolder;
 import xysoft.im.adapter.message.MessageRightAttachmentViewHolder;
 import xysoft.im.adapter.message.MessageRightImageViewHolder;
 import xysoft.im.app.Launcher;
-import xysoft.im.components.Colors;
-import xysoft.im.components.GBC;
-import xysoft.im.components.RCBorder;
 import xysoft.im.components.RCListView;
 import xysoft.im.components.message.FileEditorThumbnail;
 import xysoft.im.components.message.RemindUserPopup;
@@ -92,7 +82,6 @@ import xysoft.im.utils.FileCache;
 import xysoft.im.utils.HttpUtil;
 import xysoft.im.utils.JID;
 import xysoft.im.utils.MimeTypeUtil;
-import xysoft.im.utils.SwingAnimation;
 
 public class ChatPanel extends ParentAvailablePanel {
 	/**
@@ -186,15 +175,15 @@ public class ChatPanel extends ParentAvailablePanel {
 		// splitPane.setBorder(new RCBorder(RCBorder.BOTTOM,
 		// Colors.LIGHT_GRAY));
 		splitPane.setBorder(null);
-
+//		splitPane.setUI(new BasicSplitPaneUI());
+//		BasicSplitPaneDivider divider = (BasicSplitPaneDivider) splitPane.getComponent(0);
+//		divider.setBackground(Colors.FONT_BLACK);
+//		divider.setBorder(null);
 		splitPane.setOneTouchExpandable(false);
-		if (Launcher.currentWindowHeight > 768) {
-			splitPane.setDividerLocation(520);
-		} else {
-			splitPane.setDividerLocation(450);
-		}
+		splitPane.setDividerLocation(450);
 		// splitPane.setResizeWeight(0.1);
 		splitPane.setDividerSize(2);
+
 		splitPane.setTopComponent(messagePanel);
 		splitPane.setBottomComponent(messageEditorPanel);
 		splitPane.setPreferredSize(new Dimension(MainFrame.DEFAULT_WIDTH, MainFrame.DEFAULT_HEIGHT));

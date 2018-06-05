@@ -5,8 +5,6 @@ import java.awt.Dimension;
 import java.awt.GridBagLayout;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.io.File;
-import java.text.DecimalFormat;
 
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -18,16 +16,16 @@ import xysoft.im.components.GBC;
 import xysoft.im.components.RCButton;
 import xysoft.im.utils.IconUtil;
 
-public class ClearDBPanel extends JPanel
+public class SyncOrgPanel  extends JPanel
 {
-    /**
-	 * 清除缓存
+	/**
+	 * 组织架构同步
 	 */
-	private static final long serialVersionUID = 2674994848671235793L;
+	private static final long serialVersionUID = -4776816333848152119L;
 	private JLabel infoLabel;
     private RCButton clearButton;
 
-    public ClearDBPanel()
+    public SyncOrgPanel()
     {
         initComponents();
         initView();
@@ -43,7 +41,7 @@ public class ClearDBPanel extends JPanel
             {
                 if (clearButton.isEnabled())
                 {
-                    clearButton.setText("清除中...");
+                    clearButton.setText("同步中...");
                     clearButton.setIcon(IconUtil.getIcon(this, "/image/loading_small.gif"));
                     clearButton.setEnabled(false);
                     new Thread(new Runnable()
@@ -54,13 +52,13 @@ public class ClearDBPanel extends JPanel
                             try
                             {
                                 deleteAllDBs();
-                                clearButton.setText("数据库清理完成！");
+                                clearButton.setText("同步完成！");
                                 clearButton.setIcon(IconUtil.getIcon(this, "/image/check.png"));
-                                infoLabel.setText("数据库清理完成！");
+                                infoLabel.setText("同步完成！");
                             }
                             catch (Exception e)
                             {
-                                clearButton.setText("清除失败");
+                                clearButton.setText("同步失败");
                             }
 
                             clearButton.setEnabled(true);
@@ -82,17 +80,17 @@ public class ClearDBPanel extends JPanel
     	Launcher.imageAttachmentService.deleteAll();
     	RoomsPanel.getContext().notifyDataSetChanged(false);
 
-        RightPanel.getContext().getTitlePanel().showAppTitle("数据库已清除");
+        RightPanel.getContext().getTitlePanel().showAppTitle("联系人已同步为最新");
         RightPanel.getContext().showPanel(RightPanel.TIP);
 	}
     
     private void initComponents()
     {
-        infoLabel = new JLabel("当前数据库使用情况...");
-        clearButton = new RCButton("清除数据库", Colors.MAIN_COLOR, Colors.MAIN_COLOR_DARKER, Colors.MAIN_COLOR_DARKER);
+        infoLabel = new JLabel("当前联系人...");
+        clearButton = new RCButton("同步联系人", Colors.MAIN_COLOR, Colors.MAIN_COLOR_DARKER, Colors.MAIN_COLOR_DARKER);
         clearButton.setPreferredSize(new Dimension(150, 35));
         ToolTipManager.sharedInstance().setDismissDelay(10000);
-        clearButton.setToolTipText("清除联系人、聊天记录、群组等与登陆者相关的所有数据。");
+        clearButton.setToolTipText("同步联系人与服务器数据保持一致");
 
         calculateDB();
     }
@@ -105,7 +103,7 @@ public class ClearDBPanel extends JPanel
             @Override
             public void run()
             {
-                infoLabel.setText("当前数据库联系人数量：" + Launcher.roomService.findAll().size());
+                infoLabel.setText("当前联系人数量：" + Launcher.contactsUserService.count());
             }
         }).start();
     }

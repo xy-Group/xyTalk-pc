@@ -48,4 +48,20 @@ public class ContactsUserService extends BasicService<ContactsUserDao, ContactsU
     {
         return dao.searchByUsernameOrName(username, name);
     }
+
+	public List<ContactsUser> find100() {
+		
+		return dao.search100user();
+	}
+	
+	public List<ContactsUser> findSize(int size) {
+		
+		return dao.findSize(size);
+	}
+
+	public List<ContactsUser> findStartWith(String sp) {
+		
+		return dao.findStartWith(sp);
+	}
+
 }

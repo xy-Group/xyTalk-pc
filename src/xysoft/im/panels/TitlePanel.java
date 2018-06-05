@@ -312,6 +312,12 @@ public class TitlePanel extends ParentAvailablePanel
         parent.showPanel(RightPanel.MESSAGE);
     }
 
+    public void showAppTitle(String title)
+    {
+        this.titleLabel.setText(title);
+        roomInfoButton.setVisible(false);
+    }
+    
     public void showAppTitle()
     {
         this.titleLabel.setText("XyTalk");

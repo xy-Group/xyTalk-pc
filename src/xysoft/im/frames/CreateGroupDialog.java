@@ -4,11 +4,15 @@ import xysoft.im.app.Launcher;
 import xysoft.im.cache.UserCache;
 import xysoft.im.components.*;
 import xysoft.im.db.model.ContactsUser;
+import xysoft.im.db.model.Room;
 import xysoft.im.db.service.ContactsUserService;
+import xysoft.im.db.service.RoomService;
 import xysoft.im.entity.SelectUserData;
 import xysoft.im.panels.SelectUserPanel;
 import xysoft.im.service.MucChatService;
 import xysoft.im.utils.FontUtil;
+import xysoft.im.utils.JID;
+
 import javax.swing.*;
 import javax.swing.border.LineBorder;
 
@@ -33,6 +37,7 @@ public class CreateGroupDialog extends JDialog
     private JPanel editorPanel;
     private RCTextField groupNameTextField;
     private JCheckBox privateCheckBox;
+    private JLabel info;
 
     private SelectUserPanel selectUserPanel;
     private JPanel buttonPanel;
@@ -41,6 +46,7 @@ public class CreateGroupDialog extends JDialog
     private List<SelectUserData> userList = new ArrayList<>();
 
     private ContactsUserService contactsUserService = Launcher.contactsUserService;
+    private RoomService roomService = Launcher.roomService;
 
 
     public static final int DIALOG_WIDTH = 580;
@@ -53,18 +59,34 @@ public class CreateGroupDialog extends JDialog
         context = this;
 
         initComponents();
-        initData();
+        //initData();
+        initAllData();
 
         initView();
         setListeners();
     }
 
+    //展示最近联系人
     private void initData()
     {
-        List<ContactsUser> contactsUsers = contactsUserService.findAll();
+        List<Room> contactsUsers = roomService.findByType("s");
+        for (Room room : contactsUsers)
+        {
+            userList.add(new SelectUserData(JID.usernameByJid(room.getRoomId()) +"--"+room.getName() , false));
+        }
+
+        selectUserPanel = new SelectUserPanel(DIALOG_WIDTH, DIALOG_HEIGHT - 100, userList);
+
+    }
+
+    //展示全部用户
+    private void initAllData()
+    {
+        //List<ContactsUser> contactsUsers = contactsUserService.findAll();
+        List<ContactsUser> contactsUsers = contactsUserService.findSize(8);
         for (ContactsUser con : contactsUsers)
         {
-            userList.add(new SelectUserData(con.getUsername(), false));
+            userList.add(new SelectUserData(con.getUsername() + "--" +con.getName(), false));
         }
 
         selectUserPanel = new SelectUserPanel(DIALOG_WIDTH, DIALOG_HEIGHT - 100, userList);
@@ -105,6 +127,9 @@ public class CreateGroupDialog extends JDialog
         privateCheckBox.setFont(FontUtil.getDefaultFont(14));
         privateCheckBox.setToolTipText("私有群组对外不可见，聊天内容无法被非群成员浏览，只有创建者才有权限添加成员，建议勾选此项");
         privateCheckBox.setSelected(true);
+        
+        info = new JLabel();
+        info.setText("请勾选添加需要的群组成员");
 
 
         // 按钮组
@@ -123,7 +148,9 @@ public class CreateGroupDialog extends JDialog
     {
         editorPanel.setLayout(new FlowLayout(FlowLayout.LEFT, 10, 10));
         editorPanel.add(groupNameTextField);
-        editorPanel.add(privateCheckBox);
+        //editorPanel.add(privateCheckBox);
+        editorPanel.add(info);
+        
 
         buttonPanel.add(cancelButton, new GBC(0, 0).setWeight(1, 1).setInsets(15, 0, 0, 0));
         buttonPanel.add(okButton, new GBC(1, 0).setWeight(1, 1));
@@ -168,8 +195,6 @@ public class CreateGroupDialog extends JDialog
                     checkRoomExists(roomName);
                     try {
                     	List<String> selectedUsers = new ArrayList<String>();
-                    	selectedUsers.add("test1@win7-1803071731");
-                    	selectedUsers.add("test2@win7-1803071731");
                     	
 						MucChatService.createChatRoom(groupNameTextField.getText(),selectedUsers, UserCache.CurrentUserName+"-"+UserCache.CurrentUserRealName)
 							.join(Resourcepart.from(UserCache.CurrentUserName + "-" + UserCache.CurrentUserRealName));
@@ -199,7 +224,7 @@ public class CreateGroupDialog extends JDialog
 
             for (int i = 0; i < list.size(); i++)
             {
-                usernames[i] = list.get(i).getName();
+                usernames[i] = list.get(i).getUserName();
             }
 
             createChannelOrGroup(name, privateCheckBox.isSelected(), usernames);

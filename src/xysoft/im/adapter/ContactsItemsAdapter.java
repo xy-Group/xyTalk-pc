@@ -70,7 +70,8 @@ public class ContactsItemsAdapter extends BaseAdapter<ContactsItemViewHolder>
         holder.setOpaque(true);
 
         holder.letterLabel = new JLabel();
-        holder.letterLabel.setText(holder.getLetter());
+        //holder.letterLabel.setText(holder.getLetter());
+        holder.letterLabel.setText("");
         holder.letterLabel.setForeground(Colors.FONT_GRAY);
 
         holder.setLayout(new BorderLayout());

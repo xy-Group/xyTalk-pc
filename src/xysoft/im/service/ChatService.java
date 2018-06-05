@@ -156,6 +156,26 @@ public class ChatService {
 
 		updateLeftAllUI();
 	}
+	
+	//通过通讯录或搜索发起单聊
+	public static void createNewRoom(String barejid) {
+
+		String fromUsername = JID.usernameByJid(barejid);
+
+		Room room = new Room();
+		room.setLastMessage("发起会话");
+		room.setLastChatAt(System.currentTimeMillis());
+		room.setMsgSum(1);
+		room.setName(Launcher.contactsUserService.findByUsername(fromUsername).getName());
+		room.setRoomId(barejid);
+		room.setTotalReadCount(0);
+		room.setUpdatedAt("2018-01-01T06:38:55.119Z");
+		room.setType("s");
+		room.setUnreadCount(0);
+		Launcher.roomService.insertOrUpdate(room);
+
+		updateLeftAllUI();
+	}
 
 	private static void updateLeftAllUI() {
 

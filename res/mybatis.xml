@@ -4,6 +4,9 @@
 
     <!-- 引用db.properties配置文件 -->
     <properties resource="db.properties"/>
+    <settings>  
+      <setting name="cacheEnabled" value="true"/>  
+	</settings>
 
     <typeAliases>
         <typeAlias type="xysoft.im.db.model.CurrentUser" alias="CurrentUser"/>
@@ -28,7 +31,6 @@
             </dataSource>
         </environment>
     </environments>
-
 
     <mappers>
         <mapper resource="xysoft/im/db/mapping/TableMapper.xml"/>

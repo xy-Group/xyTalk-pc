@@ -33,6 +33,7 @@ public class SystemConfigDialog extends JDialog
     private JLabel aboutLabel;
     private JLabel clearCacheLabel;
     private JLabel clearDBLabel;
+    private JLabel syncOrgLabel;
 
     private ChangeAvatarPanel changeAvatarPanel;
     //private ChangePasswordPanel changePasswordPanel;
@@ -41,6 +42,7 @@ public class SystemConfigDialog extends JDialog
     private AboutPanel aboutPanel;
     private ClearCachePanel clearCachePanel;
     private ClearDBPanel clearDBPanel;
+    private SyncOrgPanel syncOrgPanel;
 
     private JLabel selectedLabel;
 
@@ -52,6 +54,8 @@ public class SystemConfigDialog extends JDialog
     public static final String ABOUT = "ABOUT";
     public static final String CLEAR_CHACE = "CLEAR_CHACE";
     public static final String CLEAR_DB = "CLEAR_DB";
+    public static final String SYNC_DB = "SYNC_DB";
+    
     
 
     private CardLayout cardLayout = new CardLayout();
@@ -136,6 +140,9 @@ public class SystemConfigDialog extends JDialog
         // 清除缓存 按钮
         clearDBLabel = new JLabel("清除数据库");
         processButtonLabel(clearDBLabel);
+        
+        syncOrgLabel = new JLabel("同步联系人");
+        processButtonLabel(syncOrgLabel);
 
         // 更改头像面板
         changeAvatarPanel = new ChangeAvatarPanel();
@@ -156,6 +163,8 @@ public class SystemConfigDialog extends JDialog
         clearDBPanel = new ClearDBPanel();
         // 清除缓存面板
         clearCachePanel = new ClearCachePanel();
+        // 同步联系人组织架构面板
+        syncOrgPanel = new SyncOrgPanel();
 
     }
 
@@ -176,6 +185,7 @@ public class SystemConfigDialog extends JDialog
         //settingMenuPanel.add(changeVcardLabel);
         settingMenuPanel.add(clearDBLabel);
         settingMenuPanel.add(clearCacheLabel);
+        settingMenuPanel.add(syncOrgLabel);
         settingMenuPanel.add(aboutLabel);
 
         settingAreaPanel.setLayout(cardLayout);
@@ -187,6 +197,8 @@ public class SystemConfigDialog extends JDialog
         settingAreaPanel.add(aboutPanel, ABOUT);
         settingAreaPanel.add(clearDBPanel, CLEAR_DB);
         settingAreaPanel.add(clearCachePanel, CLEAR_CHACE);
+        settingAreaPanel.add(syncOrgPanel, SYNC_DB);
+        
 
 
         add(settingPanel, BorderLayout.CENTER);
@@ -267,6 +279,10 @@ public class SystemConfigDialog extends JDialog
                     {
                         cardLayout.show(settingAreaPanel, CLEAR_DB);
                     }
+                    else if (source.getText().equals("同步联系人"))
+                    {
+                        cardLayout.show(settingAreaPanel, SYNC_DB);
+                    }
                 }
 
 
@@ -281,6 +297,7 @@ public class SystemConfigDialog extends JDialog
         aboutLabel.addMouseListener(itemMouseListener);
         clearCacheLabel.addMouseListener(itemMouseListener);
         clearDBLabel.addMouseListener(itemMouseListener);
+        syncOrgLabel.addMouseListener(itemMouseListener);
     }
 
     private void selectedLabel(JLabel label)

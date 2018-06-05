@@ -5,7 +5,11 @@ import javax.swing.*;
 
 public class ContactsHeaderViewHolder extends HeaderViewHolder
 {
-    private String letter;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 4374823571943802821L;
+	private String letter;
     public JLabel letterLabel;
 
     public ContactsHeaderViewHolder(String ch)
