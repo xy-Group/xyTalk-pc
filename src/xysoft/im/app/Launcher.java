@@ -51,6 +51,7 @@ public class Launcher
 	public static final String MUCSERVICE = "@muc.";
 	public static final boolean FILECUTTINGTRANSFER = false; //分块传输文件
 	public static final boolean ISFILETRANSFERIBBONLY = false; //建议设置为false，ibb不适合发送大文件
+	public static final String ORGUSERURL = "http://111.230.157.216/200jsonUTF8.txt";
 
     //############  最重要且必须设置的项  End ############ 
 	

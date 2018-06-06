@@ -2,6 +2,7 @@ package xysoft.im.adapter.search;
 
 import xysoft.im.adapter.BaseAdapter;
 import xysoft.im.app.Launcher;
+import xysoft.im.cache.UserCache;
 import xysoft.im.components.Colors;
 import xysoft.im.db.model.CurrentUser;
 import xysoft.im.db.model.FileAttachment;
@@ -48,8 +49,7 @@ public class SearchResultItemsAdapter extends BaseAdapter<SearchResultItemViewHo
     private AttachmentIconHelper attachmentIconHelper = new AttachmentIconHelper();
     private FileCache fileCache = new FileCache();
     private FileAttachmentService fileAttachmentService = Launcher.fileAttachmentService;
-    private CurrentUser currentUser;
-    private CurrentUserService currentUserService = Launcher.currentUserService;
+
 
     private List<String> downloadingFiles = new ArrayList<>(); // 正在下载的文件
 
@@ -586,8 +586,7 @@ public class SearchResultItemsAdapter extends BaseAdapter<SearchResultItemViewHo
             }
         });
 
-        currentUser = currentUserService.findAll().get(0);
-        String url = Launcher.HOSTNAME + fileAttachment.getLink() + "?rc_uid=" + currentUser.getUserId() + "&rc_token=" + currentUser.getAuthToken();
+        String url = Launcher.HOSTNAME + fileAttachment.getLink() + "?rc_uid=" + UserCache.CurrentBareJid + "&rc_token=" + UserCache.CurrentUserToken;
         task.execute(url);
     }
 

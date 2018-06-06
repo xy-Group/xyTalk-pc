@@ -7,6 +7,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import javax.swing.JOptionPane;
+
 import org.jivesoftware.smack.ConnectionConfiguration.SecurityMode;
 import org.jivesoftware.smack.ReconnectionManager;
 import org.jivesoftware.smack.SmackConfiguration;
@@ -186,13 +188,23 @@ public class XmppLogin implements Login {
 			final FileTransferManager manager = FileTransferManager.getInstanceFor(Launcher.connection);
 			
 			manager.addFileTransferListener(XmppFileService.fileListener());
-
+			
 			UserCache.CurrentUserName = sessionManager.getUsername();
-			UserCache.CurrentUserRealName = Launcher.contactsUserService.findByUsername(UserCache.CurrentUserName).getName();
 			UserCache.CurrentUserPassword = sessionManager.getPassword();
 			UserCache.CurrentUserToken = "";
 			UserCache.CurrentBareJid = sessionManager.getUserBareAddress();
 			UserCache.CurrentFullJid = sessionManager.getJID();
+			ContactsUser user = Launcher.contactsUserService.findByUsername(UserCache.CurrentUserName);
+			String currentRealname = "未知";
+			if (user==null){
+				JOptionPane.showMessageDialog(null,"本地数据表ContactUser缺失以下用户的真实姓名："+sessionManager.getUsername());
+			}
+			else{
+				currentRealname = user.getName();
+			}
+
+			UserCache.CurrentUserRealName = currentRealname;
+
 
 			DebugUtil.debug("UserCache.CurrentUserName:" + UserCache.CurrentUserName);
 			DebugUtil.debug("UserCache.CurrentBareJid:" + UserCache.CurrentBareJid);

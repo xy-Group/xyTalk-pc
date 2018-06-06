@@ -2,6 +2,7 @@ package xysoft.im.panels;
 
 import xysoft.im.adapter.RoomMembersAdapter;
 import xysoft.im.app.Launcher;
+import xysoft.im.cache.UserCache;
 import xysoft.im.components.*;
 import xysoft.im.db.model.ContactsUser;
 import xysoft.im.db.model.CurrentUser;
@@ -38,7 +39,6 @@ public class RoomMembersPanel extends ParentAvailablePanel
 
     private List<String> members = new ArrayList<>();
     private String roomId;
-    private CurrentUser currentUser;
     private Room room;
     private RoomMembersAdapter adapter;
     private AddOrRemoveMemberDialog addOrRemoveMemberDialog;
@@ -52,7 +52,6 @@ public class RoomMembersPanel extends ParentAvailablePanel
         initView();
         setListeners();
 
-        currentUser = Launcher.currentUserService.findAll().get(0);
     }
 
     private void initComponents()
@@ -154,7 +153,7 @@ public class RoomMembersPanel extends ParentAvailablePanel
         // 单独聊天，成员只显示两人
         if (room.getType().equals("s"))
         {
-            members.add(currentUser.getUsername());
+            members.add(UserCache.CurrentUserName);
             members.add(JID.usernameByJid(room.getRoomId()));
         }
         else //群聊
@@ -201,7 +200,7 @@ public class RoomMembersPanel extends ParentAvailablePanel
      */
     private boolean isRoomCreator()
     {
-        return room.getCreatorName() != null && room.getCreatorName().equals(currentUser.getUsername());
+        return room.getCreatorName() != null && room.getCreatorName().equals(UserCache.CurrentUserName);
     }
 
 

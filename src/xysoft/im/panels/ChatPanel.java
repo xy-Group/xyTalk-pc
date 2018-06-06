@@ -50,6 +50,7 @@ import xysoft.im.adapter.message.MessageLeftImageViewHolder;
 import xysoft.im.adapter.message.MessageRightAttachmentViewHolder;
 import xysoft.im.adapter.message.MessageRightImageViewHolder;
 import xysoft.im.app.Launcher;
+import xysoft.im.cache.UserCache;
 import xysoft.im.components.RCListView;
 import xysoft.im.components.message.FileEditorThumbnail;
 import xysoft.im.components.message.RemindUserPopup;
@@ -99,7 +100,6 @@ public class ChatPanel extends ParentAvailablePanel {
 
 	private java.util.List<MessageItem> messageItems = new ArrayList<>();
 	private MessageAdapter adapter;
-	private CurrentUser currentUser;
 	private Room room; // 当前房间
 
 	private long firstMessageTimestamp = 0L; // 如果是从消息搜索列表中进入房间的，这个属性不为0
@@ -108,7 +108,6 @@ public class ChatPanel extends ParentAvailablePanel {
 	public List<String> roomMembers = new ArrayList<>();
 
 	private MessageService messageService = Launcher.messageService;
-	private CurrentUserService currentUserService = Launcher.currentUserService;
 	private RoomService roomService = Launcher.roomService;
 	private ImageAttachmentService imageAttachmentService = Launcher.imageAttachmentService;
 	private FileAttachmentService fileAttachmentService = Launcher.fileAttachmentService;
@@ -133,7 +132,6 @@ public class ChatPanel extends ParentAvailablePanel {
 
 		super(parent);
 		context = this;
-		currentUser = currentUserService.findAll().get(0);
 		messageViewHolderCacheHelper = new MessageViewHolderCacheHelper();
 
 		initComponents();
@@ -224,7 +222,7 @@ public class ChatPanel extends ParentAvailablePanel {
 
 					if (messages.size() > 0) {
 						for (int i = messages.size() - 1; i >= 0; i--) {
-							MessageItem item = new MessageItem(messages.get(i), currentUser.getUserId());
+							MessageItem item = new MessageItem(messages.get(i), UserCache.CurrentBareJid);
 							messageItems.add(0, item);
 						}
 					}
@@ -455,7 +453,7 @@ public class ChatPanel extends ParentAvailablePanel {
 	private List<String> exceptSelfFromRoomMember() {
 		List<String> users = new ArrayList<>();
 		users.addAll(roomMembers);
-		users.remove(currentUser.getUsername());
+		users.remove(UserCache.CurrentUserName);
 		return users;
 	}
 
@@ -524,7 +522,7 @@ public class ChatPanel extends ParentAvailablePanel {
 		if (messages.size() > 0) {
 			for (Message message : messages) {
 				if (!message.isDeleted()) {
-					MessageItem item = new MessageItem(message, currentUser.getUserId());
+					MessageItem item = new MessageItem(message, UserCache.CurrentBareJid);
 					this.messageItems.add(item);
 				}
 			}
@@ -544,7 +542,7 @@ public class ChatPanel extends ParentAvailablePanel {
 
 		if (messages.size() > 0) {
 			for (Message message : messages) {
-				MessageItem item = new MessageItem(message, currentUser.getUserId());
+				MessageItem item = new MessageItem(message, UserCache.CurrentBareJid);
 				messageItems.add(item);
 			}
 		}
@@ -628,7 +626,7 @@ public class ChatPanel extends ParentAvailablePanel {
 		}
 
 		// 插入新的消息
-		MessageItem messageItem = new MessageItem(message, currentUser.getUserId());
+		MessageItem messageItem = new MessageItem(message, UserCache.CurrentBareJid);
 		this.messageItems.add(messageItem);
 		messagePanel.getMessageListView().notifyItemInserted(messageItems.size() - 1, false);
 
@@ -682,8 +680,8 @@ public class ChatPanel extends ParentAvailablePanel {
 				String Id = randomMessageId();
 				item.setMessageContent(contentMsg);
 				item.setTimestamp(System.currentTimeMillis());
-				item.setSenderId(currentUser.getUserId());
-				item.setSenderUsername(currentUser.getUsername());
+				item.setSenderId(UserCache.CurrentBareJid);
+				item.setSenderUsername(UserCache.CurrentUserName);
 				item.setId(Id);
 				item.setMessageType(MessageItem.RIGHT_TEXT);
 
@@ -691,8 +689,8 @@ public class ChatPanel extends ParentAvailablePanel {
 				dbMessage.setId(Id);
 				dbMessage.setMessageContent(contentMsg);
 				dbMessage.setRoomId(roomId);
-				dbMessage.setSenderId(currentUser.getUserId());
-				dbMessage.setSenderUsername(currentUser.getUsername());
+				dbMessage.setSenderId(UserCache.CurrentBareJid);
+				dbMessage.setSenderUsername(UserCache.CurrentUserName);
 				dbMessage.setTimestamp(item.getTimestamp());
 				dbMessage.setNeedToResend(false);
 
@@ -1048,16 +1046,16 @@ public class ChatPanel extends ParentAvailablePanel {
 		final String messageId = randomMessageId();
 		item.setMessageContent(name);
 		item.setTimestamp(System.currentTimeMillis());
-		item.setSenderId(currentUser.getUserId());
-		item.setSenderUsername(currentUser.getUsername());
+		item.setSenderId(UserCache.CurrentBareJid);
+		item.setSenderUsername(UserCache.CurrentUserName);
 		item.setId(messageId);
 		item.setProgress(0);
 
 		dbMessage.setId(messageId);
 		dbMessage.setMessageContent(name);
 		dbMessage.setRoomId(roomId);
-		dbMessage.setSenderId(currentUser.getUserId());
-		dbMessage.setSenderUsername(currentUser.getUsername());
+		dbMessage.setSenderId(UserCache.CurrentBareJid);
+		dbMessage.setSenderUsername(UserCache.CurrentUserName);
 		dbMessage.setTimestamp(item.getTimestamp());
 		dbMessage.setUpdatedAt(item.getTimestamp());
 
@@ -1383,8 +1381,8 @@ public class ChatPanel extends ParentAvailablePanel {
 			}
 		});
 
-		String url = Launcher.HOSTNAME + fileAttachment.getLink() + "?rc_uid=" + currentUser.getUserId() + "&rc_token="
-				+ currentUser.getAuthToken();
+		String url = Launcher.HOSTNAME + fileAttachment.getLink() + "?rc_uid=" + UserCache.CurrentBareJid + "&rc_token="
+				+ UserCache.CurrentUserToken;
 		task.execute(url);
 	}
 

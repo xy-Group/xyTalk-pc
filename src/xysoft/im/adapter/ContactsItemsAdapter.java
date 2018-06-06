@@ -44,39 +44,39 @@ public class ContactsItemsAdapter extends BaseAdapter<ContactsItemViewHolder>
         return new ContactsItemViewHolder();
     }
 
-    @Override
-    public HeaderViewHolder onCreateHeaderViewHolder(int viewType, int position)
-    {
-        for (int pos : positionMap.keySet())
-        {
-            if (pos == position)
-            {
-                String ch = positionMap.get(pos);
+//    @Override
+//    public HeaderViewHolder onCreateHeaderViewHolder(int viewType, int position)
+//    {
+//        for (int pos : positionMap.keySet())
+//        {
+//            if (pos == position)
+//            {
+//                String ch = positionMap.get(pos);
+//
+//                return new ContactsHeaderViewHolder(ch.toUpperCase());
+//            }
+//        }
+//
+//        return null;
+//    }
 
-                return new ContactsHeaderViewHolder(ch.toUpperCase());
-            }
-        }
-
-        return null;
-    }
-
-    @Override
-    public void onBindHeaderViewHolder(HeaderViewHolder viewHolder, int position)
-    {
-        ContactsHeaderViewHolder holder = (ContactsHeaderViewHolder) viewHolder;
-        holder.setPreferredSize(new Dimension(100, 25));
-        holder.setBackground(Colors.DARKER);
-        holder.setBorder(new RCBorder(RCBorder.BOTTOM));
-        holder.setOpaque(true);
-
-        holder.letterLabel = new JLabel();
-        //holder.letterLabel.setText(holder.getLetter());
-        holder.letterLabel.setText("");
-        holder.letterLabel.setForeground(Colors.FONT_GRAY);
-
-        holder.setLayout(new BorderLayout());
-        holder.add(holder.letterLabel, BorderLayout.WEST);
-    }
+//    @Override
+//    public void onBindHeaderViewHolder(HeaderViewHolder viewHolder, int position)
+//    {
+//        ContactsHeaderViewHolder holder = (ContactsHeaderViewHolder) viewHolder;
+//        holder.setPreferredSize(new Dimension(100, 25));
+//        holder.setBackground(Colors.DARKER);
+//        holder.setBorder(new RCBorder(RCBorder.BOTTOM));
+//        holder.setOpaque(true);
+//
+//        holder.letterLabel = new JLabel();
+//        holder.letterLabel.setText(holder.getLetter());
+//        //holder.letterLabel.setText("");
+//        holder.letterLabel.setForeground(Colors.FONT_GRAY);
+//
+//        holder.setLayout(new BorderLayout());
+//        holder.add(holder.letterLabel, BorderLayout.WEST);
+//    }
 
     @Override
     public void onBindViewHolder(ContactsItemViewHolder viewHolder, int position)

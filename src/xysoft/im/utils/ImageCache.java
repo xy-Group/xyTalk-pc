@@ -1,6 +1,7 @@
 package xysoft.im.utils;
 
 import xysoft.im.app.Launcher;
+import xysoft.im.cache.UserCache;
 import xysoft.im.db.model.CurrentUser;
 import com.sun.image.codec.jpeg.JPEGCodec;
 import com.sun.image.codec.jpeg.JPEGImageEncoder;
@@ -20,7 +21,6 @@ public class ImageCache
 
     public String IMAGE_CACHE_ROOT_PATH;
     Logger logger = Logger.getLogger(this.getClass());
-    private CurrentUser currentUser;
 
 
     public ImageCache()
@@ -42,7 +42,6 @@ public class ImageCache
             IMAGE_CACHE_ROOT_PATH = "./";
         }
 
-        currentUser = Launcher.currentUserService.findAll().get(0);
     }
 
     public ImageIcon tryGetThumbCache(String identify)
@@ -190,7 +189,7 @@ public class ImageCache
         // 服务上的图片
         if (imageUrl.startsWith("/file-upload"))
         {
-            url = Launcher.HOSTNAME + imageUrl + "?rc_uid=" + currentUser.getUserId() + "&rc_token=" + currentUser.getAuthToken();
+            url = Launcher.HOSTNAME + imageUrl + "?rc_uid=" + UserCache.CurrentBareJid + "&rc_token=" + UserCache.CurrentUserToken;
         }
         // 本地的图片
         else

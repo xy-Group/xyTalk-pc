@@ -5,8 +5,6 @@ import java.awt.Dimension;
 import java.awt.GridBagLayout;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.io.File;
-import java.text.DecimalFormat;
 
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -18,16 +16,17 @@ import xysoft.im.components.GBC;
 import xysoft.im.components.RCButton;
 import xysoft.im.utils.IconUtil;
 
-public class ClearDBPanel extends JPanel
+public class ConfigPanel extends JPanel
 {
-    /**
-	 * 清除缓存
+
+	/**
+	 * 
 	 */
-	private static final long serialVersionUID = 2674994848671235793L;
+	private static final long serialVersionUID = -6440556966568490047L;
 	private JLabel infoLabel;
     private RCButton clearButton;
 
-    public ClearDBPanel()
+    public ConfigPanel()
     {
         initComponents();
         initView();

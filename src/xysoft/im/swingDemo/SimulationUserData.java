@@ -9,6 +9,9 @@ import java.io.Reader;
 import java.net.URL;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Random;
 import org.apache.commons.io.IOUtils;
 import org.json.JSONArray;
@@ -17,6 +20,8 @@ import org.json.JSONObject;
 
 import xysoft.im.app.Launcher;
 import xysoft.im.db.model.ContactsUser;
+import xysoft.im.panels.RightPanel;
+import xysoft.im.utils.JsonUtil;
 
 
 public class SimulationUserData {
@@ -287,6 +292,13 @@ public class SimulationUserData {
 
 	public static void main(String[] args) {
 
+//		randomUserMake();
+		
+		syncAllUser();
+
+	}
+
+	public static void randomUserMake() {
 		SimulationUserData chineseName = new SimulationUserData();
 		for (int i = 0; i < 5001; i++) {
 			ContactsUser user = new ContactsUser();
@@ -296,14 +308,8 @@ public class SimulationUserData {
 			user.setUserId(chineseName.getNameP()+i);
 			user.setUsername(chineseName.getNameP()+i);
 			user.setSp(chineseName.getNameP());
-//			user.setAttr1("");
-//			user.setAttr2("");
-//			user.setAttr3("");
-//			user.setDept("");
-//			user.setLocation("");
 			Launcher.contactsUserService.insert(user);
 		}
-
 	}
 
 	
@@ -369,5 +375,65 @@ public class SimulationUserData {
 //
 //	}
 
+	private static void syncAllUser() {
+		// TODO Auto-generated method stub
+    	Launcher.contactsUserService.deleteAll();
 
+    	long start200 = System.currentTimeMillis();
+
+		JSONArray jsons;
+		try {
+			jsons = JsonUtil.readJsonsFromUrl("http://111.230.157.216/200jsonUTF8.txt");
+			int count = jsons.length();
+			double step = count/100;
+			int i = 0;
+
+			Iterator<Object> it = jsons.iterator();
+            List<ContactsUser> list=new ArrayList<ContactsUser>();
+            while (it.hasNext()) {
+                JSONObject ob = (JSONObject) it.next();
+                ContactsUser model = null;
+                if(ob.getString("n")!=null){
+                    model=new ContactsUser();
+                    model.setName(ob.getString("n"));
+                }
+                if(ob.getString("u")!=null){
+                    model.setUsername(ob.getString("u"));
+                    model.setUserId(ob.getString("u"));
+                }
+                if(ob.getString("p")!=null){
+                    model.setPhone(ob.getString("p"));
+                }
+                if(ob.getString("s")!=null){
+                    model.setSp(ob.getString("s"));
+                }
+                if(ob.getString("d")!=null){
+                    model.setDept(ob.getString("d"));
+                }
+                if(ob.getString("e")!=null){
+                    model.setMail(ob.getString("e"));
+                }
+                if(ob.getString("l")!=null){
+                    model.setLocation(ob.getString("l"));
+                }
+                i++;
+                if(model!=null){
+                    list.add(model);
+                    Launcher.contactsUserService.insert(model);
+
+                }
+
+            }			 
+
+		} catch (JSONException | IOException e) {
+			// TODO Auto-generated catch block
+			
+			e.printStackTrace();
+		}
+		long time200 = System.currentTimeMillis() - start200  ;
+	    System.out.println("200个对象查询耗时（毫秒）："+time200 );
+
+
+	}
+	
 }

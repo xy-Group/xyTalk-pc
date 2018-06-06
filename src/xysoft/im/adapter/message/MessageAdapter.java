@@ -35,8 +35,6 @@ public class MessageAdapter extends BaseAdapter<BaseMessageViewHolder>
     private List<MessageItem> messageItems;
     private RCListView listView;
     private AttachmentIconHelper attachmentIconHelper = new AttachmentIconHelper();
-    private CurrentUserService currentUserService = Launcher.currentUserService;
-    private CurrentUser currentUser;
     private ImageCache imageCache;
     private MessageService messageService = Launcher.messageService;
     private Logger logger = Logger.getLogger(this.getClass());
@@ -51,7 +49,6 @@ public class MessageAdapter extends BaseAdapter<BaseMessageViewHolder>
         this.messageItems = messageItems;
         this.listView = listView;
 
-        currentUser = currentUserService.findAll().get(0);
         imageCache = new ImageCache();
         fileCache = new FileCache();
         this.messageViewHolderCacheHelper = messageViewHolderCacheHelper;
