@@ -8,9 +8,14 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
+import java.util.function.Consumer;
+import java.util.function.Supplier;
+
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 import org.jivesoftware.smack.SmackException.NoResponseException;
@@ -19,6 +24,9 @@ import org.jivesoftware.smack.XMPPException.XMPPErrorException;
 import org.jivesoftware.smackx.vcardtemp.VCardManager;
 import org.jivesoftware.smackx.vcardtemp.packet.VCard;
 import org.jxmpp.jid.impl.JidCreate;
+
+import com.github.stuxuhai.jpinyin.PinyinFormat;
+import com.github.stuxuhai.jpinyin.PinyinHelper;
 
 import xysoft.im.adapter.ContactsItemsAdapter;
 import xysoft.im.app.Launcher;
@@ -31,6 +39,7 @@ import xysoft.im.db.model.ContactsUser;
 import xysoft.im.db.service.ContactsUserService;
 import xysoft.im.db.service.CurrentUserService;
 import xysoft.im.entity.ContactsItem;
+import xysoft.im.swingDemo.SimulationUserData;
 import xysoft.im.utils.AvatarUtil;
 import xysoft.im.utils.DebugUtil;
 import xysoft.im.utils.GraphicUtils;
@@ -46,12 +55,12 @@ public class ContactsPanel extends ParentAvailablePanel {
 	private RCListView contactsListView;
 	private List<ContactsItem> contactsItemList = new ArrayList<>();
 	private ContactsUserService contactsUserService = Launcher.contactsUserService;
-	private CurrentUserService currentUserService = Launcher.currentUserService;
 	private String currentUsername;
 	String[] keys = new String[] { "0-9", "abc", "def", "ghi", "jkl", "mno", "pq", "rs" , "tu" , "vw", "xyz" };
 	//String[] keys = new String[] { "0-9", "abcd", "efgh", "ijkl", "mnop", "qrst", "uvwx", "yz" };
 
 	private JPanel keboardPanel;
+	private JLabel loadingProgress = new JLabel();
 
 	public ContactsPanel(JPanel parent) {
 		super(parent);
@@ -77,12 +86,21 @@ public class ContactsPanel extends ParentAvailablePanel {
 			btn.addMouseListener(new MouseAdapter() {
 				@Override
 				public void mouseClicked(MouseEvent e) {
+					
 					refreshData(btn.getText());
 					super.mouseClicked(e);
+					
 				}
 			});
 			keboardPanel.add(btn);
 		}
+		
+        ImageIcon sendingIcon = new ImageIcon(getClass().getResource("/image/loading7.gif"));
+        loadingProgress.setIcon(sendingIcon);
+        loadingProgress.setVisible(false);
+        
+        keboardPanel.add(loadingProgress, new GBC(0, 0).setFill(GBC.BOTH).setWeight(1, 1).setInsets(0, 0, 0, 0));	
+        
 		contactsListView = new RCListView();
 	}
 
@@ -90,25 +108,52 @@ public class ContactsPanel extends ParentAvailablePanel {
 		setLayout(new GridBagLayout());
 		contactsListView.setContentPanelBackground(Colors.DARK);
 		add(keboardPanel, new GBC(0, 0).setFill(GBC.BOTH).setWeight(1, 1).setInsets(0, 0, 0, 0));
-		add(contactsListView, new GBC(0, 1).setFill(GBC.BOTH).setWeight(1, 5));
+			
+		add(contactsListView, new GBC(0, 2).setFill(GBC.BOTH).setWeight(1, 5));
 	}
 
-	private void refreshData(String key) {
-		contactsItemList.clear();
+	private String refreshData(String key) {
+		
+		CompletableFuture<String> resultCompletableFuture = CompletableFuture.supplyAsync(new Supplier<String>() {
+			public String get() {
+				try {
+					loadingProgress.setVisible(true);
+					contactsItemList.clear();
 
-		List<ContactsUser> contactsUsers = contactsUserService.findStartWith(key);
-		for (ContactsUser contactsUser : contactsUsers) {
-			ContactsItem item = new ContactsItem(contactsUser.getUserId(), contactsUser.getName(), "s");
+					List<ContactsUser> contactsUsers = contactsUserService.findStartWith(key);
+					for (ContactsUser contactsUser : contactsUsers) {
+						ContactsItem item = new ContactsItem(contactsUser.getUserId(), contactsUser.getName(), "s");
 
-			contactsItemList.add(item);
-		}
+						contactsItemList.add(item);
+					}
 
-		((ContactsItemsAdapter) contactsListView.getAdapter()).processData();
-		contactsListView.notifyDataSetChanged(false);
+					((ContactsItemsAdapter) contactsListView.getAdapter()).processData();
+					contactsListView.notifyDataSetChanged(false);
 
-		// 通讯录更新后，获取头像
-		//getContactsUserAvatar();
+					// 通讯录更新后，获取头像
+					//getContactsUserAvatar();
+					loadingProgress.setVisible(false);
+					
+					 DebugUtil.debug("通讯录卡片刷新执行线程："+Thread.currentThread().getName());  
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				return "ok";
+			}
+		}, Launcher.executor);
 
+		resultCompletableFuture.thenAcceptAsync(new Consumer<String>() {  
+		    @Override  
+		    public void accept(String t) {  
+		    	DebugUtil.debug(t);  
+		    	DebugUtil.debug("通讯录卡片刷新回调线程："+Thread.currentThread().getName());  
+
+		    }  
+		}, Launcher.executor);  
+				
+		return "ok";
+	
 	}
 
 	private void initData() {

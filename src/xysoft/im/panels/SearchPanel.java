@@ -1,5 +1,6 @@
 package xysoft.im.panels;
 
+import xysoft.im.adapter.ContactsItemsAdapter;
 import xysoft.im.adapter.search.SearchResultItemsAdapter;
 import xysoft.im.app.Launcher;
 import xysoft.im.components.Colors;
@@ -13,7 +14,9 @@ import xysoft.im.db.service.ContactsUserService;
 import xysoft.im.db.service.FileAttachmentService;
 import xysoft.im.db.service.MessageService;
 import xysoft.im.db.service.RoomService;
+import xysoft.im.entity.ContactsItem;
 import xysoft.im.entity.SearchResultItem;
+import xysoft.im.utils.DebugUtil;
 import xysoft.im.utils.FontUtil;
 
 import javax.swing.*;
@@ -24,6 +27,9 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
+import java.util.function.Consumer;
+import java.util.function.Supplier;
 
 
 public class SearchPanel extends ParentAvailablePanel
@@ -90,16 +96,17 @@ public class SearchPanel extends ParentAvailablePanel
 
                 listPanel.showPanel(ListPanel.SEARCH);
 
-                List<SearchResultItem> data = searchUserOrRoom(searchTextField.getText());
-                searchResultPanel.setData(data);
-                searchResultPanel.setKeyWord(searchTextField.getText());
-                searchResultPanel.notifyDataSetChanged(false);
-                searchResultPanel.getTipLabel().setVisible(false);
+                setSearchResult(searchResultPanel);
             }
+
+
 
             @Override
             public void removeUpdate(DocumentEvent e)
             {
+            	//搜索框开始通讯录搜索设置为2字符起搜
+            	if (searchTextField.getText().length()==1)
+            		return;
 
                 ListPanel listPanel = ListPanel.getContext();
                 if (searchTextField.getText() == null || searchTextField.getText().isEmpty())
@@ -112,11 +119,7 @@ public class SearchPanel extends ParentAvailablePanel
 
                 listPanel.showPanel(ListPanel.SEARCH);
 
-                List<SearchResultItem> data = searchUserOrRoom(searchTextField.getText());
-                searchResultPanel.setData(data);
-                searchResultPanel.setKeyWord(searchTextField.getText());
-                searchResultPanel.notifyDataSetChanged(false);
-                searchResultPanel.getTipLabel().setVisible(false);
+                setSearchResult(searchResultPanel);
 
             }
 
@@ -151,6 +154,36 @@ public class SearchPanel extends ParentAvailablePanel
         });
 
     }
+    
+	public void setSearchResult(SearchResultPanel searchResultPanel) {
+        
+        CompletableFuture<String> resultCompletableFuture = CompletableFuture.supplyAsync(new Supplier<String>() {
+			public String get() {
+				try {
+					List<SearchResultItem> data = searchUserOrRoom(searchTextField.getText());
+			        searchResultPanel.setData(data);
+			        searchResultPanel.setKeyWord(searchTextField.getText());
+			        searchResultPanel.notifyDataSetChanged(false);
+			        searchResultPanel.getTipLabel().setVisible(false);
+					DebugUtil.debug("搜索执行线程："+Thread.currentThread().getName());  
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				return "ok";
+			}
+		}, Launcher.executor);
+
+		resultCompletableFuture.thenAcceptAsync(new Consumer<String>() {  
+		    @Override  
+		    public void accept(String t) {  
+		    	DebugUtil.debug(t);  
+		    	DebugUtil.debug("搜索回调线程："+Thread.currentThread().getName());  
+
+		    }  
+		}, Launcher.executor);  
+			
+	}
 
     /**
      * 清空搜索文本
@@ -320,7 +353,7 @@ public class SearchPanel extends ParentAvailablePanel
         SearchResultItem item;
         for (ContactsUser user : contactsUsers)
         {
-            item = new SearchResultItem(user.getUserId(), user.getUsername(), "s");
+            item = new SearchResultItem(user.getUserId(), user.getUsername()+" - "+user.getName(), "s");
             retList.add(item);
         }
         return retList;
