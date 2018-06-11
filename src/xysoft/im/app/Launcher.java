@@ -23,6 +23,18 @@ import xysoft.im.frames.MainFrame;
 import xysoft.im.utils.DbUtils;
 import xysoft.im.utils.DebugUtil;
 
+/**
+ * 测试账户（密码都是1）：
+wangxin@vm_0_4_centos
+xuanji@vm_0_4_centos
+zeyu@vm_0_4_centos
+chenxiao@vm_0_4_centos
+zhangyun@vm_0_4_centos
+test1@vm_0_4_centos
+test2@vm_0_4_centos
+test3@vm_0_4_centos
+test4@vm_0_4_centos
+ */
 
 public class Launcher
 {
@@ -30,18 +42,18 @@ public class Launcher
 
     //############  最重要且必须设置的项  Begin ############ 
 	
-//    public static final String HOSTNAME = "111.230.157.216";
-//    public static final String DOMAIN = "vm_0_4_centos";
-//    public static final String IP = "111.230.157.216";
-//	public static final String OFFLINEFILEROBOTJID = "test1@vm_0_4_centos/robot"; //离线文件机器人fulljid
-//	public static final String OFFLINEFILEROBOTBAREJID = "test1@vm_0_4_centos"; //离线文件机器人jid
+    public static final String HOSTNAME = "111.230.157.216";
+    public static final String DOMAIN = "vm_0_4_centos";
+    public static final String IP = "111.230.157.216";
+	public static final String OFFLINEFILEROBOTJID = "test1@vm_0_4_centos/robot"; //离线文件机器人fulljid
+	public static final String OFFLINEFILEROBOTBAREJID = "test1@vm_0_4_centos"; //离线文件机器人jid
 	
-	//本地調試
-    public static final String HOSTNAME = "127.0.0.1";
-    public static final String DOMAIN = "win7-1803071731";
-    public static final String IP = "127.0.0.1";
-	public static final String OFFLINEFILEROBOTJID = "test1@win7-1803071731/robot"; //离线文件机器人fulljid
-	public static final String OFFLINEFILEROBOTBAREJID = "test1@win7-1803071731"; //离线文件机器人jid
+//	//本地調試
+//    public static final String HOSTNAME = "127.0.0.1";
+//    public static final String DOMAIN = "win7-1803071731";
+//    public static final String IP = "127.0.0.1";
+//	public static final String OFFLINEFILEROBOTJID = "test1@win7-1803071731/robot"; //离线文件机器人fulljid
+//	public static final String OFFLINEFILEROBOTBAREJID = "test1@win7-1803071731"; //离线文件机器人jid
 	
 	public static final boolean IS_DEBUGMODE = true; // debug模式则console输出全部log信息	
     public static final String RESOURCE = "pc";    

@@ -44,7 +44,7 @@ public class StateService {
 	
 	public static void sendPing(String barejid){
 		try {
-				sendPing(JidCreate.from(barejid + "/android"));
+				sendPing(JidCreate.from(barejid + "/Android"));
 				sendPing(JidCreate.from(barejid + "/ios"));
 				sendPing(JidCreate.from(barejid + "/pc"));
 				sendPing(JidCreate.from(barejid + "/Spark"));
