@@ -112,7 +112,7 @@ public class ContactsPanel extends ParentAvailablePanel {
 		add(contactsListView, new GBC(0, 2).setFill(GBC.BOTH).setWeight(1, 5));
 	}
 
-	private String refreshData(String key) {
+	private void refreshData(String key) {
 		
 		CompletableFuture<String> resultCompletableFuture = CompletableFuture.supplyAsync(new Supplier<String>() {
 			public String get() {
@@ -139,7 +139,7 @@ public class ContactsPanel extends ParentAvailablePanel {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-				return "ok";
+				return "contactsLoadOK";
 			}
 		}, Launcher.executor);
 
@@ -152,7 +152,6 @@ public class ContactsPanel extends ParentAvailablePanel {
 		    }  
 		}, Launcher.executor);  
 				
-		return "ok";
 	
 	}
 

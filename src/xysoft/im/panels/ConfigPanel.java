@@ -20,7 +20,7 @@ public class ConfigPanel extends JPanel
 {
 
 	/**
-	 * 
+	 * 系统设置
 	 */
 	private static final long serialVersionUID = -6440556966568490047L;
 	private JLabel infoLabel;
@@ -104,7 +104,7 @@ public class ConfigPanel extends JPanel
             @Override
             public void run()
             {
-                infoLabel.setText("当前数据库聊天消息记录数量：" + Launcher.messageService.findAll().size());
+              // infoLabel.setText("当前数据库聊天消息记录数量：" + Launcher.messageService.findAll().size());
             }
         }).start();
     }

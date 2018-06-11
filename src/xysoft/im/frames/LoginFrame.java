@@ -80,10 +80,6 @@ public class LoginFrame extends JFrame {
 	
 	private static Point origin = new Point();
 
-	private SqlSession sqlSession;
-	private CurrentUserService currentUserService;
-	//private String username;
-
 	public LoginFrame() {
 		initService();
 		initComponents();
@@ -102,8 +98,8 @@ public class LoginFrame extends JFrame {
 	}
 
 	private void initService() {
-		sqlSession = DbUtils.getSqlSession();
-		currentUserService = new CurrentUserService(sqlSession);
+		//sqlSession = DbUtils.getSqlSession();
+
 	}
 
 	private void initComponents() {
@@ -354,36 +350,36 @@ public class LoginFrame extends JFrame {
 		this.dispose();
 	}
 
-	@SuppressWarnings("unused")
-	private void processLoginResult(JSONObject ret) {
-		if (ret.get("status").equals("success")) {
-
-			JSONObject data = ret.getJSONObject("data");
-			String authToken = data.getString("authToken");
-			String userId = data.getString("userId");
-
-			CurrentUser currentUser = new CurrentUser();
-			currentUser.setUserId(userId);
-			currentUser.setAuthToken(authToken);
-			currentUser.setRawPassword(new String(passwordField.getPassword()));
-			currentUser.setPassword(PasswordUtil.encryptPassword(currentUser.getRawPassword()));
-			currentUser.setUsername(usernameField.getText());
-			currentUserService.insertOrUpdate(currentUser);
-
-			hideMe();
-			
-
-			MainFrame frame = new MainFrame();
-			frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-			frame.setVisible(true);
-		} else {
-			showMessage("用户不存在或密码错误");
-			loginButton.setEnabled(true);
-			usernameField.setEditable(true);
-			passwordField.setEditable(true);
-		}
-
-	}
+//	@SuppressWarnings("unused")
+//	private void processLoginResult(JSONObject ret) {
+//		if (ret.get("status").equals("success")) {
+//
+//			JSONObject data = ret.getJSONObject("data");
+//			String authToken = data.getString("authToken");
+//			String userId = data.getString("userId");
+//
+//			CurrentUser currentUser = new CurrentUser();
+//			currentUser.setUserId(userId);
+//			currentUser.setAuthToken(authToken);
+//			currentUser.setRawPassword(new String(passwordField.getPassword()));
+//			currentUser.setPassword(PasswordUtil.encryptPassword(currentUser.getRawPassword()));
+//			currentUser.setUsername(usernameField.getText());
+//			currentUserService.insertOrUpdate(currentUser);
+//
+//			hideMe();
+//			
+//
+//			MainFrame frame = new MainFrame();
+//			frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+//			frame.setVisible(true);
+//		} else {
+//			showMessage("用户不存在或密码错误");
+//			loginButton.setEnabled(true);
+//			usernameField.setEditable(true);
+//			passwordField.setEditable(true);
+//		}
+//
+//	}
 
 	private void showMessage(String message) {
 		if (!statusLabel.isVisible()) {

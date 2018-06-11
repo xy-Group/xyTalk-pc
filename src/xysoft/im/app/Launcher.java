@@ -84,7 +84,6 @@ public class Launcher
     {
         sqlSession = DbUtils.getSqlSession();
         roomService = new RoomService(sqlSession);
-        currentUserService = new CurrentUserService(sqlSession);
         messageService = new MessageService(sqlSession);
         contactsUserService = new ContactsUserService(sqlSession);
         imageAttachmentService = new ImageAttachmentService(sqlSession);

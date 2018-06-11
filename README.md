@@ -329,13 +329,13 @@ XyTalk.pc是XMPP协议的即时通讯IM客户端PC软件，可用于Windows/linu
 	<br>SSO单点登陆接口
 	<br>HTTP文件上传
 	<br>HTTP文件下载
-	<br>OAuth2.0认证
+	<br>组织架构同步
 	</TD>
 	<TD>无</TD>
 	<TD>内置功能</TD>
   </TR>
   <TR>
-	<TD>组织架构同步</TD>
+	<TD>登陆员工同步</TD>
 	<TD>无</TD>
 	<TD>需定制</TD>
   </TR>
@@ -562,6 +562,11 @@ iOS版界面:
 <p><br>2018-06-06： 
 <br>1、联系人异步全量同步
 <br>2、联系人json模拟生成
+<p><br>2018-06-11： 
+<br>1、修正了java.net.URL的空异常bug（联系人全量同步）
+<br>2、用ApacheHttpClient替换java.net.URL的get方法
+
+
 
 <H2>## 联系作者     ##</H2>
 
