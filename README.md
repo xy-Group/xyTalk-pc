@@ -567,7 +567,7 @@ iOS版界面:
 <br>2、用ApacheHttpClient替换java.net.URL的get方法
 <p><br>2018-06-12： 
 <br>1、断网离线登陆
-<p><br>2018-06-12： 
+<p><br>2018-06-14： 
 <br>1、通过addSubscribeListener进行自动花名册处理，方便状态即席和SocketBytestreams文件收发.
 
 

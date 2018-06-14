@@ -152,7 +152,7 @@ public class XmppLogin implements Login {
 			
 			//自动添加好友监听,processSubscribe起了关键作用
 			RosterService.addRosterListenerAuto();
-			//手动模式添加好友，无需再手动了
+			//手动模式添加好友，废弃
 			//RosterService.addRosterListener();
 
 			//接收文件listener
