@@ -16,6 +16,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -40,7 +41,16 @@ import javax.swing.text.StyleConstants;
 
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.log4j.Logger;
+import org.jivesoftware.smack.SmackException;
+import org.jivesoftware.smack.SmackException.NoResponseException;
+import org.jivesoftware.smack.SmackException.NotConnectedException;
+import org.jivesoftware.smack.SmackException.NotLoggedInException;
+import org.jivesoftware.smack.XMPPException.XMPPErrorException;
+import org.jivesoftware.smack.packet.Presence;
 import org.jivesoftware.smack.packet.Message.Type;
+import org.jivesoftware.smack.roster.Roster;
+import org.jxmpp.jid.impl.JidCreate;
+import org.jxmpp.stringprep.XmppStringprepException;
 
 import xysoft.im.adapter.message.BaseMessageViewHolder;
 import xysoft.im.adapter.message.MessageAdapter;
@@ -173,10 +183,11 @@ public class ChatPanel extends ParentAvailablePanel {
 		// splitPane.setBorder(new RCBorder(RCBorder.BOTTOM,
 		// Colors.LIGHT_GRAY));
 		splitPane.setBorder(null);
-//		splitPane.setUI(new BasicSplitPaneUI());
-//		BasicSplitPaneDivider divider = (BasicSplitPaneDivider) splitPane.getComponent(0);
-//		divider.setBackground(Colors.FONT_BLACK);
-//		divider.setBorder(null);
+		// splitPane.setUI(new BasicSplitPaneUI());
+		// BasicSplitPaneDivider divider = (BasicSplitPaneDivider)
+		// splitPane.getComponent(0);
+		// divider.setBackground(Colors.FONT_BLACK);
+		// divider.setBorder(null);
 		splitPane.setOneTouchExpandable(false);
 		splitPane.setDividerLocation(450);
 		// splitPane.setResizeWeight(0.1);
@@ -304,9 +315,34 @@ public class ChatPanel extends ParentAvailablePanel {
 		messageEditorPanel.getUploadFileLabel().addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				//发送文件前先Ping一下，作用是获取对方的fullJid
+				// 发送文件前先Ping一下，作用是获取对方的fullJid
 				StateService.sendPing(roomId);
 				
+				//添加对方进入花名册，因为socketstream文件发送方式需要双方互为好友
+				
+//				Presence presence = new Presence(Presence.Type.available);
+//				presence.setStatus("working");
+//				//先把我的在线状态传递到服务器
+//				try {
+//					try {
+//						Launcher.connection.sendStanza(presence);
+//						
+//					} catch (InterruptedException e1) {
+//
+//					}
+//				} catch (SmackException.NotConnectedException e1) {
+//
+//				}
+				
+				try {
+					Roster.getInstanceFor(Launcher.connection).createEntry(JidCreate.bareFrom(roomId), JID.usernameByJid(roomId), null);
+				} catch (NotLoggedInException | NoResponseException | XMPPErrorException | NotConnectedException
+						| XmppStringprepException | InterruptedException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+				
+
 				JFileChooser fileChooser = new JFileChooser();
 				fileChooser.setDialogTitle("请选择上传文件或图片");
 				fileChooser.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
@@ -316,7 +352,7 @@ public class ChatPanel extends ParentAvailablePanel {
 				if (selectedFile != null) {
 					String path = selectedFile.getAbsolutePath();
 					sendFileMessage(path);
-					//showSendingMessage();
+					// showSendingMessage();
 				}
 
 				super.mouseClicked(e);
@@ -401,6 +437,7 @@ public class ChatPanel extends ParentAvailablePanel {
 						int start = elem.getStartOffset();
 						int end = elem.getEndOffset();
 						String text = doc.getText(elem.getStartOffset(), end - start);
+
 						inputData.add(text);
 						break;
 					}
@@ -655,141 +692,154 @@ public class ChatPanel extends ParentAvailablePanel {
 	 * 如果messageId不为null, 则认为重发该消息，否则发送一条新的消息
 	 */
 	public void sendTextMessage(final String messageID, final String contentMsg) {
-		
-		
+
 		if (contentMsg == null || contentMsg.equals("")) {
 			return;
 		}
-		
-		SwingWorker aWorker = new SwingWorker() 
-    	{
-		@Override
-		protected Object doInBackground() throws Exception {
-			AsyncSend(messageID, contentMsg);
-			return true;
-		}
-		
-		private void AsyncSend(final String messageID, final String contentMsg) {
-			long time1 = System.currentTimeMillis();
-			
-			Message dbMessage = null;
-			if (messageID == null) {
-				MessageItem item = new MessageItem();
-				
 
-				String Id = randomMessageId();
-				item.setMessageContent(contentMsg);
-				item.setTimestamp(System.currentTimeMillis());
-				item.setSenderId(UserCache.CurrentBareJid);
-				item.setSenderUsername(UserCache.CurrentUserName);
-				item.setId(Id);
-				item.setMessageType(MessageItem.RIGHT_TEXT);
-
-				dbMessage = new Message();
-				dbMessage.setId(Id);
-				dbMessage.setMessageContent(contentMsg);
-				dbMessage.setRoomId(roomId);
-				dbMessage.setSenderId(UserCache.CurrentBareJid);
-				dbMessage.setSenderUsername(UserCache.CurrentUserName);
-				dbMessage.setTimestamp(item.getTimestamp());
-				dbMessage.setNeedToResend(false);
-
-				addMessageItemToEnd(item);
-
-				messageService.insert(dbMessage);
-
+		SwingWorker aWorker = new SwingWorker() {
+			@Override
+			protected Object doInBackground() throws Exception {
+				AsyncSend(messageID, contentMsg);
+				return true;
 			}
-			// 已有消息重发
-			else {
-				Message msg = messageService.findById(messageID);
 
-				msg.setTimestamp(System.currentTimeMillis());
-				msg.setUpdatedAt(0);
-				msg.setNeedToResend(false);
-				messageService.insertOrUpdate(msg);
+			private void AsyncSend(final String messageID, final String contentMsg) {
+				long time1 = System.currentTimeMillis();
 
-				String content = msg.getMessageContent();
+				Message dbMessage = null;
+				if (messageID == null) {
+					MessageItem item = new MessageItem();
 
-				int pos = findMessageItemPositionInViewReverse(msg.getId());
-				if (pos > -1) {
-					messageItems.get(pos).setNeedToResend(false);
-					messageItems.get(pos).setUpdatedAt(0);
-					messageItems.get(pos).setTimestamp(System.currentTimeMillis());
-					messagePanel.getMessageListView().notifyItemChanged(pos);
+					String Id = randomMessageId();
+					item.setMessageContent(contentMsg);
+					item.setTimestamp(System.currentTimeMillis());
+					item.setSenderId(UserCache.CurrentBareJid);
+					item.setSenderUsername(UserCache.CurrentUserName);
+					item.setId(Id);
+					item.setMessageType(MessageItem.RIGHT_TEXT);
+
+					dbMessage = new Message();
+					dbMessage.setId(Id);
+					dbMessage.setMessageContent(contentMsg);
+					dbMessage.setRoomId(roomId);
+					dbMessage.setSenderId(UserCache.CurrentBareJid);
+					dbMessage.setSenderUsername(UserCache.CurrentUserName);
+					dbMessage.setTimestamp(item.getTimestamp());
+					dbMessage.setNeedToResend(false);
+
+					addMessageItemToEnd(item);
+
+					messageService.insert(dbMessage);
+
+				}
+				// 已有消息重发
+				else {
+					Message msg = messageService.findById(messageID);
+
+					msg.setTimestamp(System.currentTimeMillis());
+					msg.setUpdatedAt(0);
+					msg.setNeedToResend(false);
+					messageService.insertOrUpdate(msg);
+
+					String content = msg.getMessageContent();
+
+					int pos = findMessageItemPositionInViewReverse(msg.getId());
+					if (pos > -1) {
+						messageItems.get(pos).setNeedToResend(false);
+						messageItems.get(pos).setUpdatedAt(0);
+						messageItems.get(pos).setTimestamp(System.currentTimeMillis());
+						messagePanel.getMessageListView().notifyItemChanged(pos);
+					}
+				}
+
+				// String content = StringEscapeUtils.escapeJava(contentMsg);
+				String content = contentMsg;
+				if (roomId.contains(".")) {// 群聊
+					MucChatService.sendMessage(roomId, content);
+				} else {
+					ChatService.sendMessage(roomId, content);
+				}
+				
+				// byte[] textByte;
+				// try {
+				// textByte = content.getBytes("utf-8");
+				// content = new String (textByte);
+				// // 发送消息到服务器
+				// // 发送到XMPP
+				// if (roomId.contains(".")){//群聊
+				// MucChatService.sendMessage(roomId, content);
+				// }
+				// else{
+				// ChatService.sendMessage(roomId, content);
+				// }
+				// } catch (UnsupportedEncodingException e) {
+				// // TODO Auto-generated catch block
+				// e.printStackTrace();
+				// }
+
+				// TODO：完善发送消息回调：
+				boolean sentSuccess = true;
+				if (sentSuccess) {
+					// 如果发送成功，收到服务器响应后更新消息的updatedAt属性，该属性如果小于0，说明消息发送失败
+					dbMessage.setUpdatedAt(System.currentTimeMillis());
+					messageService.insertOrUpdate(dbMessage);
+					// 更新消息列表
+					addOrUpdateMessageItem();
+
+					// 更新房间信息以及房间列表
+					Room room = roomService.findById(dbMessage.getRoomId());
+					room.setLastMessage(dbMessage.getMessageContent());
+					room.setLastChatAt(dbMessage.getTimestamp());
+					room.setMsgSum(room.getMsgSum() + 1);
+					room.setUnreadCount(0);
+					room.setTotalReadCount(room.getMsgSum());
+					roomService.update(room);
+					RoomsPanel.getContext().updateRoomsList(dbMessage.getRoomId());
+				}
+
+				// 10秒后如果发送不成功，则显示重发按钮
+				/*
+				 * MessageResendTask task = new MessageResendTask();
+				 * task.setListener(new ResendTaskCallback(10000) {
+				 * 
+				 * @Override public void onNeedResend(String messageId) {
+				 * Message msg = messageService.findById(messageId); if
+				 * (msg.getUpdatedAt() == 0) { // 更新消息列表
+				 * 
+				 * int pos = findMessageItemPositionInViewReverse(messageId); if
+				 * (pos > -1) { messageItems.get(pos).setNeedToResend(true);
+				 * msg.setNeedToResend(true); messageService.update(msg);
+				 * messagePanel.getMessageListView().notifyItemChanged(pos); }
+				 * 
+				 * 
+				 * // 更新房间列表 // 注意这里不能用类的成员room，因为可能已经离开了原来的房间 Room room =
+				 * roomService.findById(msg.getRoomId());
+				 * room.setLastMessage("[有消息发送失败]");
+				 * room.setLastChatAt(msg.getTimestamp());
+				 * roomService.update(room);
+				 * RoomsPanel.getContext().updateRoomItem(msg.getRoomId()); } }
+				 * }); task.execute(messageId);
+				 */
+				DebugUtil.debug("发送操作：" + (System.currentTimeMillis() - time1) + "毫秒");
+			}
+
+			@Override
+			protected void done() {
+				try {
+					boolean sent = (boolean) get();
+					if (sent) {
+						// Update UI
+						// usernameField.setText("");
+					}
+
+				} catch (Exception ex) {
+					ex.printStackTrace();
 				}
 			}
+		};
+		aWorker.execute();
 
-			String content = StringEscapeUtils.escapeJava(contentMsg);
-			// 发送消息到服务器
-			// 发送到XMPP
-			if (roomId.contains(".")){//群聊
-				MucChatService.sendMessage(roomId, content);
-			}
-			else{
-				ChatService.sendMessage(roomId, content);
-			}
-					
-			// TODO：完善发送消息回调：
-			boolean sentSuccess = true;
-			if (sentSuccess) {
-				// 如果发送成功，收到服务器响应后更新消息的updatedAt属性，该属性如果小于0，说明消息发送失败
-				dbMessage.setUpdatedAt(System.currentTimeMillis());
-				messageService.insertOrUpdate(dbMessage);
-				// 更新消息列表
-				addOrUpdateMessageItem();
-
-				// 更新房间信息以及房间列表
-				Room room = roomService.findById(dbMessage.getRoomId());
-				room.setLastMessage(dbMessage.getMessageContent());
-				room.setLastChatAt(dbMessage.getTimestamp());
-				room.setMsgSum(room.getMsgSum() + 1);
-				room.setUnreadCount(0);
-				room.setTotalReadCount(room.getMsgSum());
-				roomService.update(room);
-				RoomsPanel.getContext().updateRoomsList(dbMessage.getRoomId());
-			}
-
-			// 10秒后如果发送不成功，则显示重发按钮
-			/*
-			 * MessageResendTask task = new MessageResendTask();
-			 * task.setListener(new ResendTaskCallback(10000) {
-			 * 
-			 * @Override public void onNeedResend(String messageId) { Message msg =
-			 * messageService.findById(messageId); if (msg.getUpdatedAt() == 0) { //
-			 * 更新消息列表
-			 * 
-			 * int pos = findMessageItemPositionInViewReverse(messageId); if (pos >
-			 * -1) { messageItems.get(pos).setNeedToResend(true);
-			 * msg.setNeedToResend(true); messageService.update(msg);
-			 * messagePanel.getMessageListView().notifyItemChanged(pos); }
-			 * 
-			 * 
-			 * // 更新房间列表 // 注意这里不能用类的成员room，因为可能已经离开了原来的房间 Room room =
-			 * roomService.findById(msg.getRoomId());
-			 * room.setLastMessage("[有消息发送失败]");
-			 * room.setLastChatAt(msg.getTimestamp()); roomService.update(room);
-			 * RoomsPanel.getContext().updateRoomItem(msg.getRoomId()); } } });
-			 * task.execute(messageId);
-			 */
-			DebugUtil.debug("发送操作："+(System.currentTimeMillis()-time1)+"毫秒");
-		}
-		@Override
-        protected void done() {
-            try {
-            	boolean sent = (boolean) get();
-            	if (sent){
-                    // Update UI
-                    //usernameField.setText("");
-            	}
-            		
-            } catch (Exception ex) {
-                ex.printStackTrace();
-            }
-        }
-    	};
-    	aWorker.execute();
-		
-		
 	}
 
 	private void showSendingMessage() {
@@ -832,27 +882,28 @@ public class ChatPanel extends ParentAvailablePanel {
 	 * @param path
 	 */
 	private void sendFileMessage(String fileFullPath) {
-		DebugUtil.debug("准备文件发送:"+fileFullPath);
-		
+		DebugUtil.debug("准备文件发送:" + fileFullPath);
+
 		String fulljid = StateService.getFullJid(roomId);
-		if (fulljid==null || fulljid.isEmpty()){
-			//对方不在线或无法获得fulljid
+		if (fulljid == null || fulljid.isEmpty()) {
+			// 对方不在线或无法获得fulljid
 			sendOfflineFile(fileFullPath, roomId);
+		} else {
+			//在线文件
+			XmppFileService.sendFile(fileFullPath, fulljid, ""); // 在线文件，description为空
+
 		}
-		else{			
-			XmppFileService.sendFile(fileFullPath, fulljid,"");	//在线文件，description为空	
-			
-		}
-		
-		//TODO: 更新UI显示上传文件
-		notifyUIStartUploadFile(fileFullPath, randomMessageId());//这里使用随机消息id，是因为这并不是xmpp message
+
+		// TODO: 更新UI显示上传文件
+		notifyUIStartUploadFile(fileFullPath, randomMessageId());// 这里使用随机消息id，是因为这并不是xmpp
+																	// message
 	}
-	
+
 	private void sendOfflineFile(String fileFullPath, String bareJid) {
 		// TODO 发送离线文件
-		JOptionPane.showMessageDialog(null,"对方不在线，开始转为离线文件发送");
-		//离线文件，和离线文件机器人交互
-		XmppFileService.sendOfflineFile(fileFullPath,bareJid);
+		JOptionPane.showMessageDialog(null, "对方不在线，开始转为离线文件发送");
+		// 离线文件，和离线文件机器人交互
+		XmppFileService.sendOfflineFile(fileFullPath, bareJid);
 	}
 
 	/**
@@ -890,7 +941,7 @@ public class ChatPanel extends ParentAvailablePanel {
 			}
 
 			sendFileMessage(path);
-			//showSendingMessage();
+			// showSendingMessage();
 		}
 	}
 
@@ -906,7 +957,7 @@ public class ChatPanel extends ParentAvailablePanel {
 	}
 
 	public void notifyUIStartReciveFile(String reciveFilename, String fileId, String senderBareJid) {
-		reciveFile(reciveFilename, fileId,senderBareJid);
+		reciveFile(reciveFilename, fileId, senderBareJid);
 		uploadingOrDownloadingFiles.add(fileId);
 	}
 
@@ -914,13 +965,13 @@ public class ChatPanel extends ParentAvailablePanel {
 		// TODO 接收文件时的UI变化
 		final MessageItem item = new MessageItem();
 		boolean isImage;
-		if (reciveFilename.lastIndexOf(".")<0){
+		if (reciveFilename.lastIndexOf(".") < 0) {
 			isImage = false;
-		}else{
+		} else {
 			String type = MimeTypeUtil.getMime(reciveFilename.substring(reciveFilename.lastIndexOf(".")));
 			isImage = type.startsWith("image/");
 		}
-		
+
 		// 发送的是图片
 		String name = reciveFilename.substring(reciveFilename.lastIndexOf(File.separator) + 1); // 文件名
 
@@ -928,14 +979,14 @@ public class ChatPanel extends ParentAvailablePanel {
 		ImageAttachment imageAttachment = null;
 
 		if (isImage) {
-			
+
 			imageAttachment = new ImageAttachment();
 			imageAttachment.setId(fileId);
 			imageAttachment.setWidth(100);
 			imageAttachment.setHeight(100);
 			imageAttachment.setImageUrl(reciveFilename);
 			imageAttachment.setTitle(name);
-	
+
 			item.setImageAttachment(new ImageAttachmentItem(imageAttachment));
 			item.setMessageType(MessageItem.LEFT_IMAGE);
 		} else {
@@ -958,9 +1009,9 @@ public class ChatPanel extends ParentAvailablePanel {
 		item.setProgress(0);
 
 		addMessageItemToEnd(item);
-		
+
 		uploadingOrDownloadingFiles.remove(fileId);
-		
+
 		// 循环全部消息的原因是有可能在发送文件的同时会到来新消息，所以不能粗暴的设置最后一条消息为文件消息
 		for (int i = messageItems.size() - 1; i >= 0; i--) {
 			if (messageItems.get(i).getId().equals(item.getId())) {
@@ -994,19 +1045,19 @@ public class ChatPanel extends ParentAvailablePanel {
 	private void uploadFile(String uploadFilename, String fileId) {
 		final MessageItem item = new MessageItem();
 		boolean isImage;
-		if (uploadFilename.lastIndexOf(".")<0){
+		if (uploadFilename.lastIndexOf(".") < 0) {
 			isImage = false;
-		}else{
+		} else {
 			String type = MimeTypeUtil.getMime(uploadFilename.substring(uploadFilename.lastIndexOf(".")));
 			isImage = type.startsWith("image/");
 		}
-		
+
 		File file = new File(uploadFilename);
 		if (!file.exists()) {
 			JOptionPane.showMessageDialog(null, "文件不存在", "上传失败", JOptionPane.ERROR_MESSAGE);
 			return;
-		} 
-		
+		}
+
 		// 发送的是图片
 		int[] bounds;
 		String name = uploadFilename.substring(uploadFilename.lastIndexOf(File.separator) + 1); // 文件名
@@ -1026,7 +1077,7 @@ public class ChatPanel extends ParentAvailablePanel {
 			imageAttachment.setTitle(name);
 			dbMessage.setImageAttachmentId(imageAttachment.getId());
 			imageAttachmentService.insertOrUpdate(imageAttachment);
-			
+
 			item.setImageAttachment(new ImageAttachmentItem(imageAttachment));
 			item.setMessageType(MessageItem.RIGHT_IMAGE);
 		} else {
@@ -1038,7 +1089,7 @@ public class ChatPanel extends ParentAvailablePanel {
 			fileAttachment.setTitle(name);
 			dbMessage.setFileAttachmentId(fileAttachment.getId());
 			fileAttachmentService.insertOrUpdate(fileAttachment);
-			
+
 			item.setFileAttachment(new FileAttachmentItem(fileAttachment));
 			item.setMessageType(MessageItem.RIGHT_ATTACHMENT);
 		}
@@ -1062,15 +1113,14 @@ public class ChatPanel extends ParentAvailablePanel {
 		addMessageItemToEnd(item);
 
 		messageService.insertOrUpdate(dbMessage);
-		
-		if (Launcher.FILECUTTINGTRANSFER){ //分块传输		
+
+		if (Launcher.FILECUTTINGTRANSFER) { // 分块传输
 			cuttingTransfer(uploadFilename, fileId, item, isImage, file, dbMessage);
-		}
-		else{ //不分块,整体传输
+		} else { // 不分块,整体传输
 			wholeTransfer(uploadFilename, fileId, item, isImage, file, dbMessage);
 		}
 	}
-	
+
 	private void cuttingTransfer(String uploadFilename, String fileId, final MessageItem item, final boolean isImage,
 			File file, Message dbMessage) {
 		// 分块上传
@@ -1108,7 +1158,7 @@ public class ChatPanel extends ParentAvailablePanel {
 					}
 				}
 
-				//这里有个不合理的地方，每次分块都循环全部消息，效率太低
+				// 这里有个不合理的地方，每次分块都循环全部消息，效率太低
 				for (int i = messageItems.size() - 1; i >= 0; i--) {
 					if (messageItems.get(i).getId().equals(item.getId())) {
 						messageItems.get(i).setProgress(progress);
@@ -1152,8 +1202,9 @@ public class ChatPanel extends ParentAvailablePanel {
 		sendDataPart(0, dataParts, callback);
 	}
 
-	private void wholeTransfer(String uploadFilename, String fileId,final MessageItem item, final boolean isImage, File file, Message dbMessage) {
-		
+	private void wholeTransfer(String uploadFilename, String fileId, final MessageItem item, final boolean isImage,
+			File file, Message dbMessage) {
+
 		uploadingOrDownloadingFiles.remove(fileId);
 
 		Room room = roomService.findById(roomId);
@@ -1164,7 +1215,7 @@ public class ChatPanel extends ParentAvailablePanel {
 		if (uploadFilename.startsWith(ClipboardUtil.CLIPBOARD_TEMP_DIR)) {
 			file.delete();
 		}
-		
+
 		// 循环全部消息的原因是有可能在发送文件的同时会到来新消息，所以不能粗暴的设置最后一条消息为文件消息
 		for (int i = messageItems.size() - 1; i >= 0; i--) {
 			if (messageItems.get(i).getId().equals(item.getId())) {
@@ -1285,6 +1336,7 @@ public class ChatPanel extends ParentAvailablePanel {
 	 */
 	public void downloadOrOpenFile(String messageId) {
 		Message message = messageService.findById(messageId);
+		DebugUtil.debug("本地文件messageId："+messageId);
 		FileAttachment fileAttachment;
 		if (message == null) {
 			// 如果没有messageId对应的message, 尝试寻找messageId对应的file
@@ -1396,6 +1448,11 @@ public class ChatPanel extends ParentAvailablePanel {
 			Desktop.getDesktop().open(new File(path));
 		} catch (IOException e1) {
 			JOptionPane.showMessageDialog(null, "文件打开失败，没有找到关联的应用程序", "打开失败", JOptionPane.ERROR_MESSAGE);
+			try {
+				java.awt.Desktop.getDesktop().open((new File(path)).getParentFile());
+			} catch (IOException e) {
+
+			}
 			e1.printStackTrace();
 		} catch (IllegalArgumentException e2) {
 			JOptionPane.showMessageDialog(null, "文件不存在，可能已被删除", "打开失败", JOptionPane.ERROR_MESSAGE);

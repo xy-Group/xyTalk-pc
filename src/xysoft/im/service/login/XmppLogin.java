@@ -1,11 +1,7 @@
 package xysoft.im.service.login;
 
-import java.io.File;
 import java.io.IOException;
 import java.net.InetAddress;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
 
 import javax.swing.JOptionPane;
 
@@ -13,57 +9,28 @@ import org.jivesoftware.smack.ConnectionConfiguration.SecurityMode;
 import org.jivesoftware.smack.ReconnectionManager;
 import org.jivesoftware.smack.SmackConfiguration;
 import org.jivesoftware.smack.SmackException;
-import org.jivesoftware.smack.SmackException.NoResponseException;
 import org.jivesoftware.smack.SmackException.NotConnectedException;
 import org.jivesoftware.smack.SmackException.NotLoggedInException;
 import org.jivesoftware.smack.StanzaListener;
-import org.jivesoftware.smack.XMPPConnection;
 import org.jivesoftware.smack.XMPPException;
-import org.jivesoftware.smack.XMPPException.XMPPErrorException;
-import org.jivesoftware.smack.chat.Chat;
-import org.jivesoftware.smack.chat.ChatManager;
-import org.jivesoftware.smack.chat.ChatManagerListener;
-import org.jivesoftware.smack.chat.ChatMessageListener;
 import org.jivesoftware.smack.filter.StanzaFilter;
 import org.jivesoftware.smack.filter.StanzaTypeFilter;
-import org.jivesoftware.smack.packet.IQ;
 import org.jivesoftware.smack.packet.Message;
 import org.jivesoftware.smack.packet.Stanza;
 import org.jivesoftware.smack.tcp.XMPPTCPConnection;
 import org.jivesoftware.smack.tcp.XMPPTCPConnectionConfiguration;
-import org.jivesoftware.smackx.filetransfer.FileTransferListener;
 import org.jivesoftware.smackx.filetransfer.FileTransferManager;
-import org.jivesoftware.smackx.filetransfer.FileTransferRequest;
-import org.jivesoftware.smackx.filetransfer.IncomingFileTransfer;
-import org.jivesoftware.smackx.muc.InvitationListener;
-import org.jivesoftware.smackx.muc.MucEnterConfiguration;
-import org.jivesoftware.smackx.muc.MultiUserChat;
-import org.jivesoftware.smackx.muc.MultiUserChatException.NotAMucServiceException;
-import org.jivesoftware.smackx.muc.MultiUserChatManager;
-import org.jivesoftware.smackx.muc.packet.MUCUser.Invite;
-import org.jivesoftware.smackx.muclight.MultiUserChatLightManager;
-import org.jivesoftware.smackx.push_notifications.PushNotificationsManager;
-import org.jxmpp.jid.EntityFullJid;
-import org.jxmpp.jid.EntityJid;
-import org.jxmpp.jid.impl.JidCreate;
-import org.jxmpp.jid.parts.Resourcepart;
-import org.jxmpp.stringprep.XmppStringprepException;
 
 import xysoft.im.app.Launcher;
 import xysoft.im.cache.UserCache;
 import xysoft.im.constant.Res;
 import xysoft.im.db.model.ContactsUser;
-import xysoft.im.db.model.Room;
 import xysoft.im.listener.SessionManager;
 import xysoft.im.service.ChatService;
-import xysoft.im.service.ErrorMsgService;
-import xysoft.im.service.FormService;
-import xysoft.im.service.HeadlineChatService;
 import xysoft.im.service.MucChatService;
 import xysoft.im.service.ProviderRegister;
-import xysoft.im.service.StateService;
+import xysoft.im.service.RosterService;
 import xysoft.im.service.XmppFileService;
-import xysoft.im.swingDemo.SimulationUserData;
 import xysoft.im.utils.DebugUtil;
 
 
@@ -182,7 +149,11 @@ public class XmppLogin implements Login {
 			//注册MUC邀请监听
 			MucChatService.mucInvitation();
 			//MucChatService.mucGetInfo("a8@muc.win7-1803071731");
-
+			
+			//自动添加好友监听,processSubscribe起了关键作用
+			RosterService.addRosterListenerAuto();
+			//手动模式添加好友，无需再手动了
+			//RosterService.addRosterListener();
 
 			//接收文件listener
 			final FileTransferManager manager = FileTransferManager.getInstanceFor(Launcher.connection);
@@ -298,7 +269,7 @@ public class XmppLogin implements Login {
 					.setUsernameAndPassword(getUsername(), getPassword()).setResource(Launcher.RESOURCE)
 					.setPort(Launcher.HOSTPORT).setConnectTimeout(5000).setXmppDomain(Launcher.DOMAIN)
 					.setHost(Launcher.HOSTNAME).setHostAddress(InetAddress.getByName(Launcher.HOSTNAME)) .setSecurityMode(SecurityMode.disabled)
-					.setDebuggerEnabled(true);
+					.setDebuggerEnabled(true).setSendPresence(true);
 			DebugUtil.debug("builder:" + builder.toString());
 			return builder.build();
 

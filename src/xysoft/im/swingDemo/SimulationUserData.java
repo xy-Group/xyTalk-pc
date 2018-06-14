@@ -425,7 +425,7 @@ public class SimulationUserData {
 
             }			 
 
-		} catch (JSONException | IOException e) {
+		} catch (JSONException e) {
 			// TODO Auto-generated catch block
 			
 			e.printStackTrace();

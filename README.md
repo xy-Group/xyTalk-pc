@@ -565,12 +565,17 @@ iOS版界面:
 <p><br>2018-06-11： 
 <br>1、修正了java.net.URL的空异常bug（联系人全量同步）
 <br>2、用ApacheHttpClient替换java.net.URL的get方法
-
+<p><br>2018-06-12： 
+<br>1、断网离线登陆
+<p><br>2018-06-12： 
+<br>1、通过addSubscribeListener进行自动花名册处理，方便状态即席和SocketBytestreams文件收发.
 
 
 <H2>## 联系作者     ##</H2>
 
 如有合作意向、Bug、建议邮箱至475660@qq.com
+<br>
+QQ群：780461008
 <br>
 by XySoft team works
 <br>

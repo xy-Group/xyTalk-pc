@@ -15,7 +15,12 @@ import java.awt.event.ActionEvent;
 
 public class MainOperationPopupMenu extends JPopupMenu
 {
-    public MainOperationPopupMenu()
+    /**
+	 * 系统菜单
+	 */
+	private static final long serialVersionUID = -2456463778581789263L;
+
+	public MainOperationPopupMenu()
     {
         initMenuItem();
     }
@@ -63,7 +68,10 @@ public class MainOperationPopupMenu extends JPopupMenu
             @Override
             public void actionPerformed(ActionEvent e)
             {
-            	Launcher.connection.disconnect();
+            	if (Launcher.connection!=null){
+                	Launcher.connection.disconnect();           		
+            	}
+
                 System.exit(1);
             }
         });

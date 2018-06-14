@@ -210,6 +210,9 @@ public class ContactsPanel extends ParentAvailablePanel {
 	 *            是否热更新，hotRefresh = true， 将刷新该用户的头像缓存
 	 */
 	public void getUserAvatar(String username, boolean hotRefresh) {
+		
+		if (Launcher.connection ==null)
+			return;
 
 		try {
 			BufferedImage image = null;

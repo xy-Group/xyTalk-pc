@@ -71,7 +71,7 @@ public class RoomItemsAdapter extends BaseAdapter<RoomItemViewHolder>
         // 私聊头像
         else if (type.equals("s"))
         {
-            Image image = AvatarUtil.createOrLoadUserAvatar(JID.usernameByJid(item.getRoomId())).getScaledInstance(40, 40, Image.SCALE_SMOOTH);
+            Image image = AvatarUtil.createOrLoadUserAvatar(JID.usernameByJid(item.getRoomId())).getScaledInstance(30, 30, Image.SCALE_SMOOTH);
             //Image image = AvatarUtil.getCachedImageBufferedAvatar(JID.usernameByJid(item.getRoomId())).getScaledInstance(40, 40, Image.SCALE_SMOOTH);
             icon.setImage(image);
         }

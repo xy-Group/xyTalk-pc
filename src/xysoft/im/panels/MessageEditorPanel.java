@@ -12,6 +12,8 @@ import xysoft.im.utils.OSUtil;
 import xysoft.im.utils.SwingAnimation;
 
 import javax.swing.*;
+import javax.swing.text.html.HTMLEditorKit;
+
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -116,8 +118,9 @@ public class MessageEditorPanel extends ParentAvailablePanel
 
         textEditor = new RCTextEditor();
         textEditor.setBackground(Colors.WINDOW_BACKGROUND);
-        textEditor.setFont(FontUtil.getDefaultFont(14));
+        //textEditor.setFont(FontUtil.getDefaultFont(14));
         textEditor.setMargin(new Insets(5, 10, 0, 10));
+        //textEditor.getDocument().putProperty("IgnoreCharsetDirective", Boolean.TRUE);
  
 
         textScrollPane = new JScrollPane(textEditor);

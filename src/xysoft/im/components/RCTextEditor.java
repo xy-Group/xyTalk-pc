@@ -12,7 +12,12 @@ import java.awt.event.MouseEvent;
 
 public class RCTextEditor extends JTextPane
 {
-    @Override
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = -6403884724614197703L;
+
+	@Override
     public void paste()
     {
         Object data = ClipboardUtil.paste();

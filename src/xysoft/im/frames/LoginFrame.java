@@ -37,6 +37,7 @@ import com.github.stuxuhai.jpinyin.PinyinFormat;
 import com.github.stuxuhai.jpinyin.PinyinHelper;
 
 import xysoft.im.app.Launcher;
+import xysoft.im.cache.UserCache;
 import xysoft.im.components.Colors;
 import xysoft.im.components.GBC;
 import xysoft.im.components.RCButton;
@@ -50,7 +51,7 @@ import xysoft.im.listener.AbstractMouseListener;
 import xysoft.im.service.login.XmppLogin;
 import xysoft.im.swingDemo.SimulationUserData;
 import xysoft.im.utils.DbUtils;
-import xysoft.im.utils.Encryptor;
+//import xysoft.im.utils.Encryptor;
 import xysoft.im.utils.FilesIO;
 import xysoft.im.utils.FontUtil;
 import xysoft.im.utils.IconUtil;
@@ -77,6 +78,7 @@ public class LoginFrame extends JFrame {
 	private JLabel titleLabel;
 	private JLabel downloadLabel;
 	private JCheckBox remberPsw;
+	private JCheckBox offlineLogin;
 	
 	private static Point origin = new Point();
 
@@ -127,6 +129,9 @@ public class LoginFrame extends JFrame {
 		
 		remberPsw = new JCheckBox("记住密码", true);
 		remberPsw.setFont(FontUtil.getDefaultFont(14));
+		
+		offlineLogin = new JCheckBox("断网离线登陆", false);
+		offlineLogin.setFont(FontUtil.getDefaultFont(14));
 
 		editPanel = new JPanel();
 		editPanel.setLayout(new VerticalFlowLayout(VerticalFlowLayout.TOP, 0, 5, true, false));
@@ -138,6 +143,7 @@ public class LoginFrame extends JFrame {
 		usernameField.setFont(FontUtil.getDefaultFont(14));
 		usernameField.setForeground(Colors.FONT_BLACK);
 		usernameField.setMargin(new Insets(0, 15, 0, 0));
+		usernameField.setText("wangxin");
 
 		passwordField = new RCPasswordField();
 		passwordField.setPreferredSize(textFieldDimension);
@@ -147,6 +153,7 @@ public class LoginFrame extends JFrame {
 		passwordField.setFont(FontUtil.getDefaultFont(14));
 		passwordField.setForeground(Colors.FONT_BLACK);
 		passwordField.setMargin(new Insets(0, 15, 0, 0));
+		passwordField.setText("1");
 
 		loginButton = new RCButton("登 录", Colors.MAIN_COLOR, Colors.MAIN_COLOR_DARKER, Colors.MAIN_COLOR_DARKER);
 		loginButton.setFont(FontUtil.getDefaultFont(14));
@@ -183,6 +190,8 @@ public class LoginFrame extends JFrame {
 		//buttonPanel.add(loginButton, new GBC(0, 0).setFill(GBC.HORIZONTAL).setWeight(2, 1).setInsets(10, 0, 0, 0));		
 		buttonPanel.add(remberPsw, new GBC(0, 1).setFill(GBC.HORIZONTAL).setWeight(1, 1).setInsets(20, 10, 0, 0));
 		buttonPanel.add(downloadLabel, new GBC(1, 1).setFill(GBC.HORIZONTAL).setWeight(1, 1).setInsets(20, 10, 0, 0));
+		buttonPanel.add(offlineLogin, new GBC(0, 2).setFill(GBC.HORIZONTAL).setWeight(1, 1).setInsets(20, 10, 0, 0));		
+		
 		editPanel.add(usernameField);
 		editPanel.add(passwordField);
 		editPanel.add(loginButton);
@@ -253,9 +262,13 @@ public class LoginFrame extends JFrame {
 		loginButton.addMouseListener(new AbstractMouseListener() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				if (loginButton.isEnabled()) {
-					doLogin();
-				}
+				if (offlineLogin.isSelected()){
+					doOffLineLogin();
+				}else{
+					if (loginButton.isEnabled()) {
+						doLogin();
+					}
+				}			
 
 				super.mouseClicked(e);
 			}
@@ -268,9 +281,13 @@ public class LoginFrame extends JFrame {
 
 			@Override
 			public void keyPressed(KeyEvent e) {
-				if (e.getKeyCode() == KeyEvent.VK_ENTER) {
-					doLogin();
-				}
+				if (offlineLogin.isSelected()){
+					doOffLineLogin();
+				}else{
+					if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+						doLogin();
+					}
+				}				
 			}
 
 			@Override
@@ -280,6 +297,20 @@ public class LoginFrame extends JFrame {
 		};
 		usernameField.addKeyListener(keyListener);
 		passwordField.addKeyListener(keyListener);
+	}
+	
+	private void doOffLineLogin() {
+		// 离线登陆
+		UserCache.CurrentUserName = usernameField.getText().trim();
+		UserCache.CurrentUserPassword = "";
+		UserCache.CurrentUserToken = "";
+		UserCache.CurrentBareJid = UserCache.CurrentUserName +"@" +Launcher.DOMAIN;
+		UserCache.CurrentFullJid = "";
+		UserCache.CurrentUserRealName = "离线登陆";
+		MainFrame frame = new MainFrame();
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frame.setVisible(true);
+		hideMe();
 	}
 
 	private void doLogin() {
@@ -294,9 +325,7 @@ public class LoginFrame extends JFrame {
 			showMessage("请输入密码");
 		} else {
 			statusLabel.setVisible(false);
-			
-			
-			
+					
 			SwingWorker<?, ?> aWorker = new SwingWorker<Object, Object>() 
 	    	{
 			@Override
@@ -330,7 +359,7 @@ public class LoginFrame extends JFrame {
 	                // Update UI
 	                if (done){
 	                	hideMe();
-	                	//InsertBigData();	
+	                	//InsertBigData();	灌5000个模拟用户数据
 	                }
 	            } catch (Exception ex) {
 	                ex.printStackTrace();
@@ -340,8 +369,7 @@ public class LoginFrame extends JFrame {
 	    	};
 	    	aWorker.execute();
 	    	statusLabel.setVisible(true);
-	    	statusLabel.setText("加载数据......");
-			 
+	    	statusLabel.setText("加载数据......");		 
 		}
 
 	}
@@ -445,7 +473,8 @@ public class LoginFrame extends JFrame {
             }
 
            try {
-			FilesIO.fileWrite(file.getPath(),Encryptor.encrypt(password) ,false);
+   			//FilesIO.fileWrite(file.getPath(),Encryptor.encrypt(password) ,false);
+			FilesIO.fileWrite(file.getPath(),password,false);
 		} catch (Exception e) {
 			
 		}
@@ -467,7 +496,8 @@ public class LoginFrame extends JFrame {
 		if (password == null || password.isEmpty())
 			return "";
 		else
-			return Encryptor.decrypt(password);
+			//return Encryptor.decrypt(password);
+		return password;
 	}
 
 	private static String readName() {
