@@ -14,7 +14,7 @@ import org.jxmpp.jid.Jid;
  *
  */
 public class MucRoomInfo {
-
+	
 	private  EntityBareJid room;
     private  String description;
     private  String name;

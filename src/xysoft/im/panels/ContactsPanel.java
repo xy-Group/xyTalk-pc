@@ -68,11 +68,11 @@ public class ContactsPanel extends ParentAvailablePanel {
 
 		initComponents();
 		initView();
-		initData();
+		//initData();
 		contactsListView.setAdapter(new ContactsItemsAdapter(contactsItemList));
 
 		// TODO: 从服务器获取通讯录后，调用下面方法更新UI
-		notifyDataSetChanged();
+		//notifyDataSetChanged();
 	}
 
 	private void initComponents() {

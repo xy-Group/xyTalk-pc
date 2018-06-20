@@ -1,6 +1,9 @@
 package xysoft.im.service;
 
 import org.jivesoftware.smack.provider.ProviderManager;
+import org.jivesoftware.smackx.muc.provider.MUCAdminProvider;
+import org.jivesoftware.smackx.muc.provider.MUCOwnerProvider;
+
 import xysoft.im.extension.Features;
 import xysoft.im.extension.MucInvitation;
 import xysoft.im.extension.OfflineFile;
@@ -18,7 +21,10 @@ public class ProviderRegister {
         ProviderManager.addExtensionProvider("x", MucInvitation.NAMESPACE, new MucInvitation.Provider());
         ProviderManager.addExtensionProvider("x", OfflineFile.NAMESPACE, new OfflineFile.Provider());
         ProviderManager.addExtensionProvider("x", OfflineFileReceipt.NAMESPACE, new OfflineFileReceipt.Provider());        
-        ProviderManager.addExtensionProvider("x", OfflineFileRobot.NAMESPACE, new OfflineFileRobot.Provider());        
+        ProviderManager.addExtensionProvider("x", OfflineFileRobot.NAMESPACE, new OfflineFileRobot.Provider());     
+        ProviderManager.addIQProvider("query", "http://jabber.org/protocol/muc#owner",  
+                new MUCOwnerProvider());
+        ProviderManager.addIQProvider("query","http://jabber.org/protocol/muc#admin", new MUCAdminProvider());
 	}
 
 }

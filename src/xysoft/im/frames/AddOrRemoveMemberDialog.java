@@ -1,9 +1,12 @@
 package xysoft.im.frames;
 
+import xysoft.im.app.Launcher;
 import xysoft.im.components.*;
+import xysoft.im.db.model.Room;
 import xysoft.im.entity.SelectUserData;
 import xysoft.im.panels.SelectUserPanel;
 import xysoft.im.utils.FontUtil;
+import xysoft.im.utils.JID;
 import xysoft.im.utils.OSUtil;
 import com.sun.awt.AWTUtilities;
 
@@ -45,12 +48,34 @@ public class AddOrRemoveMemberDialog extends JDialog
         userListClone = userList;
 
         initComponents();
-
+        //initAllData();
         initView();
         setListeners();
     }
+    
+//	private void initAllData() {
+//		userList.clear();
+//		List<Room> singleUser = Launcher.roomService.findByType("s");
+//		for (Room room : singleUser) {
+//			userList.add(new SelectUserData(JID.usernameByJid(room.getRoomId()) + "--" + room.getName(), false));
+//		}
+//
+//		selectUserPanel = new SelectUserPanel(DIALOG_WIDTH, DIALOG_HEIGHT - 100, userList);
+//	}
 
-    private void initComponents()
+    public AddOrRemoveMemberDialog(Frame owner, boolean modal, List<SelectUserData> usersLists,
+			List<SelectUserData> allusers) {
+        super(owner, modal);
+        this.userList = usersLists;
+        userListClone = allusers;
+
+        initComponents();
+        //initAllData();
+        initView();
+        setListeners();
+	}
+
+	private void initComponents()
     {
         int posX = MainFrame.getContext().getX();
         int posY = MainFrame.getContext().getY();
@@ -141,40 +166,63 @@ public class AddOrRemoveMemberDialog extends JDialog
             }
         });
     }
+    
+    
+    private void searchUsers(String key) {
+		 if (key == null || key.isEmpty())
+	        {
+	           
+	            selectUserPanel.notifyDataSetChanged(null);
+	            return;
+	        }
 
-    private void searchUsers(String key)
-    {
-        if (key == null || key.isEmpty())
-        {
-            for (SelectUserData item : userListClone)
-            {
-                List<SelectUserData> selectUserDataList = selectUserPanel.getSelectedUser();
-                if (selectUserDataList.contains(item))
-                {
-                    item.setSelected(true);
-                }
-                else
-                {
-                    item.setSelected(false);
-                }
-            }
-            selectUserPanel.notifyDataSetChanged(userListClone);
-            return;
-        }
+	        key = key.toLowerCase();
+	        List<SelectUserData> users = new ArrayList<>();
 
-        key = key.toLowerCase();
-        List<SelectUserData> users = new ArrayList<>();
+	        for (SelectUserData item : userListClone)
+	        {
+	            if (item.getUserName().toLowerCase().indexOf(key) > -1 && (!selectUserPanel.getSelectedUser().contains(item)))
+	            {
+	                users.add(item);
+	            }
+	        }
 
-        for (SelectUserData item : userList)
-        {
-            if (item.getUserName().toLowerCase().indexOf(key) > -1 && (!selectUserPanel.getSelectedUser().contains(item)))
-            {
-                users.add(item);
-            }
-        }
+	        selectUserPanel.notifyDataSetChanged(users);
+	}
 
-        selectUserPanel.notifyDataSetChanged(users);
-    }
+//    private void searchUsers(String key)
+//    {
+//        if (key == null || key.isEmpty())
+//        {
+//            for (SelectUserData item : userListClone)
+//            {
+//                List<SelectUserData> selectUserDataList = selectUserPanel.getSelectedUser();
+//                if (selectUserDataList.contains(item))
+//                {
+//                    item.setSelected(true);
+//                }
+//                else
+//                {
+//                    item.setSelected(false);
+//                }
+//            }
+//            selectUserPanel.notifyDataSetChanged(userListClone);
+//            return;
+//        }
+//
+//        key = key.toLowerCase();
+//        List<SelectUserData> users = new ArrayList<>();
+//
+//        for (SelectUserData item : userList)
+//        {
+//            if (item.getUserName().toLowerCase().indexOf(key) > -1 && (!selectUserPanel.getSelectedUser().contains(item)))
+//    	    {
+//                users.add(item);
+//            }
+//        }
+//
+//        selectUserPanel.notifyDataSetChanged(users);
+//    }
 
     public List<SelectUserData> getSelectedUser()
     {

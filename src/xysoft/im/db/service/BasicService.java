@@ -65,6 +65,6 @@ public class BasicService<T extends BasicDao, E extends BasicModel>
 
     public boolean exist(String id)
     {
-        return dao.exist(id);
+        return dao.findById(id)==null?false:true;
     }
 }

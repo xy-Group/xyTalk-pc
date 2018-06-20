@@ -542,7 +542,7 @@ public class ChatPanel extends ParentAvailablePanel {
 			// 加载本地群成员
 			loadLocalRoomMembers();
 
-			title += " (" + (roomMembers.size()) + ")";
+			title += " (" + (roomMembers.size() + 1) + ")";
 		}
 
 		// 更新房间标题
@@ -788,7 +788,18 @@ public class ChatPanel extends ParentAvailablePanel {
 					addOrUpdateMessageItem();
 
 					// 更新房间信息以及房间列表
-					Room room = roomService.findById(dbMessage.getRoomId());
+					Room room = MucChatService.existRooms.get(dbMessage.getRoomId());
+					
+					if (room == null){
+						room = roomService.findById(dbMessage.getRoomId());
+						
+						if (!MucChatService.existRooms.containsKey(dbMessage.getRoomId())){
+							DebugUtil.debug("muc room 加入在线消息缓存："+dbMessage.getRoomId());
+							MucChatService.existRooms.put(dbMessage.getRoomId(),Launcher.roomService.findById(dbMessage.getRoomId()));
+							//为在线消息RoomID加入缓存，预防消息洪水，造成数据库查询异常
+						}
+					}
+
 					room.setLastMessage(dbMessage.getMessageContent());
 					room.setLastChatAt(dbMessage.getTimestamp());
 					room.setMsgSum(room.getMsgSum() + 1);

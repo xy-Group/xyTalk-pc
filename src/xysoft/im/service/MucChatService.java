@@ -1,8 +1,11 @@
 package xysoft.im.service;
 
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -50,6 +53,8 @@ import xysoft.im.utils.DebugUtil;
 import xysoft.im.utils.JID;
 
 public class MucChatService {
+	
+	public static Map<String,Room> existRooms =new HashMap<String,Room>();
 
 	public static DiscoverInfo getRoomInfo(EntityBareJid room)
 			throws NoResponseException, XMPPErrorException, NotConnectedException, InterruptedException {
@@ -83,9 +88,11 @@ public class MucChatService {
 		fromFullJid = fromJID.asFullJidIfPossible().toString();
 		barejid = fromJID.asBareJid().toString();
 		fromUsername = JID.usernameByMuc(fromFullJid);
-		DebugUtil.debug("recivePacket Launcher.currRoomId:" + Launcher.currRoomId);
-		DebugUtil.debug("recivePacket barejid:" + barejid);
-		if (barejid != null && body != null) {
+		DebugUtil.debug("muc fromFullJid:"+fromFullJid);
+		DebugUtil.debug("muc barejid:"+barejid);
+		DebugUtil.debug("muc fromUsername:"+fromUsername);
+		DebugUtil.debug("muc body:"+body);
+		if (fromJID != null && body != null) {
 			if (Launcher.currRoomId.equals(barejid)) {// 当前聊天者即为新消息发送者
 				// 如果有同样消息在数据库，不予处理。（MUC可能会重复推送已读消息，因为tigase离线消息持久化后不销毁，需要从服务器端解决）
 				if (Launcher.messageService.findById(id) != null) {
@@ -100,7 +107,12 @@ public class MucChatService {
 
 				updateChatPanel(message);
 			} else {
-				if (Launcher.roomService.exist(barejid)) {// 联系人列表中存在消息发送者,更新未读信息，则修改左侧联系人控件
+				if (existRooms.containsKey(barejid) || Launcher.roomService.findById(barejid)!=null) {// 联系人列表中存在消息发送者,更新未读信息，则修改左侧联系人控件
+					if (!existRooms.containsKey(barejid)){
+						DebugUtil.debug("muc room 加入缓存："+barejid);
+						existRooms.put(barejid,Launcher.roomService.findById(barejid));//为离线消息RoomID加入缓存，预防离线消息洪水，造成数据库查询异常
+					}
+					DebugUtil.debug("muc消息发送者是"+barejid);
 					// 如果有同样消息在数据库，不予处理。（MUC可能会重复推送已读消息，因为tigase离线消息持久化后不销毁，需要从服务器端解决）
 					if (Launcher.messageService.findById(id) != null)
 						return;
@@ -112,6 +124,7 @@ public class MucChatService {
 
 				} else {
 					// 联系人中不存在新消息发送者,则新建一个联系人
+					DebugUtil.debug("muc 新消息新建联系人"+barejid+message.getBody()+message.getFrom().asEntityBareJidIfPossible());
 					createNewRoom(message);
 				}
 				dbMessagePersistence(message);
@@ -162,7 +175,7 @@ public class MucChatService {
 
 	private static void createNewRoom(Message message) {
 		Room room = new Room();
-		room.setLastMessage("加入新群组");
+		room.setLastMessage("被加入新群组");
 		room.setLastChatAt(System.currentTimeMillis());
 		room.setMsgSum(0);
 		room.setName(mucGetInfo(message.getFrom().toString()).getName());
@@ -181,7 +194,7 @@ public class MucChatService {
 
 	private static void createNewRoomByMe(String jid, String roomName) {
 		Room room = new Room();
-		room.setLastMessage("创建新群组");
+		room.setLastMessage("我创建新群组");
 		room.setLastChatAt(System.currentTimeMillis());
 		room.setMsgSum(0);
 		room.setName(roomName);
@@ -201,7 +214,7 @@ public class MucChatService {
 	// 连带将成员加入db
 	private static void createNewRoomByMe(String jid, String roomName, List<String> users) {
 		Room room = new Room();
-		room.setLastMessage("创建新群组");
+		room.setLastMessage("我创建的新群组");
 		room.setLastChatAt(System.currentTimeMillis());
 		room.setMsgSum(0);
 		room.setName(roomName);
@@ -237,19 +250,33 @@ public class MucChatService {
 	}
 
 	private static void updateRoom(Message message) {
+		if (message.getBody()==null || message.getBody().isEmpty())
+			return;
+	
 		DebugUtil.debug("muc-updateRoom:" + message.getFrom().toString() + "--" + message.getBody());
-		Room room = Launcher.roomService.findById(message.getFrom().asEntityBareJidIfPossible().toString());
+				
+		Room room = existRooms.get(message.getFrom().asEntityBareJidIfPossible());
+		if (room == null){
+			room = Launcher.roomService.findById(message.getFrom().asEntityBareJidIfPossible().toString());
+		}
+		else{
+			DebugUtil.debug("Muc room 被缓存命中"+message.getFrom().asEntityBareJidIfPossible().toString());
+		}
 		room.setLastMessage(message.getBody());
 		room.setLastChatAt(System.currentTimeMillis());
 		room.setMsgSum(room.getMsgSum() + 1);
 		room.setUnreadCount(room.getUnreadCount() + 1);
-		Launcher.roomService.insertOrUpdate(room);
+		Launcher.roomService.update(room);
 
 		updateLeftItemUI(message);
 	}
 
 	private static void updateLeftItemUI(Message message) {
-		DebugUtil.debug("新消息导致联系人UI-Item改变updateLeftItemUI");
+		DebugUtil.debug("新消息导致联系人UI-Item改变updateLeftItemUI："+ message.getFrom().asEntityBareJidIfPossible());
+		if (RoomsPanel.getContext() == null){
+			DebugUtil.debug("LeftItemUI仍未渲染完毕");
+			return;
+		}
 		RoomsPanel.getContext().updateRoomItem(message.getFrom().asEntityBareJidIfPossible().toString());
 	}
 
@@ -403,7 +430,7 @@ public class MucChatService {
 		submitForm.setAnswer("muc#roomconfig_roomdesc", groupName);
 		submitForm.setAnswer("muc#roomconfig_persistentroom", true);
 		submitForm.setAnswer("muc#roomconfig_publicroom", true);
-		submitForm.setAnswer("muc#roomconfig_moderatedroom", true);
+		//submitForm.setAnswer("muc#roomconfig_moderatedroom", true);//使用默认的false即可
 		submitForm.setAnswer("muc#roomconfig_allowinvites", true);
 		// 设置用户成员
 		submitForm.setAnswer("muc#roomconfig_roomadmins", admins);
@@ -423,6 +450,27 @@ public class MucChatService {
 
 		return muc;
 	}
+	
+	public static void sendInvitationMessage(List<Jid> users, String roomid, String roomName){
+		MucInvitation mi = new MucInvitation(roomid, roomName);
+
+		for (int i = 0; i < users.size(); i++) {
+			Jid userJid = users.get(i);
+			Chat chat = ChatManager.getInstanceFor(Launcher.connection).chatWith(userJid.asEntityBareJidIfPossible());
+			org.jivesoftware.smack.packet.Message message = new org.jivesoftware.smack.packet.Message();
+			message.setType(Type.chat);
+			message.addExtension(mi);
+			message.setBody("请加入会议");
+			try {
+				chat.send(message);
+				DebugUtil.debug("sendOfflineInvitationMessage:" + message.toXML());
+			} catch (NotConnectedException | InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+	}
+	
 
 	private static void sendOfflineInvitationMessage(List<String> users, String roomid, String roomName)
 			throws XmppStringprepException {
@@ -489,17 +537,22 @@ public class MucChatService {
 				MucEnterConfiguration.Builder builder = room.getEnterConfigurationBuilder(
 						Resourcepart.from(UserCache.CurrentUserName + "-" + UserCache.CurrentUserRealName));
 				// 只获取最后10条历史记录
-				// builder.requestMaxStanzasHistory(1);
+				// builder.requestMaxStanzasHistory(10);
 				// 只获取该房间最后一条消息的时间戳到当前时间戳的离线
 				int historySince = MucChatService.getHistoryOffsize(roomDb.getLastChatAt());
 				builder.requestHistorySince(historySince);
 				// 只获取2018-5-1以来的历史记录
 				// builder.requestHistorySince(new Date(2018,5,1));
 				MucEnterConfiguration mucEnterConfiguration = builder.build();
-				//room.join(mucEnterConfiguration);
+				room.join(mucEnterConfiguration);
 
 			}
 		}
+	}
+
+	public static void sendKickMessage(List<String> members, String roomId, String name) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }
