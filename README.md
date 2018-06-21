@@ -506,7 +506,6 @@ Android版、iOS版界面:
 <br>
 <img alt="XyTalk IM" src="http://111.230.157.216/img/webapp.png" />
 <br>
-
 <H2>## 更新日志 ##</H2>
 2018-05-06以前没有记录了，从6号开始更新
 <br>2018-05-06： 
