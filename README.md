@@ -1,12 +1,12 @@
 <H1>XyTalk-pc 企业协作通讯系统</H1>
 
-Xy.Platform is A High Performance and Scalable Platform for enterprise communication and collaboration.
 <br>Xy.Platform是一个高性能、可扩展的企业通信和协作平台。包含通讯服务（XMPP协议）、客户端（PC、Android、iOS）、Web门户（用于集成企业应用）、WebAPI（用于企业扩展调用）。
 <br>
 <p>
-XyTalk.pc is Windows/linux/Mac XMPP instant messaging PC client software.
-<br>
-XyTalk.pc是XMPP协议的即时通讯IM客户端PC软件，可用于Windows/linux/Mac.
+	
+<br>Xy.Platform is A High Performance and Scalable Platform for enterprise communication and collaboration.
+<br>XyTalk.pc is Windows/linux/Mac XMPP instant messaging PC client software.
+
 <br>
 联系邮箱：475660@qq.com
 <br>
