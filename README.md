@@ -479,6 +479,15 @@ XyTalk.pc是XMPP协议的即时通讯IM客户端PC软件，可用于Windows/linu
 <p>
 <br>
 <H2>## 截图预览  ##</H2>
+PC版群组会话界面:
+<br>
+<img alt="XyTalk IM" src="http://111.230.157.216/img/muc.png" />
+PC版群组管理界面:
+<br>
+<img alt="XyTalk IM" src="http://111.230.157.216/img/muc1.png" />
+PC版建群界面:
+<br>
+<img alt="XyTalk IM" src="http://111.230.157.216/img/muc2.png" />
 PC版会话界面:
 <br>
 <img alt="XyTalk IM" src="http://111.230.157.216/img/chat.png" />
@@ -489,12 +498,13 @@ PC版设置界面:
 <br>
 <img alt="XyTalk IM" src="http://111.230.157.216/img/contactsync.png" />
 <br>
-Android版界面:
+Android版、iOS版界面:
 <br>
-iOS版界面:
+<img alt="XyTalk IM" src="http://111.230.157.216/img/apps.png" />
 <br>
 后台管理界面:
 <br>
+<img alt="XyTalk IM" src="http://111.230.157.216/img/webapp.png" />
 <br>
 
 <H2>## 更新日志 ##</H2>
