@@ -464,7 +464,7 @@ XyTalk.pc是XMPP协议的即时通讯IM客户端PC软件，可用于Windows/linu
 <UL>
   <LI>开发语言：Java8
   <LI>通讯协议： XMPP（用于消息）、HTTP
-  <LI>通讯Server： Tigase + Nginx + Kafka + Zookeeper，针对XMPP和企业业务我们做了部分定制，如离线文件、组织架构同步服务、企业集成登陆验证服务、消息同步、消息撤回、消息翻译、流程机器人等服务。同时支持Openfire和Tigase服务器
+  <LI>通讯Server： Tigase + Nginx + Kafka + Zookeeper，针对XMPP和企业业务我们做了部分定制，如离线文件、组织架构同步服务、企业集成登陆验证服务、消息同步、消息撤回、消息翻译、流程机器人等服务。服务器插件基于Tigase开发，
   <LI>OSGi service platform： Apache Felix
   <LI>WebServer Portal & API： Spring、Shiro、Activiti、Websocket 
   <LI>PC端UI： Java Awt/Swing（very low？知道intellij idea、Google Android Studio用什么开发的吗？）

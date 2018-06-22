@@ -22,8 +22,3 @@
 hs_err_pid*
 /bin/
 /target/
-/src/xysoft/im/app
-/src/xysoft/im/adapter
-/src/xysoft/im/frames
-/src/xysoft/im/service
-/src/xysoft/im/utils

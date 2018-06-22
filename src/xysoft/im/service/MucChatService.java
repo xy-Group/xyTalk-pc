@@ -363,7 +363,7 @@ public class MucChatService {
 			e1.printStackTrace();
 		}
 
-		// TODO 如果没有进群，则进入
+		// 如果没有进群，则进入
 		MultiUserChat room = MultiUserChatManager.getInstanceFor(Launcher.connection).getMultiUserChat(jid);
 		if (!room.isJoined())
 			try {

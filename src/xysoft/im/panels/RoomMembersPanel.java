@@ -347,7 +347,7 @@ public class RoomMembersPanel extends ParentAvailablePanel
                 continue;
             }
             DebugUtil.debug("MUC原成员："+ member);
-            userDataList.add(new SelectUserData(member, false));
+            userDataList.add(new SelectUserData(member + "--" + Launcher.contactsUserService.findByUsername(member).getName(), false));
            
         }
 
@@ -406,6 +406,7 @@ public class RoomMembersPanel extends ParentAvailablePanel
         updateUI();
     }
 
+    //邀请人进群
 	public void addMan(final String[] usernames, MultiUserChat muc) throws XmppStringprepException {
 		JOptionPane.showMessageDialog(null, usernames, "完成邀请", JOptionPane.INFORMATION_MESSAGE);	
 		
@@ -453,6 +454,7 @@ public class RoomMembersPanel extends ParentAvailablePanel
 		}
 	}
 
+	//删除群成员
 	public void kickMan(final String[] usernames, MultiUserChat muc) throws XmppStringprepException {
 		JOptionPane.showMessageDialog(null, usernames, "完成删除", JOptionPane.INFORMATION_MESSAGE);	
      	
@@ -500,7 +502,7 @@ public class RoomMembersPanel extends ParentAvailablePanel
 	}
 
     /**
-     * 删除MucRoom
+     * 删除MucRoom,即解散群
      *
      * @param roomId
      * @throws XmppStringprepException 
@@ -531,6 +533,7 @@ public class RoomMembersPanel extends ParentAvailablePanel
         
         //自我删除Room数据
         Launcher.roomService.delete(roomId);
+        DebugUtil.debug("解散群组："+roomId);
         //更新左侧房间UI
         RoomsPanel.getContext().notifyDataSetChanged(false);
     }
