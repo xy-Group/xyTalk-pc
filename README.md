@@ -494,6 +494,10 @@ PC版会话界面:
 PC版联系人界面:
 <br>
 <img alt="XyTalk IM" src="http://111.230.157.216/img/contactlist.png" />
+<br>
+发送文件，接收者是Spark客户端:
+<br>
+<img alt="XyTalk IM" src="http://111.230.157.216/img/filesend.png" />
 PC版设置界面:
 <br>
 <img alt="XyTalk IM" src="http://111.230.157.216/img/contactsync.png" />
@@ -587,6 +591,9 @@ Android版、iOS版界面:
 <br>2、MUC加人进群
 <br>3、MUC群删除成员
 <br>3、管理员解散群组
+<p><br>2018-06-22：
+<br>1、对删除群成员进行消息扩展
+<br>2、整理开发文档
 
 <H2>## 联系作者     ##</H2>
 
