@@ -1,8 +1,10 @@
 package xysoft.im.components;
 
 import xysoft.im.app.Launcher;
+import xysoft.im.cache.UserCache;
 import xysoft.im.db.model.ContactsUser;
 import xysoft.im.db.model.Room;
+import xysoft.im.entity.ContactsItem;
 import xysoft.im.frames.ImageViewerFrame;
 import xysoft.im.panels.ChatPanel;
 import xysoft.im.panels.ContactsPanel;
@@ -40,10 +42,20 @@ public class UserInfoPopup extends JPopupMenu
         // 更新对方头像
         updateAvatar();
     }
+    
+    private String getUsername(){
+    	return this.username;
+    }
 
     private void updateAvatar()
     {
-        ContactsPanel.getContext().getUserAvatar(this.username, true);
+    	new Thread(new Runnable() {
+			@Override
+			public void run() {
+				ContactsPanel.getContext().getUserAvatar(getUsername(), true);
+			}
+		}).start();
+        
     }
 
     private void initComponents()

@@ -57,7 +57,7 @@ public class AddOrRemoveMemberDialog extends JDialog
 //		userList.clear();
 //		List<Room> singleUser = Launcher.roomService.findByType("s");
 //		for (Room room : singleUser) {
-//			userList.add(new SelectUserData(JID.usernameByJid(room.getRoomId()) + "--" + room.getName(), false));
+//			userList.add(new SelectUserData(JID.usernameByJid(room.getRoomId()) + "-" + room.getName(), false));
 //		}
 //
 //		selectUserPanel = new SelectUserPanel(DIALOG_WIDTH, DIALOG_HEIGHT - 100, userList);

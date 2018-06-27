@@ -11,6 +11,8 @@ import org.jivesoftware.smack.chat2.*;
 //import org.jivesoftware.smack.packet.Message;
 import xysoft.im.db.model.Message;
 import xysoft.im.db.model.Room;
+import xysoft.im.extension.MucInvitation;
+import xysoft.im.extension.MucKick;
 import xysoft.im.extension.OfflineFile;
 import xysoft.im.extension.Receipt;
 import xysoft.im.panels.ChatPanel;
@@ -28,12 +30,19 @@ public class ChatService {
 			if (message.getBody() == null) {
 				DebugUtil.debug("(抛弃的)processPacket-Message.Type.chat:" + message.toXML());
 			} else {
-				boolean mucInvition = message.getExtension("x", "xytalk:muc:invitation") != null;
+				boolean mucInvition = message.getExtension("x", MucInvitation.NAMESPACE) != null;
+				boolean mucKick = message.getExtension("x", MucKick.NAMESPACE) != null;
 				boolean offlineFile = message.getExtension("x", OfflineFile.NAMESPACE) != null;
 				boolean processed = false;
 				if (mucInvition) {// 群组邀请消息-离线,加入群
 					MucChatService.join(message);
 					DebugUtil.debug("(离线群邀请)processPacket-Message.Type.chat:" + message.toXML());
+					processed = true;
+				}
+
+				if (mucKick) {// 被踢出群
+					MucChatService.kickMe(message);
+					DebugUtil.debug("(群踢人)processPacket-Message.Type.chat:" + message.toXML());
 					processed = true;
 				}
 

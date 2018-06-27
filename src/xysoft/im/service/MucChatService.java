@@ -46,6 +46,7 @@ import xysoft.im.cache.UserCache;
 import xysoft.im.db.model.Room;
 import xysoft.im.entity.MucRoomInfo;
 import xysoft.im.extension.MucInvitation;
+import xysoft.im.extension.MucKick;
 import xysoft.im.extension.Receipt;
 import xysoft.im.panels.ChatPanel;
 import xysoft.im.panels.RoomsPanel;
@@ -451,26 +452,6 @@ public class MucChatService {
 		return muc;
 	}
 	
-	public static void sendInvitationMessage(List<Jid> users, String roomid, String roomName){
-		MucInvitation mi = new MucInvitation(roomid, roomName);
-
-		for (int i = 0; i < users.size(); i++) {
-			Jid userJid = users.get(i);
-			Chat chat = ChatManager.getInstanceFor(Launcher.connection).chatWith(userJid.asEntityBareJidIfPossible());
-			org.jivesoftware.smack.packet.Message message = new org.jivesoftware.smack.packet.Message();
-			message.setType(Type.chat);
-			message.addExtension(mi);
-			message.setBody("请加入会议");
-			try {
-				chat.send(message);
-				DebugUtil.debug("sendOfflineInvitationMessage:" + message.toXML());
-			} catch (NotConnectedException | InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
-	}
-	
 
 	private static void sendOfflineInvitationMessage(List<String> users, String roomid, String roomName)
 			throws XmppStringprepException {
@@ -550,9 +531,63 @@ public class MucChatService {
 		}
 	}
 
-	public static void sendKickMessage(List<String> members, String roomId, String name) {
-		// TODO Auto-generated method stub
-		
+	//邀请进入群扩展消息
+	public static void sendInvitationMessage(List<Jid> users, String roomid, String roomName){
+		MucInvitation mi = new MucInvitation(roomid, roomName);
+
+		for (int i = 0; i < users.size(); i++) {
+			Jid userJid = users.get(i);
+			Chat chat = ChatManager.getInstanceFor(Launcher.connection).chatWith(userJid.asEntityBareJidIfPossible());
+			org.jivesoftware.smack.packet.Message message = new org.jivesoftware.smack.packet.Message();
+			message.setType(Type.chat);
+			message.addExtension(mi);
+			message.setBody("请加入会议");
+			try {
+				chat.send(message);
+				DebugUtil.debug("sendOfflineInvitationMessage:" + message.toXML());
+			} catch (NotConnectedException | InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+	}
+	
+	//成员被删除扩展消息
+	public static void sendKickMessage(List<String> users, String roomId, String name) {
+		MucKick mucKick = new MucKick(roomId, name);
+
+		for (int i = 0; i < users.size(); i++) {
+			String userJid = users.get(i);
+			Chat chat;
+			try {
+				chat = ChatManager.getInstanceFor(Launcher.connection).chatWith(JidCreate.entityBareFrom(userJid));
+				org.jivesoftware.smack.packet.Message message = new org.jivesoftware.smack.packet.Message();
+				message.setType(Type.chat);
+				message.addExtension(mucKick);
+				message.setBody("被管理员删除出群："+name);
+				try {
+					chat.send(message);
+					DebugUtil.debug("sendKickMessage:" + message.toXML());
+				} catch (NotConnectedException | InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			} catch (XmppStringprepException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+			
+		}
+	}
+
+	//执行我被踢出群的动作，消息来自管理员
+	public static void kickMe(org.jivesoftware.smack.packet.Message message) {
+		MucKick mi = message.getExtension("x", MucKick.NAMESPACE);
+		String jid = mi.getRoomid();
+		Launcher.roomService.delete(jid);
+		//刷新UI
+		updateLeftAllUI();		
+		// TODO 退出群订阅
 	}
 
 }

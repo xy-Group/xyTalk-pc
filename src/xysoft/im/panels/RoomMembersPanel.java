@@ -292,7 +292,7 @@ public class RoomMembersPanel extends ParentAvailablePanel
         
 		List<Room> singleUser = Launcher.roomService.findByType("s");
 		for (Room room : singleUser) {
-			usersList.add(new SelectUserData(JID.usernameByJid(room.getRoomId()) + "--" + room.getName(), false));
+			usersList.add(new SelectUserData(JID.usernameByJid(room.getRoomId()) + "-" + room.getName(), false));
 		}
 
         for (ContactsUser con : contactsUsers)
@@ -300,7 +300,7 @@ public class RoomMembersPanel extends ParentAvailablePanel
             if (!members.contains(con.getUsername()))
             {
                 //selectUsers.add(new SelectUserData(con.getUsername(), false));
-            	allusers.add(new SelectUserData(con.getUsername() + "--" + con.getName(), false));
+            	allusers.add(new SelectUserData(con.getUsername() + "-" + con.getName(), false));
             }
         }
         addOrRemoveMemberDialog = new AddOrRemoveMemberDialog(MainFrame.getContext(), true,usersList, allusers);
@@ -347,7 +347,7 @@ public class RoomMembersPanel extends ParentAvailablePanel
                 continue;
             }
             DebugUtil.debug("MUC原成员："+ member);
-            userDataList.add(new SelectUserData(member + "--" + Launcher.contactsUserService.findByUsername(member).getName(), false));
+            userDataList.add(new SelectUserData(member + "-" + Launcher.contactsUserService.findByUsername(member).getName(), false));
            
         }
 
@@ -397,7 +397,7 @@ public class RoomMembersPanel extends ParentAvailablePanel
         	addMan(usernames, muc);
         }
         
-        //删除成员
+        //删除成员，踢人
         if (type.equals("kick")){       	
         	kickMan(usernames, muc);       	
         }
@@ -412,7 +412,7 @@ public class RoomMembersPanel extends ParentAvailablePanel
 		
 		List<Jid> members = new ArrayList<Jid>();
 		for (String user : usernames){
-			members.add(JidCreate.entityBareFrom(user.split("--")[0] + "@" + Launcher.DOMAIN ));
+			members.add(JidCreate.entityBareFrom(user.split("-")[0] + "@" + Launcher.DOMAIN ));
 		} 
 		//发送邀请消息
 		MucChatService.sendInvitationMessage(members,room.getRoomId(),room.getName());
@@ -469,7 +469,7 @@ public class RoomMembersPanel extends ParentAvailablePanel
 		}
 		
 		for (String user : usernames){       		
-			String jidStr = user.split("--")[0] + "@" + Launcher.DOMAIN;
+			String jidStr = user.split("-")[0] + "@" + Launcher.DOMAIN;
 			memberForKick.add(jidStr);
 			memberList.remove(JidCreate.bareFrom(jidStr));
 			

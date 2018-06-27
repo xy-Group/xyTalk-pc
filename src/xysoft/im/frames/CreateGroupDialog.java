@@ -80,7 +80,7 @@ public class CreateGroupDialog extends JDialog {
 		userList.clear();
 		List<Room> singleUser = roomService.findByType("s");
 		for (Room room : singleUser) {
-			userList.add(new SelectUserData(JID.usernameByJid(room.getRoomId()) + "--" + room.getName(), false));
+			userList.add(new SelectUserData(JID.usernameByJid(room.getRoomId()) + "-" + room.getName(), false));
 		}
 
 		selectUserPanel = new SelectUserPanel(DIALOG_WIDTH, DIALOG_HEIGHT - 100, userList);
@@ -94,7 +94,7 @@ public class CreateGroupDialog extends JDialog {
 					List<ContactsUser> contactsUsers = contactsUserService.findAll();
 
 					for (ContactsUser con : contactsUsers) {
-						userListClone.add(new SelectUserData(con.getUsername() + "--" + con.getName(), false));
+						userListClone.add(new SelectUserData(con.getUsername() + "-" + con.getName(), false));
 					}
 					
 				} catch (Exception e) {
@@ -248,7 +248,7 @@ public class CreateGroupDialog extends JDialog {
 						List<String> selectedUsers = new ArrayList<String>();
 						
 						for (SelectUserData item : selectUserPanel.getSelectedUser()){
-							selectedUsers.add(item.getUserName().split("--")[0]+ "@" + Launcher.DOMAIN);
+							selectedUsers.add(item.getUserName().split("-")[0]+ "@" + Launcher.DOMAIN);
 						}
 //						selectedUsers.add("test3@vm_0_4_centos");
 //						selectedUsers.add("xuanji@vm_0_4_centos");

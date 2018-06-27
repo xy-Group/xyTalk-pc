@@ -74,7 +74,7 @@ public class SelectUserPanel extends JPanel
                 SelectUserItemViewHolder holder = (SelectUserItemViewHolder) e.getSource();
                 
 
-                String username = holder.username.getText();//.split("--")[0];
+                String username = holder.username.getText();//.split("-")[0];
                 if (unSelectUser(username))
                 {
                     holder.icon.setIcon(uncheckIcon);

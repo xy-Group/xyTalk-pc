@@ -20,7 +20,7 @@ public class SelectUserData
 
     public String getUserName(){
     	return fullName;
-        //return fullName.split("--")[0];
+        //return fullName.split("-")[0];
     }
 
 
