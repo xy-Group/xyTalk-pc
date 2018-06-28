@@ -7,21 +7,30 @@ import org.jivesoftware.smack.packet.ExtensionElement;
 import org.jivesoftware.smack.provider.ExtensionElementProvider;
 import org.xmlpull.v1.XmlPullParser;
 
+//通知群成员保存最新的成员清单
 public class MucUpdateMembers implements ExtensionElement
 {	
 	public static final String ELEMENT_NAME = "x";
 	public static final String NAMESPACE = "xytalk:muc:updatemember";
 	private String roomid;
-	private String memberJids;
+	private String memberUsernames;
 	
-    public MucUpdateMembers() {
+    public String getMemberUsernames() {
+		return memberUsernames;
+	}
+
+	public void setMemberUsernames(String memberUsernames) {
+		this.memberUsernames = memberUsernames;
+	}
+
+	public MucUpdateMembers() {
 		super();
 	}
 
-    public MucUpdateMembers(String roomid,String memberJids) {
+    public MucUpdateMembers(String roomid,String memberUsernames) {
 		super();
 		this.roomid = roomid;
-		this.setMemberJids(memberJids);
+		this.setMemberUsernames(memberUsernames);
 	}
 
 	public void setRoomid(String roomid) {
@@ -46,21 +55,13 @@ public class MucUpdateMembers implements ExtensionElement
     	sb.append("<roomid>" );
     	sb.append(roomid );
     	sb.append("</roomid>" );
-    	sb.append("<memberJids>" );
-    	sb.append(memberJids );
-    	sb.append( "</memberJids>");
+    	sb.append("<memberUsernames>" );
+    	sb.append(memberUsernames );
+    	sb.append( "</memberUsernames>");
     	sb.append( "</" + getElementName() + ">");
         
         return sb.toString();
     }
-
-    public String getMemberJids() {
-		return memberJids;
-	}
-
-	public void setMemberJids(String memberJids) {
-		this.memberJids = memberJids;
-	}
 
 	public static class Provider extends ExtensionElementProvider<MucUpdateMembers> {
 
@@ -85,9 +86,9 @@ public class MucUpdateMembers implements ExtensionElement
                         {
                             result.setRoomid( parser.nextText() );
                         }
-                        if ( "memberJids".equals( elementName ) )
+                        if ( "memberUsernames".equals( elementName ) )
                         {
-                            result.setMemberJids(parser.nextText() );
+                            result.setMemberUsernames(parser.nextText() );
                         }
                         break;
 

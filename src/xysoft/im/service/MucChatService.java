@@ -22,6 +22,7 @@ import org.jivesoftware.smack.XMPPConnection;
 import org.jivesoftware.smack.XMPPException.XMPPErrorException;
 import org.jivesoftware.smack.chat2.Chat;
 import org.jivesoftware.smack.chat2.ChatManager;
+import org.jivesoftware.smack.packet.ExtensionElement;
 import org.jivesoftware.smack.packet.Message;
 import org.jivesoftware.smack.packet.Message.Type;
 import org.jivesoftware.smackx.disco.ServiceDiscoveryManager;
@@ -47,6 +48,7 @@ import xysoft.im.db.model.Room;
 import xysoft.im.entity.MucRoomInfo;
 import xysoft.im.extension.MucInvitation;
 import xysoft.im.extension.MucKick;
+import xysoft.im.extension.MucUpdateMembers;
 import xysoft.im.extension.Receipt;
 import xysoft.im.panels.ChatPanel;
 import xysoft.im.panels.RoomsPanel;
@@ -393,6 +395,50 @@ public class MucChatService {
 		// TODO 服务器需要对邀请进群的消息进行持久化，以便待邀请的用户上线后加入群组，然后再通过群离线消息，获取未读消息
 		DebugUtil.debug("发送群消息：" + (System.currentTimeMillis() - time1) + "毫秒" + message.toString());
 	}
+	
+	//groupchat消息目前还不能发送扩展消息,只能通过单聊来通知群成员
+	public static void sendMessage(String roomId, String content,ExtensionElement ext) {
+		long time1 = System.currentTimeMillis();
+		EntityBareJid jid = null;
+		try {
+			jid = JidCreate.entityBareFrom(roomId);
+			
+		} catch (XmppStringprepException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+
+		// 如果没有进群，则进入
+		MultiUserChat room = MultiUserChatManager.getInstanceFor(Launcher.connection).getMultiUserChat(jid);
+		if (!room.isJoined())
+			try {
+				room.join(Resourcepart.from(UserCache.CurrentUserName + "-" + UserCache.CurrentUserRealName));
+			} catch (NotAMucServiceException | NoResponseException | XMPPErrorException | NotConnectedException
+					| XmppStringprepException | InterruptedException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+
+		org.jivesoftware.smack.packet.Message message = new org.jivesoftware.smack.packet.Message();
+		message.setType(Type.groupchat);
+		message.addExtension(ext);
+		message.setBody(content);
+		
+		try {
+			try {
+				room.sendMessage(message);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		} catch (NotConnectedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		// TODO 服务器需要对邀请进群的消息进行持久化，以便待邀请的用户上线后加入群组，然后再通过群离线消息，获取未读消息
+		DebugUtil.debug("发送群消息：" + (System.currentTimeMillis() - time1) + "毫秒" + message.toString());
+	}
 
 	public static MultiUserChat createChatRoom(String groupName, List<String> users, String nickName) throws Exception {
 
@@ -416,6 +462,7 @@ public class MucChatService {
 		if (users != null && !users.isEmpty()) {
 			for (int i = 0; i < users.size(); i++) {
 				String userJid = users.get(i);
+				DebugUtil.debug("建群时添加成员:"+userJid);
 				admins.add(userJid);
 			}
 		}
@@ -501,6 +548,7 @@ public class MucChatService {
 
 	}
 
+	//用于登录时对属于自己的群组进行MUC订阅
 	public static void joinAllRooms() throws XmppStringprepException, XMPPErrorException, NoResponseException,
 			NotConnectedException, InterruptedException, NotAMucServiceException {
 		// TODO 启动MUC房间订阅，订阅全部房间
@@ -553,28 +601,23 @@ public class MucChatService {
 	}
 	
 	//成员被删除扩展消息
-	public static void sendKickMessage(List<String> users, String roomId, String name) {
+	public static void sendKickMessage(List<Jid> users, String roomId, String name) {
 		MucKick mucKick = new MucKick(roomId, name);
 
 		for (int i = 0; i < users.size(); i++) {
-			String userJid = users.get(i);
+			Jid userJid = users.get(i);
 			Chat chat;
+			chat = ChatManager.getInstanceFor(Launcher.connection).chatWith(userJid.asEntityBareJidIfPossible());
+			org.jivesoftware.smack.packet.Message message = new org.jivesoftware.smack.packet.Message();
+			message.setType(Type.chat);
+			message.addExtension(mucKick);
+			message.setBody("被管理员删除出群："+name);
 			try {
-				chat = ChatManager.getInstanceFor(Launcher.connection).chatWith(JidCreate.entityBareFrom(userJid));
-				org.jivesoftware.smack.packet.Message message = new org.jivesoftware.smack.packet.Message();
-				message.setType(Type.chat);
-				message.addExtension(mucKick);
-				message.setBody("被管理员删除出群："+name);
-				try {
-					chat.send(message);
-					DebugUtil.debug("sendKickMessage:" + message.toXML());
-				} catch (NotConnectedException | InterruptedException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-			} catch (XmppStringprepException e1) {
+				chat.send(message);
+				DebugUtil.debug("sendKickMessage:" + message.toXML());
+			} catch (NotConnectedException | InterruptedException e) {
 				// TODO Auto-generated catch block
-				e1.printStackTrace();
+				e.printStackTrace();
 			}
 			
 		}
@@ -587,7 +630,36 @@ public class MucChatService {
 		Launcher.roomService.delete(jid);
 		//刷新UI
 		updateLeftAllUI();		
-		// TODO 退出群订阅
+		
 	}
+
+	//发送群成员更新消息
+	public static void sendUpdateMemberMessage(String roomId, String memberforSave) throws XmppStringprepException {
+		if (memberforSave==null || memberforSave.isEmpty())
+			return;
+		
+		MucUpdateMembers mucMemberforSave = new MucUpdateMembers(roomId, memberforSave);
+		String [] users = memberforSave.split(",");
+		for (String user : users){
+			if (!user.isEmpty()){
+				String jid = user + "@" +Launcher.DOMAIN;
+				ChatService.sendMessage(jid, "更新群成员", mucMemberforSave);
+			}
+		}
+		
+	}
+
+	//接收到更新群成员消息后,保存
+	public static void updateMembers(org.jivesoftware.smack.packet.Message message) {
+		
+		MucUpdateMembers mum = message.getExtension("x", MucUpdateMembers.NAMESPACE);
+		String memberUsernames = mum.getMemberUsernames();
+		String roomid = mum.getRoomid();
+		Room room = Launcher.roomService.findById(roomid);
+		room.setMember(memberUsernames);
+		Launcher.roomService.update(room);//保存DB
+		
+	}
+	
 
 }

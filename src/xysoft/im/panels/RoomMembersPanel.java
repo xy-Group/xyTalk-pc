@@ -10,6 +10,7 @@ import xysoft.im.db.model.Room;
 import xysoft.im.db.service.ContactsUserService;
 import xysoft.im.db.service.CurrentUserService;
 import xysoft.im.db.service.RoomService;
+import xysoft.im.entity.MucRoomInfo;
 import xysoft.im.entity.SelectUserData;
 import xysoft.im.frames.AddOrRemoveMemberDialog;
 import xysoft.im.frames.MainFrame;
@@ -23,6 +24,8 @@ import javax.swing.border.LineBorder;
 import org.jivesoftware.smack.SmackException.NoResponseException;
 import org.jivesoftware.smack.SmackException.NotConnectedException;
 import org.jivesoftware.smack.XMPPException.XMPPErrorException;
+import org.jivesoftware.smackx.disco.ServiceDiscoveryManager;
+import org.jivesoftware.smackx.disco.packet.DiscoverInfo;
 import org.jivesoftware.smackx.muc.MultiUserChat;
 import org.jivesoftware.smackx.muc.MultiUserChatManager;
 import org.jxmpp.jid.Jid;
@@ -43,7 +46,7 @@ public class RoomMembersPanel extends ParentAvailablePanel
 	 * 右侧单聊群聊成员浮动窗
 	 */
 	private static final long serialVersionUID = -7968437757611971512L;
-	public static final int ROOM_MEMBER_PANEL_WIDTH = 200;
+	public static final int ROOM_MEMBER_PANEL_WIDTH = 250;
     private static RoomMembersPanel roomMembersPanel;
 
     private RCListView listView = new RCListView();
@@ -51,11 +54,12 @@ public class RoomMembersPanel extends ParentAvailablePanel
     private JButton leaveButton;
 
     private List<String> members = new ArrayList<>();
+    private List<String> memberList = new ArrayList<String>();
     private String roomId;
     private Room room;
     private RoomMembersAdapter adapter;
     private AddOrRemoveMemberDialog addOrRemoveMemberDialog;
-
+    
     public RoomMembersPanel(JPanel parent)
     {
         super(parent);
@@ -110,6 +114,7 @@ public class RoomMembersPanel extends ParentAvailablePanel
     {
         if (aFlag)
         {
+        	DebugUtil.debug("打开群成员面板");        	
             updateUI();
             setVisible(aFlag);
         }
@@ -117,7 +122,8 @@ public class RoomMembersPanel extends ParentAvailablePanel
         setVisible(aFlag);
     }
 
-    public void updateUI()
+
+	public void updateUI()
     {
         if (roomId != null)
         {
@@ -130,7 +136,7 @@ public class RoomMembersPanel extends ParentAvailablePanel
                 e.printStackTrace();
                 room = Launcher.roomService.findById(roomId);
             }
-
+            
             getRoomMembers();
 
             // 单独聊天，不显示退出按钮
@@ -171,19 +177,39 @@ public class RoomMembersPanel extends ParentAvailablePanel
         }
         else //群聊
         {
-            String roomMembers = room.getMember();
-            String[] userArr = new String[]{};
-            if (roomMembers != null)
-            {
-                userArr = roomMembers.split(",");
-            }
+        	if (!Launcher.isUseDiscoInfoGetMembers){//使用数据库作为成员数据源
+	            String roomMembers = room.getMember();
+	            memberList.clear();
+	            if (roomMembers!=null && !roomMembers.isEmpty())
+	            {
+	            	for (String strUsername : roomMembers.split(",")){
+	            		memberList.add(strUsername+"@"+Launcher.DOMAIN);
+	            	}
+	            }
+        	}
+        	else{//使用discoverInfo IQ作为成员数据源
+	        	DiscoverInfo discoverInfo;
+				try {
+					discoverInfo = ServiceDiscoveryManager.getInstanceFor(Launcher.connection).discoverInfo(JidCreate.entityBareFrom(room.getRoomId()));
+					MucRoomInfo info = new MucRoomInfo(discoverInfo);
+					memberList.clear();
+					for (String strJid : info.getAdminJid()){
+						memberList.add(strJid);
+					}
+					
+				} catch (NoResponseException | XMPPErrorException | NotConnectedException | XmppStringprepException
+						| InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+        	}
 
             if (isRoomCreator())
             {
                 members.remove("添加成员");
                 members.add("添加成员");
 
-                if (userArr.length > 1)
+                if (memberList.size() > 1)
                 {
                     members.remove("删除成员");
                     members.add("删除成员");
@@ -195,11 +221,11 @@ public class RoomMembersPanel extends ParentAvailablePanel
                 members.add(room.getCreatorName());
             }
 
-            for (int i = 0; i < userArr.length; i++)
+            for (int i = 0; i < memberList.size(); i++)
             {
-                if (!members.contains(userArr[i]))
+                if (!members.contains(memberList.get(i)))
                 {
-                    members.add(userArr[i]);
+                    members.add(memberList.get(i).replace("@"+Launcher.DOMAIN, ""));
                 }
             }
         }
@@ -347,8 +373,14 @@ public class RoomMembersPanel extends ParentAvailablePanel
                 continue;
             }
             DebugUtil.debug("MUC原成员："+ member);
-            userDataList.add(new SelectUserData(member + "-" + Launcher.contactsUserService.findByUsername(member).getName(), false));
+            String cnName = Launcher.contactsUserService.findByUsername(member)==null?"未知":Launcher.contactsUserService.findByUsername(member).getName();
+            userDataList.add(new SelectUserData(member + "-" + cnName, false));
            
+        }
+        
+        for (String member : memberList)
+        {
+        	DebugUtil.debug("MUC原成员JID："+ member);
         }
 
         addOrRemoveMemberDialog = new AddOrRemoveMemberDialog(MainFrame.getContext(), true, userDataList);
@@ -406,146 +438,151 @@ public class RoomMembersPanel extends ParentAvailablePanel
         updateUI();
     }
 
-    //邀请人进群
-	public void addMan(final String[] usernames, MultiUserChat muc) throws XmppStringprepException {
-		JOptionPane.showMessageDialog(null, usernames, "完成邀请", JOptionPane.INFORMATION_MESSAGE);	
-		
-		List<Jid> members = new ArrayList<Jid>();
-		for (String user : usernames){
-			members.add(JidCreate.entityBareFrom(user.split("-")[0] + "@" + Launcher.DOMAIN ));
-		} 
-		//发送邀请消息
-		MucChatService.sendInvitationMessage(members,room.getRoomId(),room.getName());
-		
-		if (room.getMember().length()>1){
-			String[] oldMembers = room.getMember().split(",");
-			for (String user : oldMembers){
-				members.add(JidCreate.entityBareFrom(user + "@" + Launcher.DOMAIN ));
-			} 
-		}
-		
-		if (members.size()==0)
-			return;
-		
-		StringBuilder memberforSave = new StringBuilder();
-		for (Jid jid : members){
-			memberforSave.append(jid.asUnescapedString().replace("@" + Launcher.DOMAIN, "") + ",");
-		}
-		room.setMember(memberforSave.toString().substring(0,memberforSave.toString().length()-1));
-		Launcher.roomService.update(room);
-		
-		//对 xmpp muc 做邀请兼容处理
-		for (int i = 0; i < members.size(); i++) {
-			Jid userJid = members.get(i);
-			try {
-				muc.invite(userJid.asEntityBareJidIfPossible(), "邀请您进入群。");
-			} catch (NotConnectedException | InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}	
-		
-		//保存全部成员
-		try {
-			muc.grantAdmin(members);
-		} catch (XMPPErrorException | NoResponseException | NotConnectedException | InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
+  //邀请人进群
+  	public void addMan(final String[] usernames, MultiUserChat muc) throws XmppStringprepException {
+  		JOptionPane.showMessageDialog(null, usernames, "完成邀请", JOptionPane.INFORMATION_MESSAGE);	
+  		
+  		List<Jid> members = new ArrayList<Jid>();
+  		for (String user : usernames){
+  			//从"username-中文名"拼接出jid
+  			members.add(JidCreate.entityBareFrom(user.split("-")[0] + "@" + Launcher.DOMAIN ));
+  		} 
+  		//发送邀请消息,邀请新人
+  		MucChatService.sendInvitationMessage(members,room.getRoomId(),room.getName());
+  				
+  		if (room.getMember().length()>1){
+  			String[] oldMembers = room.getMember().split(",");
+  			for (String user : oldMembers){
+  				members.add(JidCreate.entityBareFrom(user + "@" + Launcher.DOMAIN ));
+  			} 
+  		}
+  		
+  		if (members.size()==0)
+  			return;
+  		
+  		StringBuilder memberforSave = new StringBuilder();
+  		for (Jid jid : members){
+  			memberforSave.append(jid.asUnescapedString().replace("@" + Launcher.DOMAIN, "") + ",");
+  		}
+  		
+  		room.setMember(memberforSave.toString());
+  		Launcher.roomService.update(room);
+  		
+  		//通知所有群组成员更新群成员
+  		//MucChatService.sendUpdateMemberMessage(room.getRoomId(),memberforSave.toString());
+  		
+  		//对 xmpp muc 做邀请兼容处理,废弃
+//  		for (int i = 0; i < members.size(); i++) {
+//  			Jid userJid = members.get(i);
+//  			try {
+//  				muc.invite(userJid.asEntityBareJidIfPossible(), "邀请您进入群。");
+//  			} catch (NotConnectedException | InterruptedException e) {
+//  				// TODO Auto-generated catch block
+//  				e.printStackTrace();
+//  			}
+//  		}	
+  		
+  		//通知服务器，保存全部成员
+  		try {
+  			muc.grantAdmin(members);
+  		} catch (XMPPErrorException | NoResponseException | NotConnectedException | InterruptedException e) {
+  			// TODO Auto-generated catch block
+  			e.printStackTrace();
+  		}
+  	}
 
-	//删除群成员
-	public void kickMan(final String[] usernames, MultiUserChat muc) throws XmppStringprepException {
-		JOptionPane.showMessageDialog(null, usernames, "完成删除", JOptionPane.INFORMATION_MESSAGE);	
-     	
-		List<Jid> memberList = new ArrayList<Jid>();
-		List<String> memberForKick = new ArrayList<String>();
-		
-		if (room.getMember().length()>1){
-			String[] oldMembers = room.getMember().split(",");
-			for (String user : oldMembers){
-				memberList.add(JidCreate.entityBareFrom(user + "@" + Launcher.DOMAIN ));
-			} 
-		}
-		
-		for (String user : usernames){       		
-			String jidStr = user.split("-")[0] + "@" + Launcher.DOMAIN;
-			memberForKick.add(jidStr);
-			memberList.remove(JidCreate.bareFrom(jidStr));
-			
-			//兼容XMPP
-			try {
-				muc.kickParticipant(Resourcepart.from(user), "您被管理员踢出");
-			} catch (XMPPErrorException | NoResponseException | NotConnectedException | InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
-		
-		StringBuilder memberforSave = new StringBuilder();
-		for (Jid jid : memberList){
-			memberforSave.append(jid.asUnescapedString().replace("@" + Launcher.DOMAIN, "") + ",");
-		}
-		room.setMember(memberforSave.toString().substring(0,memberforSave.toString().length()-1));
-		Launcher.roomService.update(room);
-		
-		//发送删除消息
-		MucChatService.sendKickMessage(memberForKick,room.getRoomId(),room.getName());
-		
-		//保存全部成员
-		try {
-			muc.grantAdmin(memberList);
-		} catch (XMPPErrorException | NoResponseException | NotConnectedException | InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
+  	//删除群成员
+  	public void kickMan(final String[] usernames, MultiUserChat muc) throws XmppStringprepException {
+  		JOptionPane.showMessageDialog(null, usernames, "完成删除", JOptionPane.INFORMATION_MESSAGE);	
+       	
+  		List<Jid> memberJidList = new ArrayList<Jid>();
+  		List<Jid> memberForKick = new ArrayList<Jid>();
+  		
+  		for (String user : usernames){       		
+  			String jidStr = user.split("-")[0] + "@" + Launcher.DOMAIN;
+  			DebugUtil.debug("剔除:"+jidStr);
+  			memberForKick.add(JidCreate.from(jidStr));
+  			if (memberList.contains(jidStr)){
+  				memberList.remove(jidStr);
+  				members.remove(user);
+  			} 			
+  		}
+  		
+  		StringBuilder memberforSave = new StringBuilder();
+  		for (String jid : memberList){
+  			memberforSave.append(jid.replace("@" + Launcher.DOMAIN, "") + ",");
+  			memberJidList.add(JidCreate.from(jid));
+  			DebugUtil.debug("kickMan-memberJidList:"+JidCreate.from(jid));
+  		}
+  		DebugUtil.debug("kickMan-memberforSave:"+memberforSave.toString());
+  		
+  		
+  		room.setMember(memberforSave.toString());
+  		Launcher.roomService.update(room);
+  		
+  		//发送删除消息,被删除者接收到消息后,删除room信息,并刷新UI
+  		MucChatService.sendKickMessage(memberForKick,room.getRoomId(),room.getName());
+  		
+  		//通知所有群组成员更新群成员,
+  		//如果通过discoverInfo直接获取MucRoomInfo中的成员列表,本应不使用这个方法，但revokeAdmin并不生效，也不在后台数据库删除成员
+  		//MucChatService.sendUpdateMemberMessage(room.getRoomId(),memberforSave.toString());
+  		
+  		//删除成员
+  		try {
+  			muc.revokeAdmin(memberForKick);
+  			muc.banUsers(memberForKick);
+  
+  		} catch (XMPPErrorException | NoResponseException | NotConnectedException | InterruptedException e) {
+  			// TODO Auto-generated catch block
+  			e.printStackTrace();
+  		}
+  	}
 
-    /**
-     * 删除MucRoom,即解散群
-     *
-     * @param roomId
-     * @throws XmppStringprepException 
-     */
-    private void deleteGroup(String roomId) throws XmppStringprepException
-    {
-        JOptionPane.showMessageDialog(null, "删除群聊：" + roomId, "删除群聊", JOptionPane.INFORMATION_MESSAGE);
-        MultiUserChat muc = 
-				MultiUserChatManager.getInstanceFor(Launcher.connection).getMultiUserChat(JidCreate.entityBareFrom(roomId));
-        
-        //发送删除消息
-        List<String> memberForKick = new ArrayList<String>();
-		
-		if (room.getMember()!=null && !room.getMember().isEmpty()){
-			String[] oldMembers = room.getMember().split(",");
-			for (String user : oldMembers){
-				memberForKick.add(user + "@" + Launcher.DOMAIN );
-			} 
-			MucChatService.sendKickMessage(memberForKick,room.getRoomId(),room.getName());
-		}
-      	      
-        try {
-			muc.destroy("解散群组", JidCreate.entityBareFrom(roomId));
-		} catch (NoResponseException | XMPPErrorException | NotConnectedException | InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-        
-        //自我删除Room数据
-        Launcher.roomService.delete(roomId);
-        DebugUtil.debug("解散群组："+roomId);
-        //更新左侧房间UI
-        RoomsPanel.getContext().notifyDataSetChanged(false);
-    }
+      /**
+       * 删除MucRoom,即解散群
+       *
+       * @param roomId
+       * @throws XmppStringprepException 
+       */
+      private void deleteGroup(String roomId) throws XmppStringprepException
+      {
+          JOptionPane.showMessageDialog(null, "删除群聊：" + roomId, "删除群聊", JOptionPane.INFORMATION_MESSAGE);
+          MultiUserChat muc = 
+  				MultiUserChatManager.getInstanceFor(Launcher.connection).getMultiUserChat(JidCreate.entityBareFrom(roomId));
+          
+          //发送删除消息
+          List<Jid> memberForKick = new ArrayList<Jid>();
+  		
+  		if (room.getMember()!=null && !room.getMember().isEmpty()){
+  			String[] oldMembers = room.getMember().split(",");
+  			for (String user : oldMembers){
+  				memberForKick.add(JidCreate.from(user + "@" + Launcher.DOMAIN) );
+  			} 
+  			MucChatService.sendKickMessage(memberForKick,room.getRoomId(),room.getName());
+  		}
+        	      
+          try {
+  			muc.destroy("解散群组", JidCreate.entityBareFrom(roomId));
+  		} catch (NoResponseException | XMPPErrorException | NotConnectedException | InterruptedException e) {
+  			// TODO Auto-generated catch block
+  			e.printStackTrace();
+  		}
+          
+          //自我删除Room数据
+          Launcher.roomService.delete(roomId);
+          DebugUtil.debug("解散群组："+roomId);
+          //更新左侧房间UI
+          RoomsPanel.getContext().notifyDataSetChanged(false);
+      }
 
-    /**
-     * 我退出MUC订阅
-     *
-     * @param roomId
-     */
-    private void leaveGroup(final String roomId)
-    {
-        JOptionPane.showMessageDialog(null, "退出群聊：" + roomId, "退出群聊", JOptionPane.INFORMATION_MESSAGE);
-    }
+      /**
+       * 我退出MUC订阅
+       *
+       * @param roomId
+       */
+      private void leaveGroup(final String roomId)
+      {
+          JOptionPane.showMessageDialog(null, "退出群聊：" + roomId, "退出群聊", JOptionPane.INFORMATION_MESSAGE);
+      }
 
 }

@@ -54,7 +54,7 @@ public class RoomMembersAdapter extends BaseAdapter<RoomMembersItemViewHolder>
             viewHolder.roomName.setText(name);        	
         }
         else{
-            String realName = Launcher.contactsUserService.findByUsername(name).getName();
+            String realName = Launcher.contactsUserService.findByUsername(name)==null?"未知":Launcher.contactsUserService.findByUsername(name).getName();
             viewHolder.roomName.setText(realName +" - " + name);       	
         }
 

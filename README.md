@@ -596,6 +596,11 @@ Android版、iOS版界面:
 <br>2、整理开发文档
 <p><br>2018-06-25：
 <br>1、对群组成员侧边栏异步加载
+<p><br>2018-06-27：
+<br>1、对群组扩展消息进行合并，统一使用MucUpdateMembers
+<p><br>2018-06-27：
+<br>1、DiscoverInfo查询MUC信息iq获取成员列表
+<br>2、使用isUseDiscoInfoGetMembers开关来快速切换MUC成员列表加载方式
 
 <H2>## 联系作者     ##</H2>
 

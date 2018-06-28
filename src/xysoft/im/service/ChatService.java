@@ -1,6 +1,7 @@
 package xysoft.im.service;
 
 import org.jivesoftware.smack.SmackException.NotConnectedException;
+import org.jivesoftware.smack.packet.ExtensionElement;
 import org.jivesoftware.smack.packet.Stanza;
 import org.jivesoftware.smack.packet.Message.Type;
 import org.jxmpp.jid.EntityBareJid;
@@ -13,6 +14,7 @@ import xysoft.im.db.model.Message;
 import xysoft.im.db.model.Room;
 import xysoft.im.extension.MucInvitation;
 import xysoft.im.extension.MucKick;
+import xysoft.im.extension.MucUpdateMembers;
 import xysoft.im.extension.OfflineFile;
 import xysoft.im.extension.Receipt;
 import xysoft.im.panels.ChatPanel;
@@ -27,11 +29,12 @@ public class ChatService {
 		// 消息包
 		org.jivesoftware.smack.packet.Message message = (org.jivesoftware.smack.packet.Message) stanza;
 		if (message.getType() == org.jivesoftware.smack.packet.Message.Type.chat) {// 单聊
-			if (message.getBody() == null) {
+			if (message.getBody() == null && message.getExtensions()==null) {
 				DebugUtil.debug("(抛弃的)processPacket-Message.Type.chat:" + message.toXML());
 			} else {
 				boolean mucInvition = message.getExtension("x", MucInvitation.NAMESPACE) != null;
 				boolean mucKick = message.getExtension("x", MucKick.NAMESPACE) != null;
+				boolean mucUpdateMembers = message.getExtension("x", MucUpdateMembers.NAMESPACE) != null;
 				boolean offlineFile = message.getExtension("x", OfflineFile.NAMESPACE) != null;
 				boolean processed = false;
 				if (mucInvition) {// 群组邀请消息-离线,加入群
@@ -43,6 +46,12 @@ public class ChatService {
 				if (mucKick) {// 被踢出群
 					MucChatService.kickMe(message);
 					DebugUtil.debug("(群踢人)processPacket-Message.Type.chat:" + message.toXML());
+					processed = true;
+				}
+
+				if (mucUpdateMembers) {// 更新群成员
+					MucChatService.updateMembers(message);
+					DebugUtil.debug("(更新群成员)processPacket-Message.Type.chat:" + message.toXML());
 					processed = true;
 				}
 
@@ -246,6 +255,30 @@ public class ChatService {
 		org.jivesoftware.smack.packet.Message message = new org.jivesoftware.smack.packet.Message();
 		message.setType(Type.chat);
 		message.addExtension(new Receipt());
+		message.setBody(content);
+		try {
+			chat.send(message);
+			DebugUtil.debug("chat.sendMessage:：" + message.toString());
+		} catch (NotConnectedException | InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+	}
+	
+	public static void sendMessage(String roomId, String content,ExtensionElement ext) {
+		EntityBareJid jid = null;
+		try {
+			jid = JidCreate.entityBareFrom(roomId);
+		} catch (XmppStringprepException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		Chat chat = ChatManager.getInstanceFor(Launcher.connection).chatWith(jid);
+
+		org.jivesoftware.smack.packet.Message message = new org.jivesoftware.smack.packet.Message();
+		message.setType(Type.chat);
+		message.addExtension(ext);
 		message.setBody(content);
 		try {
 			chat.send(message);

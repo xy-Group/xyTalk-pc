@@ -42,18 +42,18 @@ public class Launcher
 
     //############  最重要且必须设置的项  Begin ############ 
 //	//网络服务	
-    public static final String HOSTNAME = "111.230.157.216";
-    public static final String DOMAIN = "vm_0_4_centos";
-    public static final String IP = "111.230.157.216";
-	public static final String OFFLINEFILEROBOTJID = "test1@vm_0_4_centos/robot"; //离线文件机器人fulljid
-	public static final String OFFLINEFILEROBOTBAREJID = "test1@vm_0_4_centos"; //离线文件机器人jid
+//    public static final String HOSTNAME = "111.230.157.216";
+//    public static final String DOMAIN = "vm_0_4_centos";
+//    public static final String IP = "111.230.157.216";
+//	public static final String OFFLINEFILEROBOTJID = "test1@vm_0_4_centos/robot"; //离线文件机器人fulljid
+//	public static final String OFFLINEFILEROBOTBAREJID = "test1@vm_0_4_centos"; //离线文件机器人jid
 	
 //	//本地调试
-//    public static final String HOSTNAME = "127.0.0.1";
-//    public static final String DOMAIN = "win7-1803071731";
-//    public static final String IP = "127.0.0.1";
-//	  public static final String OFFLINEFILEROBOTJID = "test1@win7-1803071731/robot"; //离线文件机器人fulljid
-//	  public static final String OFFLINEFILEROBOTBAREJID = "test1@win7-1803071731"; //离线文件机器人jid
+    public static final String HOSTNAME = "127.0.0.1";
+    public static final String DOMAIN = "win7-1803071731";
+    public static final String IP = "127.0.0.1";
+	  public static final String OFFLINEFILEROBOTJID = "test1@win7-1803071731/robot"; //离线文件机器人fulljid
+	  public static final String OFFLINEFILEROBOTBAREJID = "test1@win7-1803071731"; //离线文件机器人jid
 	
 	public static final boolean IS_DEBUGMODE = true; // debug模式则console输出全部log信息	
     public static final String RESOURCE = "pc";    
@@ -64,6 +64,10 @@ public class Launcher
 	public static final boolean FILECUTTINGTRANSFER = false; //分块传输文件
 	public static final boolean ISFILETRANSFERIBBONLY = false; //建议设置为false(不使用ibb)，ibb不适合发送大文件
 	public static final String ORGUSERURL = "http://111.230.157.216/200jsonUTF8.txt";
+	//是否使用DiscoverInfo来查询MUC信息iq获取成员列表
+    //ture:使用DiscoverInfo方式； false:使用本地db方式；
+	public static final  boolean isUseDiscoInfoGetMembers = true;
+
 
     //############  最重要且必须设置的项  End ############ 
 	

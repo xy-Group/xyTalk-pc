@@ -71,8 +71,10 @@ public class UserInfoPopup extends JPopupMenu
         ImageIcon imageIcon = new ImageIcon();
         imageIcon.setImage(AvatarUtil.createOrLoadUserAvatar(username).getScaledInstance(100,100, Image.SCALE_SMOOTH));
         avatarLabel.setIcon(imageIcon);
-     
+        
+        usernameLabel = new JLabel();
         ContactsUser cu = contactsUserService.findByUsername(username);
+        if (cu!=null){
         StringBuilder sbInfo = new StringBuilder();
         sbInfo.append("<html>姓名: ");
         sbInfo.append(cu.getName());     
@@ -85,8 +87,9 @@ public class UserInfoPopup extends JPopupMenu
         sbInfo.append("<br>办公位置: ");
         sbInfo.append(cu.getLocation());     
         sbInfo.append("</html>");
-        usernameLabel = new JLabel();
+        
         usernameLabel.setText(sbInfo.toString());     
+        }
 
         /*sendButton = new RCButton("发消息");
         sendButton.setPreferredSize(new Dimension(180, 40));

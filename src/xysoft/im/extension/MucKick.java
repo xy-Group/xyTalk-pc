@@ -7,6 +7,7 @@ import org.jivesoftware.smack.packet.ExtensionElement;
 import org.jivesoftware.smack.provider.ExtensionElementProvider;
 import org.xmlpull.v1.XmlPullParser;
 
+//废弃，和MucUpdateMembers合并处理
 public class MucKick implements ExtensionElement
 {	
 	public static final String ELEMENT_NAME = "x";
