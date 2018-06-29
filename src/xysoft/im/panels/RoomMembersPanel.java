@@ -471,16 +471,16 @@ public class RoomMembersPanel extends ParentAvailablePanel
   		//通知所有群组成员更新群成员
   		//MucChatService.sendUpdateMemberMessage(room.getRoomId(),memberforSave.toString());
   		
-  		//对 xmpp muc 做邀请兼容处理,废弃
-//  		for (int i = 0; i < members.size(); i++) {
-//  			Jid userJid = members.get(i);
-//  			try {
-//  				muc.invite(userJid.asEntityBareJidIfPossible(), "邀请您进入群。");
-//  			} catch (NotConnectedException | InterruptedException e) {
-//  				// TODO Auto-generated catch block
-//  				e.printStackTrace();
-//  			}
-//  		}	
+  		//对 xmpp muc 做邀请兼容处理
+  		for (int i = 0; i < members.size(); i++) {
+  			Jid userJid = members.get(i);
+  			try {
+  				muc.invite(userJid.asEntityBareJidIfPossible(), "邀请您进入群:"+room.getName());
+  			} catch (NotConnectedException | InterruptedException e) {
+  				// TODO Auto-generated catch block
+  				e.printStackTrace();
+  			}
+  		}	
   		
   		//通知服务器，保存全部成员
   		try {
