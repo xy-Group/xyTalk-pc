@@ -474,9 +474,9 @@ XyTalk.pc是XMPP协议的即时通讯IM客户端PC软件，可用于Windows/linu
   <LI>DB： MySQL（Server side）、SQLite（客户端）
     <LI>文件服务（用于离线文件存储、群文件、图片、短语音、短视频、企业文档库等应用），支持：
 	<UL>
-		<LI>私有Xy.File OSS-FS文件服务 （自主开发，免费开源）
-		<LI>私有企业云存储：Seafile网盘 （https://github.com/haiwen/seafile）
-		<LI>私有分布式文件：FastDFS文件系统
+		<LI>私有自带Xy.File OSS-FS文件系统服务 ,自主开发,免费开源.（https://gitee.com/475660/xyFS）
+		<LI>私有企业云存储：Seafile网盘  （https://github.com/haiwen/seafile）
+		<LI>私有分布式文件：FastDFS文件系统 （https://github.com/happyfish100/fastdfs）
 		<LI>私有分布式文件：MongoDB GridFS分布式文件系统
 		<LI>私有分布式文件：百度文件系统 BFS （https://github.com/baidu/bfs）
 		<LI>私有分布式文件：微信后台分布式存储数据库 PaxosStore （https://github.com/Tencent/paxosstore）
