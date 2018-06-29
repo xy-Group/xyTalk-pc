@@ -484,7 +484,6 @@ XyTalk.pc是XMPP协议的即时通讯IM客户端PC软件，可用于Windows/linu
 		<LI>公有云存储：阿里OSS云存储 
 		<LI>公有云存储：七牛云
 		<LI>公有云存储：腾讯文件云存储 CFS
-
 	</UL>
   <LI>ORM：Mybatis
   <LI>日志库：logback、slf4j-log4j12
