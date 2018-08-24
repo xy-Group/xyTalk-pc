@@ -397,6 +397,13 @@ QQ群：780461008
 <br>
 欢迎对企业IM、协同门户、OA开发感兴趣的朋友和我一起打造系列产品线。
 <br>
-by XySoft team works
+我的主要开源作品：https://gitee.com/475660/xyTalk-pc/
+<br>
+我的博客：https://www.cnblogs.com/starcrm/
+
+<br>
+联系邮箱：475660@qq.com
+<br>
+联系微信：wx13710637136
 <br>
 
