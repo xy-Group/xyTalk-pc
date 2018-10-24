@@ -89,3 +89,5 @@
 <p><br>2018-06-28：
 <br>1、DiscoverInfo查询MUC信息iq获取成员列表
 <br>2、使用isUseDiscoInfoGetMembers开关来快速切换MUC成员列表加载方式
+<p><br>2018-10-24：
+<br>1、修正群邀请离线消息的bug
