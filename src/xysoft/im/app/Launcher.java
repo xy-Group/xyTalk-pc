@@ -25,11 +25,6 @@ import xysoft.im.utils.DebugUtil;
 
 /**
  * 测试账户（密码都是1）：
-wangxin@vm_0_4_centos
-xuanji@vm_0_4_centos
-zeyu@vm_0_4_centos
-chenxiao@vm_0_4_centos
-zhangyun@vm_0_4_centos
 test1@vm_0_4_centos
 test2@vm_0_4_centos
 test3@vm_0_4_centos
@@ -41,25 +36,29 @@ public class Launcher
     private static Launcher context;
 
     //############  最重要且必须设置的项  Begin ############ 
-//	//网络服务	
-//    public static final String HOSTNAME = "111.230.157.216";
-//    public static final String DOMAIN = "vm_0_4_centos";
-//    public static final String IP = "111.230.157.216";
-//	public static final String OFFLINEFILEROBOTJID = "test1@vm_0_4_centos/robot"; //离线文件机器人fulljid
-//	public static final String OFFLINEFILEROBOTBAREJID = "test1@vm_0_4_centos"; //离线文件机器人jid
+    
+    //服务器类型，openfire:1 tigase:2
+    public static final int SERVERTYPE = 1;
+
+//	//测试服务	
+    public static final String HOSTNAME = "111.230.157.216";
+    public static final String DOMAIN = "vm_0_4_centos";
+    public static final String IP = "111.230.157.216";
+	public static final String OFFLINEFILEROBOTJID = "test1@vm_0_4_centos/robot"; //离线文件机器人fulljid
+	public static final String OFFLINEFILEROBOTBAREJID = "test1@vm_0_4_centos"; //离线文件机器人jid
 	
 //	//本地调试
-    public static final String HOSTNAME = "127.0.0.1";
-    public static final String DOMAIN = "win7-1803071731";
-    public static final String IP = "127.0.0.1";
-	  public static final String OFFLINEFILEROBOTJID = "test1@win7-1803071731/robot"; //离线文件机器人fulljid
-	  public static final String OFFLINEFILEROBOTBAREJID = "test1@win7-1803071731"; //离线文件机器人jid
+//    public static final String HOSTNAME = "127.0.0.1";
+//    public static final String DOMAIN = "win7-1803071731";
+//    public static final String IP = "127.0.0.1";
+//	public static final String OFFLINEFILEROBOTJID = "test1@win7-1803071731/robot"; //离线文件机器人fulljid
+//	public static final String OFFLINEFILEROBOTBAREJID = "test1@win7-1803071731"; //离线文件机器人jid
 	
 	public static final boolean IS_DEBUGMODE = true; // debug模式则console输出全部log信息	
     public static final String RESOURCE = "pc";    
     public static final int HOSTPORT = 5222;
     public static final int HOSTSSLPORT = 5223;
-    public static final String APP_VERSION = "0.3.1";
+    public static final String APP_VERSION = "0.3.2";
 	public static final String MUCSERVICE = "@muc.";
 	public static final boolean FILECUTTINGTRANSFER = false; //分块传输文件
 	public static final boolean ISFILETRANSFERIBBONLY = false; //建议设置为false(不使用ibb)，ibb不适合发送大文件

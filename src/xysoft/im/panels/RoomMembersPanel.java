@@ -159,7 +159,7 @@ public class RoomMembersPanel extends ParentAvailablePanel
             }
             else
             {
-                leaveButton.setText("退出群组");
+                leaveButton.setText("退群");
             }
 
         }
@@ -216,10 +216,10 @@ public class RoomMembersPanel extends ParentAvailablePanel
                 }
             }
 
-            if (room.getCreatorName() != null)
-            {
-                members.add(room.getCreatorName());
-            }
+//            if (room.getCreatorName() != null)
+//            {
+//                members.add(room.getCreatorName());
+//            }
 
             for (int i = 0; i < memberList.size(); i++)
             {

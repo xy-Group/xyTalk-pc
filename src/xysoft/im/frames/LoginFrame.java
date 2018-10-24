@@ -439,8 +439,8 @@ public class LoginFrame extends JFrame {
             if (oldusername!=null && !oldusername.isEmpty())
             {
             	if (!oldusername.equals(username) && ! Launcher.roomService.findAll().isEmpty()){
-            		JOptionPane.showMessageDialog(null, "您更换了登陆账户，并且原账户数据并未清除，所以切换操作不被允许，将自动退出。如确实需要更换账户，请先删除原账户所有数据库记录。", "提示",JOptionPane.WARNING_MESSAGE);  
-            		System.exit(1);
+            		JOptionPane.showMessageDialog(null, "您更换了登陆账户，并且原账户数据并未清除，建议先删除原账户所有数据库记录。", "提示",JOptionPane.WARNING_MESSAGE);  
+            		//System.exit(1);
             	}            		
             }
             FilesIO.fileWrite(file.getPath(), username,false);

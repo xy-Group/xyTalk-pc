@@ -55,6 +55,26 @@ import xysoft.im.panels.RoomsPanel;
 import xysoft.im.utils.DebugUtil;
 import xysoft.im.utils.JID;
 
+/*
+ * 
+####已完成####
+建群(邀请别人)
+建群(离线被邀请)
+建群(在线被邀请)
+显示成员列表
+加成员（群主通过联系人选择器）
+删成员（群主通过当前群成员选择器）
+群主解散群
+普通成员退出群
+
+####待做####
+@All\@成员
+消息撤回
+禁言
+群文件\群图片（待部署调用xyFS）
+消息、文件、图片转发到其他联系人或群
+ */
+
 public class MucChatService {
 	
 	public static Map<String,Room> existRooms =new HashMap<String,Room>();
@@ -195,9 +215,9 @@ public class MucChatService {
 		updateLeftAllUI();
 	}
 
-	private static void createNewRoomByMe(String jid, String roomName) {
+	private static void createNewRoomByInvitation(String jid, String roomName) {
 		Room room = new Room();
-		room.setLastMessage("我创建新群组");
+		room.setLastMessage(jid+"邀请我进群");
 		room.setLastChatAt(System.currentTimeMillis());
 		room.setMsgSum(0);
 		room.setName(roomName);
@@ -206,8 +226,8 @@ public class MucChatService {
 		room.setUpdatedAt("2018-01-01T06:38:55.119Z");
 		room.setType("m");
 		room.setUnreadCount(0);
-		room.setCreatorName(UserCache.CurrentUserName);
-		room.setCreatorId(UserCache.CurrentUserName);
+		//room.setCreatorName(UserCache.CurrentUserName);
+		//room.setCreatorId(UserCache.CurrentUserName);
 
 		Launcher.roomService.insertOrUpdate(room);
 
@@ -450,6 +470,7 @@ public class MucChatService {
 		EntityBareJid groupJid = JidCreate.entityBareFrom(jid);
 
 		MultiUserChat muc = MultiUserChatManager.getInstanceFor(Launcher.connection).getMultiUserChat(groupJid);
+		DebugUtil.debug("nickName:" + nickName);
 		muc.create(Resourcepart.from(nickName));
 
 		// 获得聊天室的配置表单
@@ -457,15 +478,30 @@ public class MucChatService {
 		// 根据原始表单创建一个要提交的新表单。
 		Form submitForm = form.createAnswerForm();
 
-		// 因为muc成员（members）是不被持久化的，所以创建群组，需要把其他受邀的人设置为admin
 		List<String> admins = new ArrayList<>();
+		// 因为muc成员（members）是不被持久化的，所以创建群组，需要把其他受邀的人设置为admin
 		if (users != null && !users.isEmpty()) {
 			for (int i = 0; i < users.size(); i++) {
 				String userJid = users.get(i);
 				DebugUtil.debug("建群时添加成员:"+userJid);
 				admins.add(userJid);
 			}
-		}
+		}	
+		
+//		if (Launcher.SERVERTYPE == 2){		
+//		}
+//		
+//		List<org.jxmpp.jid.Jid> adminsJid = new ArrayList<org.jxmpp.jid.Jid>();
+//
+//		if (Launcher.SERVERTYPE == 2){
+//			if (users != null && !users.isEmpty()) {
+//				for (int i = 0; i < users.size(); i++) {
+//					String userJid = users.get(i);
+//					DebugUtil.debug("建群时添加成员:"+userJid);
+//					adminsJid.add(JidCreate.from(userJid));
+//				}
+//			}
+//		}
 
 		// 设置提交表单默认值
 		for (FormField field : form.getFields()) {
@@ -476,11 +512,11 @@ public class MucChatService {
 
 		submitForm.setAnswer("muc#roomconfig_roomname", groupName);
 		submitForm.setAnswer("muc#roomconfig_roomdesc", groupName);
-		submitForm.setAnswer("muc#roomconfig_persistentroom", true);
-		submitForm.setAnswer("muc#roomconfig_publicroom", true);
+		//submitForm.setAnswer("muc#roomconfig_persistentroom", true);
+		//submitForm.setAnswer("muc#roomconfig_publicroom", true);
 		//submitForm.setAnswer("muc#roomconfig_moderatedroom", true);//使用默认的false即可
-		submitForm.setAnswer("muc#roomconfig_allowinvites", true);
-		// 设置用户成员
+		//submitForm.setAnswer("muc#roomconfig_allowinvites", true);
+		// 设置用户成员,tigase写法
 		submitForm.setAnswer("muc#roomconfig_roomadmins", admins);
 
 		// 发送已完成的表单（包含默认值）到服务器来配置聊天室
@@ -495,6 +531,8 @@ public class MucChatService {
 
 		// TODO 对离线用户还应发送邀请消息，并让服务器存储离线消息，待用户上线后还应对此类消息进行处理
 		sendOfflineInvitationMessage(users, jid, groupName);
+		// 设置用户成员,openfire写法
+		//muc.grantAdmin(adminsJid);
 
 		return muc;
 	}
@@ -529,7 +567,7 @@ public class MucChatService {
 	}
 
 	public static void join(Message message) {
-		// TODO 收到加入群的离线消息，进入群
+		// TODO 收到加入群的离线消息，被邀请进入群
 		MucInvitation mi = message.getExtension("x", "xytalk:muc:invitation");
 		String jid = mi.getRoomid();
 		String roomname = mi.getRoomName();
@@ -539,7 +577,7 @@ public class MucChatService {
 					.getMultiUserChat(JidCreate.entityBareFrom(jid));
 			muc.join(Resourcepart.from(UserCache.CurrentUserName + "-" + UserCache.CurrentUserRealName));
 			// 更新左侧panel，将群组UI新建出来
-			createNewRoomByMe(jid, roomname);
+			createNewRoomByInvitation(jid, roomname);
 		} catch (NotAMucServiceException | NoResponseException | XMPPErrorException | NotConnectedException
 				| XmppStringprepException | InterruptedException e) {
 			// TODO Auto-generated catch block

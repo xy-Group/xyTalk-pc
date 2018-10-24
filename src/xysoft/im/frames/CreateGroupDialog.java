@@ -75,7 +75,7 @@ public class CreateGroupDialog extends JDialog {
 	}
 
 	
-	// 展示全部用户
+	// 展示全部已存在数据库中的用户
 	private void initAllData() {
 		userList.clear();
 		List<Room> singleUser = roomService.findByType("s");
@@ -92,13 +92,14 @@ public class CreateGroupDialog extends JDialog {
 			public String get() {
 				try {
 					List<ContactsUser> contactsUsers = contactsUserService.findAll();
-
-					for (ContactsUser con : contactsUsers) {
-						userListClone.add(new SelectUserData(con.getUsername() + "-" + con.getName(), false));
+					
+					for (ContactsUser contact : contactsUsers) {
+						if (!contact.getUsername().equals(UserCache.CurrentUserName)){//过滤自己，无需邀请
+							userListClone.add(new SelectUserData(contact.getUsername() + "-" + contact.getName(), false));							
+						}
 					}
 					
 				} catch (Exception e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 				return "initAllDataOK";
@@ -198,7 +199,8 @@ public class CreateGroupDialog extends JDialog {
 
 	        for (SelectUserData item : userListClone)
 	        {
-	            if (item.getUserName().toLowerCase().indexOf(key) > -1 && (!selectUserPanel.getSelectedUser().contains(item)))
+	            if (item.getUserName().toLowerCase().indexOf(key) > -1 
+	            		&& (!selectUserPanel.getSelectedUser().contains(item)))
 	            {
 	                users.add(item);
 	            }
@@ -261,6 +263,8 @@ public class CreateGroupDialog extends JDialog {
 						muc.grantOwnership(owners);
 
 						muc.join(Resourcepart.from(UserCache.CurrentUserName + "-" + UserCache.CurrentUserRealName));
+						
+						setVisible(false);
 
 					} catch (Exception e1) {
 
