@@ -12,6 +12,16 @@ XyTalk.pc是XMPP协议的即时通讯IM客户端PC软件，可用于Windows/linu
 <br>
 联系微信：wx13710637136
 <p>
+<b>配套OSS私有企业文件存储服务(开放中)：</b>
+https://gitee.com/475660/xyFS
+<br>
+<b>iOS客户端开源(开放中)：</b>
+https://gitee.com/475660/xyTalk-ios
+<br>
+<b>Android客户端开源(尚未开放)：</b>
+<br>
+<b>XyTalk Portal门户及后台管理(尚未开放)</b>
+<p>
 
 <p>
 <H2>## 特性   ##</H2>
@@ -394,10 +404,9 @@ Android版、iOS版界面:
 QQ群：780461008
 <br>
 注意：本产品只是我业余时间开发验证和练手，目前Bug还较多。
+
 <br>
-欢迎对企业IM、协同门户、OA开发感兴趣的朋友和我一起打造系列产品线。
-<br>
-我的主要开源作品：https://gitee.com/475660/xyTalk-pc/
+我的主要开源作品：https://gitee.com/475660
 <br>
 我的博客：https://www.cnblogs.com/starcrm/
 
