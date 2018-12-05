@@ -13,10 +13,10 @@ XyTalk.pc是XMPP协议的即时通讯IM客户端PC软件，可用于Windows/linu
 联系微信：wx13710637136
 <p>
 <b>配套OSS私有企业文件存储服务(开放中)：</b>
-https://gitee.com/475660/xyFS
+<A HREF="https://gitee.com/475660/xyFS" target="_blank">https://gitee.com/475660/xyFS</A>
 <br>
 <b>iOS客户端开源(开放中)：</b>
-https://gitee.com/475660/xyTalk-ios
+<A HREF="https://gitee.com/475660/xyTalk-ios" target="_blank">https://gitee.com/475660/xyTalk-ios</A>
 <br>
 <b>Android客户端开源(尚未开放)：</b>
 <br>
